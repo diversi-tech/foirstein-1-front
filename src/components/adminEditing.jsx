@@ -1,5 +1,5 @@
 
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 // import {
 //   Container,
 //   Grid,
@@ -19,83 +19,124 @@
 //   Button,
 // } from '@mui/material';
 // import { Delete, Edit } from '@mui/icons-material';
+// import userService from '../axios/userAxios'; // נתיב לקובץ השירות שלך
 
 // const UserManagementComponent = () => {
-//   const [users, setUsers] = useState([
-//     {
-//       UserId: 1,
-//       Username: 'john_doe',
-//       Email: 'john.doe@example.com',
-//       Role: 'user',
-//       ProfilePicture: 'https://via.placeholder.com/150',
-//       CreatedAt: new Date('2023-01-01'),
-//       UpdatedAt: new Date('2023-06-01'),
-//     },
-//     {
-//       UserId: 2,
-//       Username: 'jane_smith',
-//       Email: 'jane.smith@example.com',
-//       Role: 'admin',
-//       ProfilePicture: 'https://via.placeholder.com/150',
-//       CreatedAt: new Date('2023-01-15'),
-//       UpdatedAt: new Date('2023-06-10'),
-//     },
-//   ]);
-
+//   const [users, setUsers] = useState([]);
 //   const [editUserId, setEditUserId] = useState(null);
 //   const [editUsername, setEditUsername] = useState('');
 //   const [editEmail, setEditEmail] = useState('');
 //   const [editProfilePicture, setEditProfilePicture] = useState('');
 //   const [editCreatedAt, setEditCreatedAt] = useState(null);
 //   const [editUpdatedAt, setEditUpdatedAt] = useState(null);
+//   const [editPasswordHash, setEditPasswordHash] = useState('');
+//   const [editRole ,setEditRole] = useState('');
+//   const [newUsername, setNewUsername] = useState('');
+//   const [newEmail, setNewEmail] = useState('');
+//   const [newProfilePicture, setNewProfilePicture] = useState('');
+//   const [newPasswordHash, setNewPasswordHash] = useState('');
+//   const [newRole, setNewRole] = useState('');
 
-//   const handleEditUser = (userId) => {
-//     const userToEdit = users.find((user) => user.UserId === userId);
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       try {
+//         const data = await userService.getAllUsers();
+//         setUsers(data);
+//       } catch (error) {
+//         console.error('Error fetching users:', error);
+//       }
+//     };
+
+//     fetchUsers();
+//   }, []);
+
+//   const handleEditUser = (userId) => {  
+//     const userToEdit = users.find((user) => user.userId === userId);
 //     if (userToEdit) {
 //       setEditUserId(userId);
-//       setEditUsername(userToEdit.Username);
-//       setEditEmail(userToEdit.Email);
-//       setEditProfilePicture(userToEdit.ProfilePicture);
-//       setEditCreatedAt(userToEdit.CreatedAt);
-//       setEditUpdatedAt(userToEdit.UpdatedAt);
+//       setEditUsername(userToEdit.username);
+//       setEditPasswordHash(userToEdit.passwordHash); 
+//       setEditEmail(userToEdit.email);
+//       setEditRole(userToEdit.role);
+//       setEditProfilePicture(userToEdit.profilePicture);
+//       setEditCreatedAt(userToEdit.createdAt);
+//       setEditUpdatedAt(userToEdit.updatedAt);
 //     }
 //   };
 
-//   const handleSaveEditUser = () => {
-//     const updatedUsers = users.map((user) =>
-//       user.UserId === editUserId
-//         ? {
-//             ...user,
-//             Username: editUsername,
-//             Email: editEmail,
-//             ProfilePicture: editProfilePicture,
-//             UpdatedAt: new Date(),
-//           }
-//         : user
-//     );
-//     setUsers(updatedUsers);
-//     setEditUserId(null);
-//     setEditUsername('');
-//     setEditEmail('');
-//     setEditProfilePicture('');
-//     setEditCreatedAt(null);
-//     setEditUpdatedAt(null);
+//   const handleSaveEditUser = async () => {
+//     try {
+//       const updatedUser = await userService.updateUser({
+//         userId: editUserId,
+//         username: editUsername,
+//         passwordHash: editPasswordHash, // או להוסיף את ה-Hash הנוכחי אם צריך
+//         email: editEmail,
+//         role: editRole, // או התפקיד המתאים
+//         profilePicture: editProfilePicture,
+//         createdAt: editCreatedAt,
+//         updatedAt: new Date()
+//       });
+
+//       if (updatedUser) {
+//         const updatedUsers = users.map((user) =>
+//           user.userId === editUserId ? updatedUser : user
+//         );
+//         setUsers(updatedUsers);
+//         handleCancelEditUser();
+//       } else {
+//         console.error('Failed to update user on the server.');
+//       }
+//     } catch (error) {
+//       console.error('Error updating user:', error);
+//     }
 //   };
 
 //   const handleCancelEditUser = () => {
 //     setEditUserId(null);
 //     setEditUsername('');
+//     setEditPasswordHash('');
 //     setEditEmail('');
 //     setEditProfilePicture('');
 //     setEditCreatedAt(null);
 //     setEditUpdatedAt(null);
+//     setEditRole('');
 //   };
 
-//   const handleDeleteUser = (userId) => {
-//     const updatedUsers = users.filter((user) => user.UserId !== userId);
-//     setUsers(updatedUsers);
+//   const handleDeleteUser = async (userId) => {
+//     try {
+//       await userService.deleteUser(userId);
+//       const updatedUsers = users.filter((user) => user.userId !== userId);
+//       setUsers(updatedUsers);
+//     } catch (error) {
+//       console.error('Error deleting user:', error);
+//     }
 //   };
 
+//   const handleAddUser = async () => {
+//     try {
+//       const newUser = await userService.addUser({
+//         username: newUsername,
+//         passwordHash: newPasswordHash,
+//         email: newEmail,
+//         role: newRole,
+//         profilePicture: newProfilePicture,
+//         createdAt: new Date(),
+//         updatedAt: new Date(),
+//       });
+
+//       setUsers([...users, newUser]);
+//       setNewUsername('');
+//       setNewPasswordHash('');
+//       setNewEmail('');
+//       setNewProfilePicture('');
+//       setNewRole('');
+//     } catch (error) {
+//       console.error('Error adding user:', error);
+//     }
+//   };
+//   const getInitial = (name) => {
+//     return name ? name.charAt(0).toUpperCase() : '?';
+//   };
 //   return (
 //     <Container>
 //       <Grid container spacing={3}>
@@ -111,6 +152,7 @@
 //                     <TableRow>
 //                       <TableCell>ID</TableCell>
 //                       <TableCell>Username</TableCell>
+//                       <TableCell>Password</TableCell>
 //                       <TableCell>Email</TableCell>
 //                       <TableCell>Role</TableCell>
 //                       <TableCell>Profile Picture</TableCell>
@@ -119,16 +161,21 @@
 //                   </TableHead>
 //                   <TableBody>
 //                     {users.map((user) => (
-//                       <TableRow key={user.UserId}>
-//                         <TableCell>{user.UserId}</TableCell>
-//                         <TableCell>{user.Username}</TableCell>
-//                         <TableCell>{user.Email}</TableCell>
-//                         <TableCell>{user.Role}</TableCell>
+//                       <TableRow key={user.userId}>
+//                         <TableCell>{user.userId}</TableCell>
+//                         <TableCell>{user.username}</TableCell>
+//                         <TableCell>{user.passwordHash}</TableCell>
+//                         <TableCell>{user.email}</TableCell>
+//                         <TableCell>{user.role}</TableCell>
 //                         <TableCell>
-//                           <Avatar alt={user.Username} src={user.ProfilePicture} />
+//                           {user.profilePicture ? (
+//                             <Avatar alt={user.username} src={user.profilePicture} />
+//                           ) : (
+//                             <Avatar>{getInitial(user.username)}</Avatar>
+//                           )}
 //                         </TableCell>
 //                         <TableCell>
-//                           {editUserId === user.UserId ? (
+//                           {editUserId === user.userId ? (
 //                             <>
 //                               <TextField
 //                                 label="Username"
@@ -145,7 +192,7 @@
 //                                 value={editProfilePicture}
 //                                 onChange={(e) => setEditProfilePicture(e.target.value)}
 //                               />
-//                               <Button onClick={handleSaveEditUser}>Save</Button>
+//                               <Button onClick={()=>handleSaveEditUser(user.userId)}>Save</Button>
 //                               <Button onClick={handleCancelEditUser}>Cancel</Button>
 //                             </>
 //                           ) : (
@@ -153,14 +200,14 @@
 //                               <IconButton
 //                                 edge="end"
 //                                 aria-label="edit"
-//                                 onClick={() => handleEditUser(user.UserId)}
+//                                 onClick={() => handleEditUser(user.userId)}
 //                               >
 //                                 <Edit />
 //                               </IconButton>
 //                               <IconButton
 //                                 edge="end"
 //                                 aria-label="delete"
-//                                 onClick={() => handleDeleteUser(user.UserId)}
+//                                 onClick={() => handleDeleteUser(user.userId)}
 //                               >
 //                                 <Delete />
 //                               </IconButton>
@@ -172,6 +219,42 @@
 //                   </TableBody>
 //                 </Table>
 //               </TableContainer>
+//               <Typography variant="h6" component="h2" gutterBottom style={{ marginTop: '20px' }}>
+//                 Add New User
+//               </Typography>
+//               <TextField
+//                 label="Username"
+//                 value={newUsername}
+//                 onChange={(e) => setNewUsername(e.target.value)}
+//                 style={{ marginRight: '10px' }}
+//               />
+//               <TextField
+//                 label="Password"
+//                 value={newPasswordHash}
+//                 onChange={(e) => setNewPasswordHash(e.target.value)}
+//                 style={{ marginRight: '10px' }}
+//               />
+//               <TextField
+//                 label="Email"
+//                 value={newEmail}
+//                 onChange={(e) => setNewEmail(e.target.value)}
+//                 style={{ marginRight: '10px' }}
+//               />
+//               <TextField
+//                 label="Role"
+//                 value={newRole}
+//                 onChange={(e) => setNewRole(e.target.value)}
+//                 style={{ marginRight: '10px' }}
+//               />
+//               {/* <TextField
+//                 label="Profile Picture"
+//                 value={newProfilePicture}
+//                 onChange={(e) => setNewProfilePicture(e.target.value)}
+//                 style={{ marginRight: '10px' }}
+//               /> */}
+//               <Button variant="contained" color="primary" onClick={handleAddUser}>
+//                 Add User
+//               </Button>
 //             </CardContent>
 //           </Card>
 //         </Grid>
@@ -181,7 +264,7 @@
 // };
 
 // export default UserManagementComponent;
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -201,101 +284,127 @@ import {
   Button,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import userService from '../axios/userAxios'; // נתיב לקובץ השירות שלך
 
 const UserManagementComponent = () => {
-  const [users, setUsers] = useState([
-    {
-      UserId: 1,
-      Username: 'john_doe',
-      Email: 'john.doe@example.com',
-      Role: 'user',
-      ProfilePicture: 'https://via.placeholder.com/150',
-      CreatedAt: new Date('2023-01-01'),
-      UpdatedAt: new Date('2023-06-01'),
-    },
-    {
-      UserId: 2,
-      Username: 'jane_smith',
-      Email: 'jane.smith@example.com',
-      Role: 'admin',
-      ProfilePicture: 'https://via.placeholder.com/150',
-      CreatedAt: new Date('2023-01-15'),
-      UpdatedAt: new Date('2023-06-10'),
-    },
-  ]);
-
+  const [users, setUsers] = useState([]);
   const [editUserId, setEditUserId] = useState(null);
   const [editUsername, setEditUsername] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editProfilePicture, setEditProfilePicture] = useState('');
   const [editCreatedAt, setEditCreatedAt] = useState(null);
   const [editUpdatedAt, setEditUpdatedAt] = useState(null);
-
+  const [editPasswordHash, setEditPasswordHash] = useState('');
+  const [editRole ,setEditRole] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newProfilePicture, setNewProfilePicture] = useState('');
+  const [newPasswordHash, setNewPasswordHash] = useState('');
+  const [newRole, setNewRole] = useState('');
 
-  const handleEditUser = (userId) => {
-    const userToEdit = users.find((user) => user.UserId === userId);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await userService.getAllUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleEditUser = (userId) => {  
+    const userToEdit = users.find((user) => user.userId === userId);
     if (userToEdit) {
       setEditUserId(userId);
-      setEditUsername(userToEdit.Username);
-      setEditEmail(userToEdit.Email);
-      setEditProfilePicture(userToEdit.ProfilePicture);
-      setEditCreatedAt(userToEdit.CreatedAt);
-      setEditUpdatedAt(userToEdit.UpdatedAt);
+      setEditUsername(userToEdit.username);
+      setEditPasswordHash(userToEdit.passwordHash); 
+      setEditEmail(userToEdit.email);
+      setEditRole(userToEdit.role);
+      setEditProfilePicture(userToEdit.profilePicture);
+      setEditCreatedAt(userToEdit.createdAt);
+      setEditUpdatedAt(userToEdit.updatedAt);
     }
   };
 
-  const handleSaveEditUser = () => {
-    const updatedUsers = users.map((user) =>
-      user.UserId === editUserId
-        ? {
-            ...user,
-            Username: editUsername,
-            Email: editEmail,
-            ProfilePicture: editProfilePicture,
-            UpdatedAt: new Date(),
-          }
-        : user
-    );
-    setUsers(updatedUsers);
-    setEditUserId(null);
-    setEditUsername('');
-    setEditEmail('');
-    setEditProfilePicture('');
-    setEditCreatedAt(null);
-    setEditUpdatedAt(null);
+  const handleSaveEditUser = async () => {
+    try {
+      const updatedUser = await userService.updateUser({
+        userId: editUserId,
+        username: editUsername,
+        passwordHash: editPasswordHash, // או להוסיף את ה-Hash הנוכחי אם צריך
+        email: editEmail,
+        role: editRole, // או התפקיד המתאים
+        profilePicture: editProfilePicture,
+        createdAt: editCreatedAt,
+        updatedAt: new Date()
+      });
+
+      if (updatedUser) {
+        const updatedUsers = users.map((user) =>
+          user.userId === editUserId ? updatedUser : user
+        );
+        setUsers(updatedUsers);
+        handleCancelEditUser();
+      } else {
+        console.error('Failed to update user on the server.');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
 
   const handleCancelEditUser = () => {
     setEditUserId(null);
     setEditUsername('');
+    setEditPasswordHash('');
     setEditEmail('');
     setEditProfilePicture('');
     setEditCreatedAt(null);
     setEditUpdatedAt(null);
+    setEditRole('');
   };
 
-  const handleDeleteUser = (userId) => {
-    const updatedUsers = users.filter((user) => user.UserId !== userId);
-    setUsers(updatedUsers);
+  const handleDeleteUser = async (userId) => {
+    try {
+      await userService.deleteUser(userId);
+      const updatedUsers = users.filter((user) => user.userId !== userId);
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
   };
 
-  const handleAddUser = () => {
-    const newUser = {
-      UserId: users.length + 1,
-      Username: newUsername,
-      Email: newEmail,
-      Role: 'user',
-      ProfilePicture: newProfilePicture,
-      CreatedAt: new Date(),
-      UpdatedAt: new Date(),
-    };
-    setUsers([...users, newUser]);
-    setNewUsername('');
-    setNewEmail('');
-    setNewProfilePicture('');
+  const handleAddUser = async () => {
+    try {
+      const newUser = await userService.addUser({
+        username: newUsername,
+        passwordHash: newPasswordHash,
+        email: newEmail,
+        role: newRole,
+        profilePicture: newProfilePicture,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      setUsers([...users, newUser]);
+      setNewUsername('');
+      setNewPasswordHash('');
+      setNewEmail('');
+      setNewProfilePicture('');
+      setNewRole('');
+    } catch (error) {
+      console.error('Error adding user:', error);
+    }
+  };
+  // const generatePassword = () => {
+  //   const password = Math.random().toString(36).slice(-8);
+  //   setNewPasswordHash(password);
+  // };
+  const getInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : '?';
   };
 
   return (
@@ -313,6 +422,7 @@ const UserManagementComponent = () => {
                     <TableRow>
                       <TableCell>ID</TableCell>
                       <TableCell>Username</TableCell>
+                      <TableCell>Password</TableCell>
                       <TableCell>Email</TableCell>
                       <TableCell>Role</TableCell>
                       <TableCell>Profile Picture</TableCell>
@@ -321,32 +431,58 @@ const UserManagementComponent = () => {
                   </TableHead>
                   <TableBody>
                     {users.map((user) => (
-                      <TableRow key={user.UserId}>
-                        <TableCell>{user.UserId}</TableCell>
-                        <TableCell>{user.Username}</TableCell>
-                        <TableCell>{user.Email}</TableCell>
-                        <TableCell>{user.Role}</TableCell>
+                      <TableRow key={user.userId}>
+                        <TableCell>{user.userId}</TableCell>
                         <TableCell>
-                          <Avatar alt={user.Username} src={user.ProfilePicture} />
+                          {editUserId === user.userId ? (
+                            <TextField
+                              value={editUsername}
+                              onChange={(e) => setEditUsername(e.target.value)}
+                            />
+                          ) : (
+                            user.username
+                          )}
                         </TableCell>
                         <TableCell>
-                          {editUserId === user.UserId ? (
+                          {editUserId === user.userId ? (
+                            <TextField
+                              value={editPasswordHash}
+                              onChange={(e) => setEditPasswordHash(e.target.value)}
+                            />
+                          ) : (
+                            user.passwordHash
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editUserId === user.userId ? (
+                            <TextField
+                              value={editEmail}
+                              onChange={(e) => setEditEmail(e.target.value)}
+                            />
+                          ) : (
+                            user.email
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editUserId === user.userId ? (
+                            <TextField
+                              value={editRole}
+                              onChange={(e) => setEditRole(e.target.value)}
+                            />
+                          ) : (
+                            user.role
+                          )}
+                        </TableCell>
+                        <TableCell>
+                           {user.profilePicture ? (
+                            <Avatar alt={user.username} src={user.profilePicture} />
+                          ) : (
+                            <Avatar>{getInitial(user.username)}</Avatar>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editUserId === user.userId ? (
                             <>
-                              <TextField
-                                label="Username"
-                                value={editUsername}
-                                onChange={(e) => setEditUsername(e.target.value)}
-                              />
-                              <TextField
-                                label="Email"
-                                value={editEmail}
-                                onChange={(e) => setEditEmail(e.target.value)}
-                              />
-                              <TextField
-                                label="Profile Picture"
-                                value={editProfilePicture}
-                                onChange={(e) => setEditProfilePicture(e.target.value)}
-                              />
                               <Button onClick={handleSaveEditUser}>Save</Button>
                               <Button onClick={handleCancelEditUser}>Cancel</Button>
                             </>
@@ -355,14 +491,14 @@ const UserManagementComponent = () => {
                               <IconButton
                                 edge="end"
                                 aria-label="edit"
-                                onClick={() => handleEditUser(user.UserId)}
+                                onClick={() => handleEditUser(user.userId)}
                               >
                                 <Edit />
                               </IconButton>
                               <IconButton
                                 edge="end"
                                 aria-label="delete"
-                                onClick={() => handleDeleteUser(user.UserId)}
+                                onClick={() => handleDeleteUser(user.userId)}
                               >
                                 <Delete />
                               </IconButton>
@@ -383,6 +519,14 @@ const UserManagementComponent = () => {
                 onChange={(e) => setNewUsername(e.target.value)}
                 style={{ marginRight: '10px' }}
               />
+             <TextField
+                label="Password"
+                type="password"
+                value={newPasswordHash}
+                onChange={(e) => setNewPasswordHash(e.target.value)}
+                style={{ marginRight: '10px' }}
+              />
+              {/* <Button onClick={generatePassword}>Generate Password</Button> */}
               <TextField
                 label="Email"
                 value={newEmail}
@@ -390,12 +534,18 @@ const UserManagementComponent = () => {
                 style={{ marginRight: '10px' }}
               />
               <TextField
+                label="Role"
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
+                style={{ marginRight: '10px' }}
+              />
+              {/* <TextField
                 label="Profile Picture"
                 value={newProfilePicture}
                 onChange={(e) => setNewProfilePicture(e.target.value)}
                 style={{ marginRight: '10px' }}
-              />
-              <Button variant="contained" color="primary" onClick={handleAddUser}>
+              /> */}
+               <Button variant="contained" color="primary" onClick={handleAddUser}>
                 Add User
               </Button>
             </CardContent>
@@ -407,4 +557,3 @@ const UserManagementComponent = () => {
 };
 
 export default UserManagementComponent;
-
