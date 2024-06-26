@@ -1,21 +1,21 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './component/Home';
+import Register from './component/Register';
 import Login from './component/Login';
-import Welcome from './component/welcome';
-import Logon from './component/Logon';
 
 
-import './App.css';
+
 
 const App = () => {
   return (
-   
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/logon" element={<Logon />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/" element={<Login />} /> {/* Redirect to Login by default */}
+     
+        <Route path="/home" element={<Home/>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );
