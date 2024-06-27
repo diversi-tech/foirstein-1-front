@@ -3,15 +3,19 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme'; // Path to your general design theme file
 import ForgotPassword from './components/forgotPassword';
- // Import the ForgotPassword component
+import AdminPanel from './components/changePermission';
+import { Provider } from 'react-redux';
+import { store } from './redux/store'; // ניחוש בשביל store.js
 
 function App() {
   return (
+   <Provider store={store}>
     <ThemeProvider theme={theme}>
-    
-    </ThemeProvider>
-  );
-}
-
-export default App;
+    <div className="App">
+      <AdminPanel />
+    </div>
+  </ThemeProvider>
+   </Provider>
+  );}
+  export default App;
 
