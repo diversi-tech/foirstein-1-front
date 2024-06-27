@@ -16,6 +16,7 @@ const userService = {
 
   addUser: async (user) => {
     try {
+      debugger
       const response = await axios.post(`${API_URL}/addUser`, user);
       return response.data;
     } catch (error) {
