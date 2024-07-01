@@ -6,6 +6,8 @@ import  ChangePermission  from "./changePermission"
 import UserManagementComponent from "./adminEditing"
 import ActivityLog from './ActivityLog'
 
+
+
 export const RoutingAdmin=()=>{
     return <BrowserRouter>
     <AdminNav></AdminNav>

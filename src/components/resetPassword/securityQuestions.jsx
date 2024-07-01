@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField, Typography, Container, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import userService from './axios/userAxios';
+import userService from '../../axios/userAxios';
 
 
 const SecurityQuestions = () => {

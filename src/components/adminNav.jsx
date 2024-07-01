@@ -70,6 +70,7 @@ export const AdminNav = () => {
             <MenuItem onClick={handleClose} component={StyledLink} to="/changePermission">שינוי הרשאות</MenuItem>
             <MenuItem onClick={handleClose} component={StyledLink} to="/Charts">גרפים</MenuItem>
             <MenuItem onClick={handleClose} component={StyledLink} to="/UserManagementComponent">ניהול משתמשים</MenuItem>
+
           </Menu>
         </Toolbar>
       </AppBar>
