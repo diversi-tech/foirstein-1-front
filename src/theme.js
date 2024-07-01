@@ -2,7 +2,9 @@ import { createTheme } from '@mui/material/styles';
 import { heIL } from '@mui/material/locale';
 
 const theme = createTheme({
+
   direction: 'rtl',
+
   typography: {
     fontFamily: [
       'Roboto',
@@ -12,6 +14,74 @@ const theme = createTheme({
     ].join(','),
     fontSize: 16,
     // ...שאר ההגדרות
+
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1.5rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1.25rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    h3: {
+      fontSize: '1.75rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 500,
+      lineHeight: 1.2,
+      marginBottom: '1rem',
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    body1: {
+      fontSize: '1rem',
+      lineHeight: 1.5,
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.5,
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    subtitle1: {
+      fontSize: '1rem',
+      fontWeight: 500,
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    subtitle2: {
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      textAlign: 'right', // שינוי לכיוון ימין
+    },
+    button: {
+      textTransform: 'none',
+      fontWeight: 500,
+    },
+
   },
   palette: {
     primary: {
