@@ -286,6 +286,7 @@ const ActivityLog = () => {
   };
 
   const fetchLogs = async () => {
+    debugger
     if(logs.length > 0){
       setActivityLogList(logs);
     }
