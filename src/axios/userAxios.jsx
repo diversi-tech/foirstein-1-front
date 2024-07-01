@@ -68,4 +68,3 @@ export const updateUserRole = (userId, newRole) => {
  };
 
 export default userService;
-
