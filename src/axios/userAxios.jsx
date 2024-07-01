@@ -61,10 +61,18 @@ const userService = {
       console.error('Error updating user:', error);
       throw error;
     }
-  }
-};
-export const updateUserRole = (userId, newRole) => {
-    return await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
- };
+  },
+  updateUserRole: async (userId, newRole) => {
+    try {
+        const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
+        debugger
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        throw error;
+    }
+  },
+}
+
 
 export default userService;
