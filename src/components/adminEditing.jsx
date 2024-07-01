@@ -61,7 +61,7 @@ const UserManagementComponent = () => {
     const userToEdit = users.find((user) => user.userId === userId);
     if (userToEdit) {
       setEditUserId(userId);
-      setEditUsername(userToEdit.username);
+      setEditUsername(userToEdit.userName);
       setEditPasswordHash(userToEdit.passwordHash); 
       setEditEmail(userToEdit.email);
       setEditRole(userToEdit.role);
@@ -78,7 +78,7 @@ const UserManagementComponent = () => {
     try {
       const updatedUser = await userService.updateUser({
         userId: editUserId,
-        username: editUsername,
+        userName: editUsername,
         passwordHash: editPasswordHash,
         email: editEmail,
         role: editRole,
@@ -133,7 +133,7 @@ const UserManagementComponent = () => {
     try {
       const newUser = await userService.addUser({
         userId: newUserId,
-        username: newUsername,
+        userName: newUsername,
         passwordHash: newPasswordHash,
         email: newEmail,
         role: newRole,
@@ -236,9 +236,9 @@ const UserManagementComponent = () => {
                           </TableCell>
                           <TableCell align="right">
                             {user.profilePicture ? (
-                              <Avatar alt={user.username} src={user.profilePicture} />
+                              <Avatar alt={user.userName} src={user.profilePicture} />
                             ) : (
-                              <Avatar>{getInitial(user.username)}</Avatar>
+                              <Avatar>{getInitial(user.userName)}</Avatar>
                             )}
                           </TableCell>
                           <TableCell align="right">
@@ -282,7 +282,7 @@ const UserManagementComponent = () => {
                                 InputLabelProps={{ shrink: true }}
                               />
                             ) : (
-                              user.username
+                              user.userName
                             )}
                           </TableCell>
                           <TableCell align="right">{index + 1}</TableCell>
