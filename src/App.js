@@ -3,21 +3,22 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme'; // Path to your general design theme file
 import ForgotPassword from './components/forgotPassword';
-import ActivityLog from './components/ActivityLog';
+import AdminPanel from './components/changePermission';
 import { Provider } from 'react-redux';
-import {store} from './redux/store';
-
- // Import the ForgotPassword component
+import UserManagementComponent from './components/adminEditing.jsx'
+import { store } from './redux/store.jsx';
+import { useState, useEffect } from 'react';
 
 function App() {
   return (
-    <Provider store={store}>
+   <Provider store={store}>
     <ThemeProvider theme={theme}>
-    <ActivityLog></ActivityLog>
-    </ThemeProvider>
-    </Provider>
+    <div className="App">
+    </div>
+  </ThemeProvider>
+   </Provider>
   );
 }
-
 export default App;
+
 
