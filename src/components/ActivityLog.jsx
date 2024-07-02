@@ -1,4 +1,9 @@
+
+
 // import React, { useState, useEffect } from "react";
+// import { useDispatch, useSelector } from 'react-redux';
+// import axios from "axios";
+
 // import {
 //   Table,
 //   TableContainer,
@@ -16,58 +21,74 @@
 //   Box,
 // } from "@mui/material";
 // import { ExpandMore, ExpandLess } from "@mui/icons-material";
-// import axios from "axios";
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
+// import userService from "../axios/userAxios";
+// import ActivityLogService from "../axios/ActivityLogAxios";
+// import { FillData } from "../redux/actions/userAction";
+// import { FillLog } from "../redux/actions/ActivityLogAction";
 
 // const ActivityLog = () => {
-//   const [logs, setLogs] = useState([]);
+//   const dispatch = useDispatch();
+//   const logs = useSelector(state => state.activityLogReducer.activityLogList);
+//   const users = useSelector(state => state.userReducer.userList);
+  
+//   const [usersList, setFusersList] = useState([]);
+//   const [ActivityLogList, setActivityLogList] = useState([]);
 //   const [filteredLogs, setFilteredLogs] = useState([]);
-//   const [users, setUsers] = useState([]);
 //   const [userId, setUserId] = useState("");
-//   const [username, setUserName] = useState("");
+//   const [userName, setUserName] = useState("");
 //   const [startDate, setStartDate] = useState(null);
 //   const [endDate, setEndDate] = useState(null);
 //   const [activity, setActivity] = useState("");
 //   const [expandedRow, setExpandedRow] = useState(null);
 
 //   useEffect(() => {
-//     fetchLogs();
 //     fetchUsers();
+//     fetchLogs();
 //   }, []);
 
-//   const fetchLogs = () => {
-//     axios
-    
+//   useEffect(() => {
+//     handleSearch();
+//   }, [logs, usersList]);
 
-//       .get("http://localhost:5211/api/ActivityLog/GetAllActivity")
-//       .then((response) => {
-//         setLogs(response.data);
-//         setFilteredLogs(response.data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching logs:", error);
-//       });
+//   const fetchUsers = async () => {
+//     if(users.length > 0){
+//       setFusersList(users);
+//     }
+//     else{
+//       try {
+//         const response1 = await userService.getAllUsers();
+//         setFusersList(response1);
+//         dispatch(FillData(response1));
+//       } catch (error) {
+//         console.error("Error fetching users:", error);
+//       }
+//     }
 //   };
 
-//   const fetchUsers = () => {
-//     axios
-//       .get("http://localhost:5211/api/Users")
-//       .then((response) => {
-//         setUsers(response.data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching users:", error);
-//       });
+//   const fetchLogs = async () => {
+//     if(logs.length > 0){
+//       setActivityLogList(logs);
+//     }
+//     else{
+//       try {
+//         const response2 = await ActivityLogService.getAllActivityLog();
+//         setActivityLogList(response2);
+//         dispatch(FillLog(response2));
+//       } catch (error) {
+//         console.error("Error fetching logs:", error);
+//       }
+//     }
 //   };
 
 //   const handleSearch = () => {
-//     let filtered = logs.filter((log) => {
-//       const user = users.find((user) => user.userId === log.userId);
-//       const userNameMatch = user ? user.username.toLowerCase().includes(username.toLowerCase()) : false;
-//       const userIdMatch = userId === "" || (user && user.userId.toString().includes(userId));
+//     let filtered = ActivityLogList.filter((log) => {
+//       const user = usersList.find((user) => user.userId === log.userId1);
+//       const userNameMatch = user ? user.userName.toLowerCase().includes(userName.toLowerCase()) : false;
+//       const userIdMatch = userId === "" || (user && user.tz.toString().includes(userId));
 
-//       let matchUserName = username.trim() === "" || userNameMatch;
+//       let matchUserName = userName.trim() === "" || userNameMatch;
 //       let matchActivity = activity === "" || log.activity.toLowerCase().includes(activity.toLowerCase());
 
 //       let matchDateRange = true;
@@ -88,28 +109,46 @@
 //   };
 
 //   return (
-//     <Box sx={{ maxWidth: 1200, margin: 'auto', padding: '20px' }}>
+//     <Box dir="rtl" sx={{ maxWidth: 1200, margin: 'auto', padding: '20px' }}>
 //       <Grid container spacing={2} alignItems="center">
 //         <Grid item xs={12} sm={6} md={2}>
 //           <TextField
 //             label="תעודת זהות משתמש"
 //             variant="outlined"
 //             value={userId}
-//             defaultValue={userId}
 //             onChange={(e) => setUserId(e.target.value)}
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
+//             InputLabelProps={{ style: { color: 'black' } }}
 //           />
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
 //           <TextField
 //             label="שם משתמש"
-//             variant="outlined"
-//             value={username}
-//             defaultValue={username}
+//             type="userName"
+//             value={userName}
 //             onChange={(e) => setUserName(e.target.value)}
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
+//             InputLabelProps={{ style: { color: 'black' } }}
+//           />
+//         </Grid>
+        
+//         <Grid item xs={12} sm={6} md={2}>
+//           <DatePicker
+//             selected={endDate}
+//             onChange={(date) => setEndDate(date)}
+//             dateFormat="dd/MM/yyyy"
+//             customInput={
+//               <TextField
+//                 label="עד תאריך"
+//                 variant="outlined"
+//                 fullWidth
+//                 sx={{ minWidth: '150px' }}
+//                 defaultValue={endDate ? endDate.toLocaleDateString() : ''}
+//                 InputLabelProps={{ style: { color: 'black' } }}
+//               />
+//             }
 //           />
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
@@ -124,36 +163,21 @@
 //                 fullWidth
 //                 sx={{ minWidth: '150px' }}
 //                 defaultValue={startDate ? startDate.toLocaleDateString() : ''}
+//                 InputLabelProps={{ style: { color: 'black' } }}
 //               />
 //             }
 //           />
-//         </Grid>
-//         <Grid item xs={12} sm={6} md={2}>
-//           <DatePicker
-//             selected={endDate}
-//             onChange={(date) => setEndDate(date)}
-//             dateFormat="dd/MM/yyyy"
-//             customInput={
-//               <TextField
-//                 label="עד תאריך"
-//                 variant="outlined"
-//                 fullWidth
-//                 sx={{ minWidth: '150px' }}
-//                 defaultValue={endDate ? endDate.toLocaleDateString() : ''}
-//               />
-//             }
-//           />
-
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
 //           <TextField
 //             label="פעילות"
+//             id="outlined-basic"
 //             variant="outlined"
 //             value={activity}
-//             defaultValue={activity}
 //             onChange={(e) => setActivity(e.target.value)}
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
+//             InputLabelProps={{ style: { color: 'black' } }}
 //           />
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
@@ -176,13 +200,13 @@
 //           </TableHead>
 //           <TableBody>
 //             {filteredLogs.map((log, index) => {
-//               const user = users.find((user) => user.userId === log.userId);
+//               const user = usersList.find((user) => user.tz === log.userId);
 //               return (
 //                 <React.Fragment key={log.logId}>
 //                   <TableRow>
 //                     <TableCell align="center">{index + 1}</TableCell>
-//                     <TableCell align="center">{user ? user.userId : "Unknown User"}</TableCell>
-//                     <TableCell align="center">{user ? user.username : "Unknown User"}</TableCell>
+//                     <TableCell align="center">{user ? user.tz : "משתמש לא ידוע"}</TableCell>
+//                     <TableCell align="center">{user ? user.userName : "משתמש לא ידוע"}</TableCell>
 //                     <TableCell align="center">
 //                       <IconButton onClick={() => handleRowToggle(index)}>
 //                         {expandedRow === index ? <ExpandLess /> : <ExpandMore />}
@@ -216,6 +240,9 @@
 // };
 
 // export default ActivityLog;
+
+
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
@@ -241,20 +268,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import userService from "../axios/userAxios";
 import ActivityLogService from "../axios/ActivityLogAxios";
-import {FillData} from "../redux/actions/userAction";
+import { FillData } from "../redux/actions/userAction";
 import { FillLog } from "../redux/actions/ActivityLogAction";
-
-
 
 const ActivityLog = () => {
   const dispatch = useDispatch();
   const logs = useSelector(state => state.activityLogReducer.activityLogList);
   const users = useSelector(state => state.userReducer.userList);
+  
   const [usersList, setFusersList] = useState([]);
   const [ActivityLogList, setActivityLogList] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [userId, setUserId] = useState("");
-  const [username, setUserName] = useState("");
+  const [userName, setUserName] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [activity, setActivity] = useState("");
@@ -266,49 +292,46 @@ const ActivityLog = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredLogs(logs);
-  }, [logs]);
+    handleSearch();
+  }, [logs, usersList]);
 
   const fetchUsers = async () => {
     if(users.length > 0){
       setFusersList(users);
     }
     else{
-          try {
-      const response = await userService.getAllUsers();
-      setFusersList(response);
-      dispatch(FillData(usersList));
-    } catch (error) {
-      console.error("Error fetching users:", error);
+      try {
+        const response1 = await userService.getAllUsers();
+        setFusersList(response1);
+        dispatch(FillData(response1));
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     }
-    }
-
   };
 
   const fetchLogs = async () => {
-    debugger
     if(logs.length > 0){
       setActivityLogList(logs);
     }
     else{
       try {
-        const response = await ActivityLogService.getAllActivityLog();
-        setActivityLogList(response)
-        dispatch(FillLog(ActivityLogList));
+        const response2 = await ActivityLogService.getAllActivityLog();
+        setActivityLogList(response2);
+        dispatch(FillLog(response2));
       } catch (error) {
         console.error("Error fetching logs:", error);
       }
     }
-
   };
 
   const handleSearch = () => {
     let filtered = ActivityLogList.filter((log) => {
-      const user = usersList.find((user) => user.userId === log.userId);
-      const userNameMatch = user ? user.username.toLowerCase().includes(username.toLowerCase()) : false;
-      const userIdMatch = userId === "" || (user && user.userId.toString().includes(userId));
+      const user = usersList.find((user) => user.userId === log.userId1);
+      const userNameMatch = user ? user.userName.toLowerCase().includes(userName.toLowerCase()) : false;
+      const userIdMatch = userId === "" || (user && user.tz.toString().includes(userId));
 
-      let matchUserName = username.trim() === "" || userNameMatch;
+      let matchUserName = userName.trim() === "" || userNameMatch;
       let matchActivity = activity === "" || log.activity.toLowerCase().includes(activity.toLowerCase());
 
       let matchDateRange = true;
@@ -329,7 +352,7 @@ const ActivityLog = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: 'auto', padding: '20px' }}>
+    <Box dir="rtl" sx={{ maxWidth: 1200, margin: 'auto', padding: '20px' }}>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} sm={6} md={2}>
           <TextField
@@ -339,16 +362,20 @@ const ActivityLog = () => {
             onChange={(e) => setUserId(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
             label="שם משתמש"
-            variant="outlined"
-            value={username}
+            type="userName"
+            value={userName}
             onChange={(e) => setUserName(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
         
@@ -364,6 +391,8 @@ const ActivityLog = () => {
                 fullWidth
                 sx={{ minWidth: '150px' }}
                 defaultValue={endDate ? endDate.toLocaleDateString() : ''}
+                InputLabelProps={{ style: { color: 'black' } }}
+                inputProps={{ style: { direction: 'rtl' } }}
               />
             }
           />
@@ -380,6 +409,8 @@ const ActivityLog = () => {
                 fullWidth
                 sx={{ minWidth: '150px' }}
                 defaultValue={startDate ? startDate.toLocaleDateString() : ''}
+                InputLabelProps={{ style: { color: 'black' } }}
+                inputProps={{ style: { direction: 'rtl' } }}
               />
             }
           />
@@ -393,6 +424,8 @@ const ActivityLog = () => {
             onChange={(e) => setActivity(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
+            InputLabelProps={{ style: { color: 'black' } }}
+            inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
@@ -415,13 +448,13 @@ const ActivityLog = () => {
           </TableHead>
           <TableBody>
             {filteredLogs.map((log, index) => {
-              const user = users.find((user) => user.userId === log.userId);
+              const user = usersList.find((user) => user.tz === log.userId);
               return (
                 <React.Fragment key={log.logId}>
                   <TableRow>
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{user ? user.userId : "Unknown User"}</TableCell>
-                    <TableCell align="center">{user ? user.username : "Unknown User"}</TableCell>
+                    <TableCell align="center">{user ? user.tz : "משתמש לא ידוע"}</TableCell>
+                    <TableCell align="center">{user ? user.userName : "משתמש לא ידוע"}</TableCell>
                     <TableCell align="center">
                       <IconButton onClick={() => handleRowToggle(index)}>
                         {expandedRow === index ? <ExpandLess /> : <ExpandMore />}
