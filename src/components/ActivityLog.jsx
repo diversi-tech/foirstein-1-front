@@ -1,5 +1,3 @@
-
-
 // import React, { useState, useEffect } from "react";
 // import { useDispatch, useSelector } from 'react-redux';
 // import axios from "axios";
@@ -120,6 +118,7 @@
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
 //             InputLabelProps={{ style: { color: 'black' } }}
+//             inputProps={{ style: { direction: 'rtl' } }}
 //           />
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
@@ -131,6 +130,7 @@
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
 //             InputLabelProps={{ style: { color: 'black' } }}
+//             inputProps={{ style: { direction: 'rtl' } }}
 //           />
 //         </Grid>
         
@@ -147,6 +147,7 @@
 //                 sx={{ minWidth: '150px' }}
 //                 defaultValue={endDate ? endDate.toLocaleDateString() : ''}
 //                 InputLabelProps={{ style: { color: 'black' } }}
+//                 inputProps={{ style: { direction: 'rtl' } }}
 //               />
 //             }
 //           />
@@ -164,6 +165,7 @@
 //                 sx={{ minWidth: '150px' }}
 //                 defaultValue={startDate ? startDate.toLocaleDateString() : ''}
 //                 InputLabelProps={{ style: { color: 'black' } }}
+//                 inputProps={{ style: { direction: 'rtl' } }}
 //               />
 //             }
 //           />
@@ -178,6 +180,7 @@
 //             fullWidth
 //             sx={{ minWidth: '150px' }}
 //             InputLabelProps={{ style: { color: 'black' } }}
+//             inputProps={{ style: { direction: 'rtl' } }}
 //           />
 //         </Grid>
 //         <Grid item xs={12} sm={6} md={2}>
@@ -240,6 +243,7 @@
 // };
 
 // export default ActivityLog;
+
 
 
 
@@ -362,7 +366,7 @@ const ActivityLog = () => {
             onChange={(e) => setUserId(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
-            InputLabelProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'blue', marginLeft: '5px',marginRight:'25px' } , shrink: true}}
             inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
@@ -374,7 +378,7 @@ const ActivityLog = () => {
             onChange={(e) => setUserName(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
-            InputLabelProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'blue', marginLeft: '5px' } }}
             inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
@@ -391,7 +395,7 @@ const ActivityLog = () => {
                 fullWidth
                 sx={{ minWidth: '150px' }}
                 defaultValue={endDate ? endDate.toLocaleDateString() : ''}
-                InputLabelProps={{ style: { color: 'black' } }}
+                InputLabelProps={{ style: { color: 'blue', marginLeft: '5px' } }}
                 inputProps={{ style: { direction: 'rtl' } }}
               />
             }
@@ -409,7 +413,7 @@ const ActivityLog = () => {
                 fullWidth
                 sx={{ minWidth: '150px' }}
                 defaultValue={startDate ? startDate.toLocaleDateString() : ''}
-                InputLabelProps={{ style: { color: 'black' } }}
+                InputLabelProps={{ style: { color: 'blue', marginLeft: '5px' } }}
                 inputProps={{ style: { direction: 'rtl' } }}
               />
             }
@@ -424,7 +428,7 @@ const ActivityLog = () => {
             onChange={(e) => setActivity(e.target.value)}
             fullWidth
             sx={{ minWidth: '150px' }}
-            InputLabelProps={{ style: { color: 'black' } }}
+            InputLabelProps={{ style: { color: 'blue', marginLeft: '50px' } }}
             inputProps={{ style: { direction: 'rtl' } }}
           />
         </Grid>
