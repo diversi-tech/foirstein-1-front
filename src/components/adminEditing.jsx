@@ -24,6 +24,11 @@ const UserManagementComponent = () => {
   const [editphoneNumber, setEditphoneNumber] = useState('');
   const [edituserDob, setEdituserDob] = useState('');
   const [newUserId, setnewUserId] = useState(null);
+  const [newUserTz, setnewUserTz] = useState(null);
+  const [newUserMegama, setnewUserMegama] = useState(null);
+  const [newLname, setnewLname] = useState(null);
+  const [newFname, setnewFname] = useState(null);
+
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newProfilePicture, setNewProfilePicture] = useState('');
@@ -131,18 +136,33 @@ const UserManagementComponent = () => {
 
   const handleAddUser = async () => {
     try {
-      const newUser = await userService.addUser({
-        userId: newUserId,
-        userName: newUsername,
-        passwordHash: newPasswordHash,
-        email: newEmail,
-        role: newRole,
-        profilePicture: newProfilePicture,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        phoneNumber: newPhoneNumber,
-        userDob: newUserDob
-      });
+      const formData = new FormData();
+      formData.append('Tz', newUserTz);
+      formData.append('UserName', newEmail);
+      formData.append('Fname', newFname);
+      formData.append('Lname', newLname);
+      formData.append('PasswordHash', newPasswordHash);
+      formData.append('Email', newEmail);
+      formData.append('Role', 'Student');
+      formData.append('UserDob', newUserDob);
+      formData.append('PhoneNumber', newPhoneNumber);
+      formData.append('Megama', newUserMegama);
+      formData.append('ProfilePicture', newProfilePicture);
+      // if (image) {
+      //   formData.append('ProfilePicture', image, image.name);
+      // }
+      const newUser = await userService.addUser(formData
+        // userId: newUserId,
+        // userName: newUsername,
+        // passwordHash: newPasswordHash,
+        // email: newEmail,
+        // role: newRole,
+        // profilePicture: newProfilePicture,
+        // createdAt: new Date(),
+        // updatedAt: new Date(),
+        // phoneNumber: newPhoneNumber,
+        // userDob: newUserDob
+      );
 
       setUsers([...users, newUser]);
       myDispatch(FillData(users));
@@ -332,92 +352,116 @@ const UserManagementComponent = () => {
       <Dialog open={isAddUserDialogOpen} onClose={() => setAddUserDialogOpen(false)}>
         <DialogTitle>הוסף משתמש</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            placeholder='הכנס תעודת זהות'
-            label="תעודת זהות"
-            type="text"
-            fullWidth
-            value={newUserId}
-            onChange={(e) => setnewUserId(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            margin="dense"
-            placeholder='הכנס שם משתמש'
-            label="שם משתמש"
-            type="text"
-            fullWidth
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            margin="dense"
-            placeholder='הכנס  כתובת מייל'
-            label="מייל"
-            type="email"
-            fullWidth
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            margin="dense"
-            placeholder='הכנס סיסמא'
-            label="סיסמא"
-            type={showPassword ? "text" : "password"}
-            fullWidth
-            value={newPasswordHash}
-            onChange={(e) => setNewPasswordHash(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handlePasswordVisibility}>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          <TextField
-            select
-            margin="dense"
-            placeholder='בחר תפקיד'
-            label="תפקיד"
-            fullWidth
-            value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Liberian">Liberian</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </TextField>
-          <TextField
-            margin="dense"
-            label="מספר טלפון"
-            placeholder="הכנס מספר טלפון "
-            type="text"
-            fullWidth
-            value={newPhoneNumber}
-            onChange={(e) => setnewPhoneNumber(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            margin="dense"
-            label="תאריך לידה"
-            type="date"
-            placeholder="הכנס תאריך לידה"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newUserDob}
-            onChange={(e) => setnewUserDob(e.target.value)}
-          />
+        <TextField
+          autoFocus
+          label="תעודת זהות"
+          placeholder='הכנס תעודת זהות'
+          fullWidth
+          margin="normal"
+          value={newUserTz}
+          onChange={(e) => setnewUserTz(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+        autoFocus
+          label="שם משתמש"
+          placeholder='הכנס  שם משתמש'
+          fullWidth
+          margin="normal"
+          value={newUsername}
+          onChange={(e) => setNewUsername(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+        autoFocus
+          label="שם פרטי"
+          placeholder='הכנס  שם פרטי'
+          fullWidth
+          margin="normal"
+          value={newFname}
+          onChange={(e) => setnewFname(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+
+        />
+        <TextField
+        autoFocus
+          label="שם משפחה"
+          placeholder='הכנס  שם משפחה'          
+          fullWidth
+          margin="normal"
+          value={newLname}
+          onChange={(e) => setnewLname(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+        autoFocus
+          label="סיסמה"
+          placeholder='הכנס סיסמא'          
+          type="password"
+          fullWidth
+          margin="normal"
+          value={newPasswordHash}
+          onChange={(e) => setNewPasswordHash(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handlePasswordVisibility}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+        />
+
+        <TextField
+        autoFocus
+          label="אימייל"
+          placeholder='הכנס מייל'
+          type="email"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+        autoFocus
+          label="תאריך לידה"
+          type="date"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={newUserDob}
+          onChange={(e) => setnewUserDob(e.target.value)}
+        />
+        <TextField
+        autoFocus
+          label="טלפון"
+          placeholder='הכנס טלפון'
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={newPhoneNumber}
+          onChange={(e) => setnewPhoneNumber(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          autoFocus
+          label="מגמה"
+          placeholder='הכנס מגמה'
+           variant="outlined"
+          fullWidth
+          margin="dense"
+          value={newUserMegama}
+          onChange={(e) => setnewUserMegama(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+        />
+        
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setAddUserDialogOpen(false)} color="primary">
