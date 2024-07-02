@@ -8,7 +8,7 @@ return(
   <BrowserRouter>
     <Routes>
         {/* <Route path="/" element={<PasswordRecovery />} /> */}
-        <Route path="/" element={<SecurityQuestions />} />
+        <Route path="/security-question" element={<SecurityQuestions />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/password-reset-success" element={<PasswordResetSuccess/>} />
       </Routes>
