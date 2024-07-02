@@ -7,6 +7,7 @@ export const InitialState={
     ]
 }
 export const userReducer=produce((state,action)=>{
+  debugger
     switch(action.type){
   case  'FILL_DATA':state.userList=action.payload
     break;
