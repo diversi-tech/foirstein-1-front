@@ -3,6 +3,7 @@ import {produce} from 'immer'
 export const InitialState={
     //רשימה שתמולא מהשרת
     userList:[
+<<<<<<< HEAD
       {
         "userId": "317807113",
         "username": "tzivi levi",
@@ -27,6 +28,9 @@ export const InitialState={
         "userDob": "2024-06-14T00:00:00",
         "phoneNumber": "0527578589"
       }
+=======
+     
+>>>>>>> 12779444188d850dab9ea140f2885c8fc073f2e9
     ]
 }
 export const userReducer=produce((state,action)=>{

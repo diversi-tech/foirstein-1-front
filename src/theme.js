@@ -1,8 +1,10 @@
-// theme.js
 import { createTheme } from '@mui/material/styles';
+import { heIL } from '@mui/material/locale';
 
 const theme = createTheme({
-  direction: 'rtl', // הוסף את השורה הזו לכיוון של עברית (ימין לשמאל)
+
+  direction: 'rtl',
+
   typography: {
     fontFamily: [
       'Roboto',
@@ -11,6 +13,8 @@ const theme = createTheme({
       'sans-serif',
     ].join(','),
     fontSize: 16,
+    // ...שאר ההגדרות
+
     h1: {
       fontSize: '2.5rem',
       fontWeight: 500,
@@ -77,6 +81,7 @@ const theme = createTheme({
       textTransform: 'none',
       fontWeight: 500,
     },
+
   },
   palette: {
     primary: {
@@ -115,6 +120,18 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
+          '& .MuiInputLabel-root': {
+            right: 0,
+            left: 'auto',
+            transformOrigin: 'top right',
+            textAlign: 'right',
+            width: 'auto',
+          },
+          '& .MuiOutlinedInput-root': {
+            '& input': {
+              textAlign: 'right',
+            },
+          },
         },
       },
     },
@@ -141,6 +158,6 @@ const theme = createTheme({
       },
     },
   },
-});
+}, heIL);
 
 export default theme;

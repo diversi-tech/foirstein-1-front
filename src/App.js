@@ -1,29 +1,39 @@
-// App.js
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
+import ReactDOM from 'react-dom';
 import theme from './theme'; // Path to your general design theme file
-import ForgotPassword from './components/forgotPassword';
-import AdminPanel from './components/changePermission';
 import { Provider } from 'react-redux';
-import UserManagementComponent from './components/adminEditing.jsx'
 import { store } from './redux/store.jsx';
 import { useState, useEffect } from 'react';
 import { RoutingAdmin } from './components/routingAdmin.jsx';
+import PasswordRouting from './components/resetPassword/passwordRouting.jsx'
+
+
+
 
 function App() {
   return (
-   <Provider store={store}>
+
+  <Provider store={store}>
     <ThemeProvider theme={theme}>
     <div className="App">
-<<<<<<< HEAD
       <RoutingAdmin />
-=======
->>>>>>> main
+      <PasswordRouting></PasswordRouting>
     </div>
   </ThemeProvider>
    </Provider>
   );
 }
+
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+
 export default App;
 
 

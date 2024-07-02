@@ -29,6 +29,32 @@ const userService = {
       throw error;
     }
   },
+  verifyIdNumber: async (idNumber) => {
+    debugger
+    try {
+      const response = await axios.get(`${API_URL}/verify-security-questions?idNumber=${idNumber}`);
+   
+      return response.data;
+    } catch (err) {
+      throw new Error('נכשל בהבאת הנתונים מהשרת.');
+    }
+  },
+
+  changePassword: async (idNumber, newPassword) => {
+    try {
+      const response = await axios.put(`${API_URL}/reset-password`, {
+          idNumber,
+          newPassword
+      }, {
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      return response.data;
+    } catch (err) {
+      throw new Error('שגיאה בהתחברות לשרת');
+    }
+  },
 
   addUser: async (user) => {
     try {
@@ -61,10 +87,19 @@ const userService = {
       console.error('Error updating user:', error);
       throw error;
     }
-  }
-};
-export const updateUserRole = (userId, newRole) => {
-    return await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
- };
+
+  },
+  updateUserRole: async (userId, newRole) => {
+    try {
+        const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
+        debugger
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        throw error;
+    }
+  },
+}
+
 
 export default userService;
