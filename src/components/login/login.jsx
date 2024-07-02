@@ -58,6 +58,7 @@ const Login = () => {
           label="סיסמה"
           type="password"
           variant="outlined"
+          placeholder='הכנס סיסמא'
           fullWidth
           margin="normal"
           value={password}
