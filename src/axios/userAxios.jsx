@@ -82,7 +82,7 @@ const userService = {
         debugger
       const response = await (`${API_URL}/updateUser`, updatedUser);
       return response.data;
-      alert(response.data.username)   
+     
     } catch (error) {
       console.error('Error updating user:', error);
       throw error;
