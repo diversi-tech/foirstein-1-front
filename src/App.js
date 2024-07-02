@@ -21,7 +21,6 @@ function App() {
     <div className="App">
         <RoutingAdmin />
       <PasswordRouting></PasswordRouting>  
-      // <TableToPDF />
       <RoutingAdmin />
       <LoginRouting></LoginRouting>
     </div>
