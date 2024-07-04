@@ -28,7 +28,6 @@ const UserManagementComponent = () => {
   const [newUserMegama, setnewUserMegama] = useState(null);
   const [newLname, setnewLname] = useState(null);
   const [newFname, setnewFname] = useState(null);
-
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newProfilePicture, setNewProfilePicture] = useState('');
@@ -151,18 +150,7 @@ const UserManagementComponent = () => {
       // if (image) {
       //   formData.append('ProfilePicture', image, image.name);
       // }
-      const newUser = await userService.addUser(formData
-        // userId: newUserId,
-        // userName: newUsername,
-        // passwordHash: newPasswordHash,
-        // email: newEmail,
-        // role: newRole,
-        // profilePicture: newProfilePicture,
-        // createdAt: new Date(),
-        // updatedAt: new Date(),
-        // phoneNumber: newPhoneNumber,
-        // userDob: newUserDob
-      );
+      const newUser = await userService.addUser(formData);
 
       setUsers([...users, newUser]);
       myDispatch(FillData(users));
