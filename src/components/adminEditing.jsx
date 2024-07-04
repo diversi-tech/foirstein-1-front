@@ -55,6 +55,7 @@ const UserManagementComponent = () => {
   const myDispatch = useDispatch();
 
   useEffect(() => {
+    debugger
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
