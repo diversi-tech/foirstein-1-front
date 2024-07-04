@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store.jsx';
 import { RoutingAdmin } from './components/routingAdmin.jsx';
 import PasswordRouting from './components/resetPassword/passwordRouting.jsx'
-import TableToPDF from './components/pdf.jsx';
 import LoginRouting from './components/login/loginRouting.jsx';
 
 
@@ -19,7 +18,6 @@ function App() {
   <Provider store={store}>
     <ThemeProvider theme={theme}>
     <div className="App">
-        <RoutingAdmin />
       <PasswordRouting></PasswordRouting>  
       <RoutingAdmin />
       <LoginRouting></LoginRouting>
