@@ -93,6 +93,15 @@
 //   );
 // };
 
+
+
+
+
+
+
+
+
+
 // export default ChangePermission;
 import React, { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
@@ -124,7 +133,7 @@ const ChangePermission = () => {
     debugger
     userService.updateUserRole(userId, newRole)
       .then(response => {
-        if (response.data.success) {
+        if (response.success) {
           debugger
           dispatch(FillData(users.map(user => user.userId === userId ? { ...user, role: newRole } : user)));
         } else {
