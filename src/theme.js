@@ -4,6 +4,7 @@ import { heIL } from '@mui/material/locale';
 const theme = createTheme({
 
   direction: 'rtl',
+  
 
   typography: {
     fontFamily: [
@@ -85,7 +86,8 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#0D1E46;',
+
+      main: '#0D1E46',
     },
     secondary: {
       main: '#B71C1C',

@@ -18,6 +18,7 @@ function App() {
   <Provider store={store}>
     <ThemeProvider theme={theme}>
     <div className="App">
+      <PasswordRouting></PasswordRouting>  
       <RoutingAdmin />
       <LoginRouting></LoginRouting>
     </div>

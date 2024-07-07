@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@material-ui/pickers": "^3.3.11",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/x-date-pickers": "^7.7.1",
@@ -12,6 +13,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "react": "^18.3.1",
     "react-datepicker": "^7.2.0",
     "react-dom": "^18.3.1",
@@ -19,6 +22,7 @@
     "react-router-dom": "^6.24.0",
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
+    "stylis": "^4.3.2",
     "stylis-plugin-rtl": "^2.1.1",
     "web-vitals": "^2.1.4"
   },
