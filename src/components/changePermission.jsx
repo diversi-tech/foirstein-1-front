@@ -27,12 +27,18 @@ const ChangePermission = () => {
     console.log('Changing role for user:', userId, 'to:', newRole); // Log role change
     userService.updateUserRole(userId, newRole)
       .then(response => {
+
+        if (response.success) {
+          debugger
+          dispatch(FillData(users.map(user => user.userId === userId ? { ...user, role: newRole } : user)));
+
         console.log('Role update response:', response); // Log update response
         if (response.succes) {
           const updatedUsers = users.map(user => 
             user.userId === userId ? { ...user, role: newRole } : user
           );
           dispatch(FillData(updatedUsers));
+
         } else {
           alert('Error updating role');
         }

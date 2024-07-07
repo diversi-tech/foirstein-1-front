@@ -32,6 +32,7 @@ const Login = () => {
       setError('שגיאת שרת, נסה שוב מאוחר יותר');
     }
   };
+  
 
   return (
     <ThemeProvider theme={theme}>
