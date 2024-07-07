@@ -27,7 +27,6 @@ const ChangePermission = () => {
     console.log('Changing role for user:', userId, 'to:', newRole); // Log role change
     userService.updateUserRole(userId, newRole)
       .then(response => {
-
         if (response.success) {
           debugger
           dispatch(FillData(users.map(user => user.userId === userId ? { ...user, role: newRole } : user)));
@@ -41,8 +40,8 @@ const ChangePermission = () => {
 
         } else {
           alert('Error updating role');
-        }
-      })
+        }}
+  })
       .catch((error) => {
         debugger;
         console.error('Error updating role:', error);
