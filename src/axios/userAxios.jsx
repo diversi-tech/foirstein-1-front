@@ -1,27 +1,11 @@
 import axios from 'axios';
 
-
-// // יצירת אינסטנס של axios עם הגדרות ברירת מחדל
-// const axiosInstance = axios.create({
-//   baseURL: 'http://localhost:5211/api', // URL בסיסי של ה-API
-//   headers: {
-//     'Content-Type': 'application/json'
-//   }
-// });
-
-// // פונקציה לקבלת כל המשתמשים
-// export const getAllUsers = () => {
-//   return axiosInstance.get('/Users/getAllUsers');
-// };
-
-// // פונקציה לעדכון הרשאת משתמש
-// 
-const API_URL = 'http://localhost:5211/api/Users'; // שים כאן את ה-URL שלך לקונטרולר
+// URL בסיסי של ה-API
+const API_URL = 'http://localhost:5211/api/Users';
 
 const userService = {
   getAllUsers: async () => {
     try {
-        debugger
       const response = await axios.get(`${API_URL}/getUsers`);
       return response.data;
     } catch (error) {
@@ -30,35 +14,30 @@ const userService = {
     }
   },
   verifyIdNumber: async (idNumber) => {
-    debugger
     try {
       const response = await axios.get(`${API_URL}/verify-security-questions?idNumber=${idNumber}`);
-   
       return response.data;
     } catch (err) {
       throw new Error('נכשל בהבאת הנתונים מהשרת.');
     }
   },
-
   changePassword: async (idNumber, newPassword) => {
     try {
       const response = await axios.put(`${API_URL}/reset-password`, {
-          idNumber,
-          newPassword
+        idNumber,
+        newPassword
       }, {
-          headers: {
-              'Content-Type': 'application/json',
-          },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
       return response.data;
     } catch (err) {
       throw new Error('שגיאה בהתחברות לשרת');
     }
   },
-
   addUser: async (user) => {
     try {
-      debugger
       const response = await axios.post(`${API_URL}/addUser`, user);
       return response.data;
     } catch (error) {
@@ -66,7 +45,6 @@ const userService = {
       throw error;
     }
   },
-
   deleteUser: async (userId) => {
     try {
       const response = await axios.delete(`${API_URL}/dellUser/${userId}`);
@@ -76,13 +54,10 @@ const userService = {
       throw error;
     }
   },
-
   updateUser: async (updatedUser) => {
     try {
-        debugger
-      const response = await (`${API_URL}/updateUser`, updatedUser);
+      const response = await axios.put(`${API_URL}/updateUser`, updatedUser);
       return response.data;
-     
     } catch (error) {
       console.error('Error updating user:', error);
       throw error;
@@ -90,15 +65,14 @@ const userService = {
   },
   updateUserRole: async (userId, newRole) => {
     try {
-        const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
-        debugger
-        return response.data;
+      const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
+      return response.data;
     } catch (error) {
-        console.error('Error updating user role:', error);
-        throw error;
+      console.error('Error updating user role:', error);
+      throw error;
     }
   },
-}
-
+};
 
 export default userService;
+

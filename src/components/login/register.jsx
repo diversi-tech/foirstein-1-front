@@ -20,6 +20,7 @@ const Register = () => {
   const handleRegister = async () => {
     setError('');
     try {
+      debugger
       const formData = new FormData();
       formData.append('Tz', idNumber);
       formData.append('UserName', username);

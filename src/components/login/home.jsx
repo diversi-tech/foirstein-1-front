@@ -9,6 +9,8 @@ const Home = () => {
         <Typography variant="h4">WELCOME</Typography>
       </Box>
     </Container>
+     
+
   );
 };
 

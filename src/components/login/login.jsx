@@ -45,7 +45,7 @@ const Login = () => {
         <Typography variant="h4" gutterBottom align="center">
           התחברות
         </Typography>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <TextField
           label="שם משתמש"
           variant="outlined"
