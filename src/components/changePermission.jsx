@@ -59,7 +59,7 @@ const ChangePermission = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <Typography variant="h1" align="center">ניהול משתמשים</Typography>
+        <Typography variant="h1" align="center">שינוי הרשאות</Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>

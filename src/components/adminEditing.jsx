@@ -216,6 +216,14 @@ const UserManagementComponent = () => {
   };
   const theme = createTheme({
     direction: 'rtl',
+    palette: {
+      primary: {
+        main: '#0D1E46',
+      },
+      secondary: {
+        main: '#B71C1C',
+      },
+    },
     // Palette:{  mode: outerTheme.palette.mode},
   });
 

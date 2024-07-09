@@ -62,7 +62,7 @@ const userService = {
     }
   },
 
-  updateUser: async (updatedUser) => {
+  updateUser: async (updatedUser,id) => {
     try {
       debugger
       const response = await axios.put(`${API_URL}/updateUser`, updatedUser);

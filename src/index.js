@@ -3,17 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import { store } from './redux/store'; // ודא שהנתיב נכון
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme'; // Path to your general design theme file
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <ThemeProvider theme={theme}>
         <App />
-      </ThemeProvider>
   </React.StrictMode>
 );
 

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField, Typography, Container, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import userService from '../../axios/userAxios';
-
-
+import NavBar from '../reports/minNav';
 const SecurityQuestions = () => {
     const [idNumber, setIdNumber] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
     const handleSubmit = async (e) => {
-        debugger
         e.preventDefault();
         if (!idNumber) {
             setError('.יש למלא את מספר תעודת הזהות');
@@ -19,7 +15,7 @@ const SecurityQuestions = () => {
         }
         try {
             const response = await userService.verifyIdNumber(idNumber);
-            if (response!="") {
+            if (response !== "") {
                 localStorage.setItem('idNumber', idNumber);
                 navigate('/reset-password');
             } else {
@@ -31,14 +27,15 @@ const SecurityQuestions = () => {
     };
 
     return (
+       
         <Container maxWidth="sm">
-            <Paper elevation={3} sx={{ p: 4, mt: 4, borderRadius: 2, textAlign: 'right', direction: 'ltr' }}>
+            <Paper elevation={3} sx={{ p: 4, mt: 4, borderRadius: 2, textAlign: 'right', direction: 'rtl', width: 'fit-content', maxWidth: '90vw', marginLeft: 'auto' }}>
                 <Typography variant="h4" gutterBottom align="right">
                     שאלת אבטחה
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <Typography variant="h6" gutterBottom textAlign="right">
-                        ?מהו מספר תעודת הזהות שלך
+                        מהו מספר תעודת הזהות שלך?
                     </Typography>
                     <TextField
                         variant="outlined"
@@ -51,7 +48,7 @@ const SecurityQuestions = () => {
                         value={idNumber}
                         onChange={(e) => setIdNumber(e.target.value)}
                         InputLabelProps={{
-                            style: { right: 'unset', left: 'auto', transformOrigin: 'top right', textAlign: 'right', paddingRight: '1270px' }, // הוספתי paddingRight להזזת התווית
+                            style: { right: 'unset', left: 'auto', transformOrigin: 'top right', textAlign: 'right', paddingRight: '40px' },
                             shrink: true,
                         }}
                         inputProps={{ style: { textAlign: 'left' } }}
@@ -82,5 +79,4 @@ const SecurityQuestions = () => {
         </Container>
     );
 };
-
 export default SecurityQuestions;

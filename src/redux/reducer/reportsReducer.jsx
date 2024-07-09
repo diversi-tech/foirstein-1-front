@@ -8,7 +8,7 @@ export const InitialState={
 }
 export const reportsReducer=produce((state,action)=>{
     switch(action.type){
-  case  'FILL_DATA':state.reportsList=action.payload
+  case  'FILL_DATA1':state.reportsList=action.payload
     break;
     }
    },InitialState)
