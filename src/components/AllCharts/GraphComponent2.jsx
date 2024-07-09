@@ -10,14 +10,14 @@ import { useDispatch, useSelector } from 'react-redux';
 const GraphComponent2 = () => {
   const [mydata, setmydata] = useState([]);
   const [loading, setLoading] = useState(true);  // Add loading state
-  const data1 = useSelector((state) => state.RatingNoteReducer.RatingNoteList);
+  const myList = useSelector((state) => state.RatingNoteReducer.RatingNoteList);
   const dispatch = useDispatch();
   const color = useSelector((state) => state.colorReducer.colors);
 
   useEffect(() => {
     const fetchgraph = async () => {
-      if (data1.length > 0) {
-        setmydata(data1);
+      if (myList.length > 0) {
+        setmydata(myList);
         setLoading(false);  // Set loading to false when data is available
       } else {
         try {
@@ -32,7 +32,7 @@ const GraphComponent2 = () => {
       }
     };
     fetchgraph();
-  }, [data1, dispatch]);
+  }, [myList, dispatch]);
 
   const formatData = () => {
     const grouped = mydata.reduce((acc, item) => {

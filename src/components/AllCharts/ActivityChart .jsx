@@ -87,9 +87,9 @@ import userService from '../../axios/userAxios';
 // import { FillData4 } from '../../redux/actions/userAction';
 const ActivityChart = () => {
   const dispatch = useDispatch();
-  const userList = useSelector((state) => state.userReducer.userList)  // הגדרת ברירת מחדל במקרה של undefined
+  const f = useSelector((state) => state.userReducer.userList)  // הגדרת ברירת מחדל במקרה של undefined
   useEffect(() => {
-    if (userList.length === 0) {
+    if (f.length === 0) {
       const fetchData = async () => {
         try {
           debugger
@@ -101,10 +101,10 @@ const ActivityChart = () => {
       };
       fetchData();
     }
-  }, [dispatch, userList]);
+  }, [dispatch, f]);
   const processData = () => {
     const months = {};
-    userList.forEach((user) => {
+    f.forEach((user) => {
       const createdAt = new Date(user.createdAt);
       const month = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}`;
       if (months[month]) {

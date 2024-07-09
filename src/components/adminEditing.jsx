@@ -224,7 +224,6 @@ const UserManagementComponent = () => {
         main: '#B71C1C',
       },
     },
-    // Palette:{  mode: outerTheme.palette.mode},
   });
 
   const cacheRtl = createCache({

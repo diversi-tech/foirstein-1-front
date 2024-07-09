@@ -88,13 +88,13 @@ export const Nav = () => {
   }, [location.pathname]);
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm('האם אתה בטוח שאתה רוצה להתנתק?');
-    if (confirmLogout) {
+    // const confirmLogout = window.confirm('האם אתה בטוח שאתה רוצה להתנתק?');
+    // if (confirmLogout) {
       sessionStorage.removeItem('jwt');
       setIsLoggedIn(false);
       navigate('/home');
       console.log('Logging out...');
-    }
+    // }
   };
 
   const handleMenuOpen = (event) => {

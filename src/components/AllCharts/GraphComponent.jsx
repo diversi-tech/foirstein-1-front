@@ -9,15 +9,15 @@ import { FillData7 } from '../../redux/actions/RatingNoteAction';
 
 const GraphComponent = () => {
   const [localData, setLocalData] = useState([]);
-  const data1 = useSelector((state) => state.RatingNoteReducer.RatingNoteList);
+  const myList = useSelector((state) => state.RatingNoteReducer.RatingNoteList);
   const colors = useSelector((state) => state.colorReducer.colors);
   const dispatch = useDispatch();
 
   useEffect(() => {
     
     const fetchgraph = async () => {
-      if (data1.length > 0) {
-        setLocalData(data1);
+      if (myList.length > 0) {
+        setLocalData(myList);
       }
        else {
         try {
@@ -33,7 +33,7 @@ const GraphComponent = () => {
     };
 
     fetchgraph();
-  }, [data1, dispatch]);
+  }, [myList, dispatch]);
 
   const formatData = () => {
     const grouped = {};
