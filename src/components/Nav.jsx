@@ -127,7 +127,7 @@ export const Nav = () => {
               variant="body1"
               style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'bold' }}
             >
-              אתר ספריה
+              מרחבית 
             </Typography>
           </RightSection>
           <StyledLink to="/" active={location.pathname === '/' || location.pathname === '/login/home' || location.pathname === '/home'}>
