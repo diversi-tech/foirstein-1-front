@@ -5,13 +5,18 @@ import theme from './theme'; // Path to your general design theme file
 import { Provider } from 'react-redux';
 import { store } from './redux/store.jsx';
 import { Routing } from './components/routing.jsx';
+import AccessibilityOptions from './components/Accessibility/AccessibilityOptions.jsx';
+
+
 
 function App() {
   return (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
     <div className="App">
+    <AccessibilityOptions></AccessibilityOptions>
       <Routing />
+     
           </div>
   </ThemeProvider>
    </Provider>

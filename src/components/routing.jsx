@@ -1,6 +1,6 @@
 import { BrowserRouter,Route,Routes } from "react-router-dom"
 import { Nav } from "./Nav"
-import {Home} from "./login/home"
+import Home from "./login/home"
 import  ChangePermission  from "./changePermission"
 // import { Charts } from "./Charts"
 import UserManagementComponent from "./adminEditing"
@@ -17,10 +17,17 @@ import ReportPage from "./reports/showReport1"
 import NavBar from "./reports/minNav"
 import Charts from "./AllCharts/charts"
 import ActivityChart from "./AllCharts/ActivityChart "
+import AccessibilityOptions from "./Accessibility/AccessibilityOptions"
+import { AccessibilityProvider } from "./Accessibility/AccessibilityContext"
 
 export const Routing=()=>{
+
     return <BrowserRouter>
+    <AccessibilityProvider>
+  
+    
       <Nav></Nav> 
+      <AccessibilityOptions />
     <Routes>
      <Route path='/' element={<Home></Home>}></Route>
      <Route path='/home' element={<Home></Home>}></Route>
@@ -45,5 +52,6 @@ export const Routing=()=>{
 
 
     </Routes>
+    </AccessibilityProvider>
      </BrowserRouter>
 } 

@@ -53,13 +53,13 @@ const Login = () => {
         window.location.reload();
 
       } else if (response.data.token === null) {
-        setError('סיסמה לא נכונה');
+        setError(' סיסמה לא נכונה');
       } else {
-        setError('שם משתמש לא קיים במערכת');
+        setError(' לא קיים במערכת');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError(' נסה שוב מאוחר יותר');
+      setError(' שגיעה נסה שוב מאוחר יותר');
     }
   };
   
@@ -90,7 +90,7 @@ const Login = () => {
               }}
             >
               <TextField
-                label="שם משתמש"
+                label="תעודת זהות*"
                 dir='rtl'
                 variant="outlined"
                 fullWidth
@@ -99,7 +99,7 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
-                label="סיסמה"
+                label="סיסמה*"
                 dir='rtl'
                 type={showPassword ? 'text' : 'password'}
                 variant="outlined"
