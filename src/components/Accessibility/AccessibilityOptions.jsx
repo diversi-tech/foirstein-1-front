@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
   button: {
     position: 'fixed',
-    bottom: 20,
+    bottom: -5,
     right: 20,
     zIndex: 1000,
     borderRadius: '50%',

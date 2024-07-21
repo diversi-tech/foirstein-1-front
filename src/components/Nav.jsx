@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { getRoleFromToken, getUserNameFromToken } from './decipheringToken';
-import AccessibilityOptions from './Accessibility/AccessibilityOptions';
 
 const Root = styled('div')(({ theme }) => ({
   flexGrow: 1,
@@ -123,7 +122,7 @@ export const Nav = () => {
       <NavBar position="fixed">
         <Toolbar>
           <RightSection>
-            <img src="/Bookshelf.png" alt="Bookshelf Icon" style={{ height: '24px', marginRight: 'auto' }} />
+            <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '24px', marginRight: 'auto' }} />
             <Typography
               variant="body1"
               style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'bold' }}
@@ -134,7 +133,6 @@ export const Nav = () => {
           <StyledLink to="/" active={location.pathname === '/' || location.pathname === '/login/home' || location.pathname === '/home'}>
             דף הבית
           </StyledLink>
-          {/* <AccessibilityOptions></AccessibilityOptions> */}
           {!isLoggedIn && (
             <StyledLink to="/login" active={location.pathname === '/login' || location.pathname === '/login/security-question/reset-password/password-reset-success/login'}>
               התחברות

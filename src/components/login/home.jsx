@@ -1,13 +1,26 @@
+// src/Home.js
+// import React from 'react';
+// import { Container, Typography, Box } from '@mui/material';
 
+// export const Home = () => {
+//   return (
+//     <Container maxWidth="xs">
+//       <Box sx={{ mt: 8 }}>
+//         <Typography variant="h4">WELCOME</Typography>
+//       </Box>
+//     </Container>
+//   );
+// };
+
+// export default Home;
 import React from 'react';
 import { Container, Typography, Box, Button } from '@mui/material';
-import { LibraryBooks, Info } from '@mui/icons-material'; 
+import { LibraryBooks, Info } from '@mui/icons-material';
 export const Home = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 8, textAlign: 'center' }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h2" gutterBottom>
-       
           ברוכים הבאים לספריה שלנו
         </Typography>
         <Typography variant="h6" color="textSecondary">
@@ -42,7 +55,7 @@ export const Home = () => {
         </Button>
       </Box>
       <Box
-        sx={{ 
+        sx={{
           backgroundColor: '#F5F5F5',
           padding: 4,
           borderRadius: 2,
