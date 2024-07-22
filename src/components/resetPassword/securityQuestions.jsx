@@ -16,7 +16,6 @@ const SecurityQuestions = () => {
         try {
             const response = await userService.verifyIdNumber(idNumber);
             if (response !== "") {
-                localStorage.setItem('idNumber', idNumber);
                 navigate('/reset-password');
             } else {
                 setError('מספר זהות לא קיים במערכת');
