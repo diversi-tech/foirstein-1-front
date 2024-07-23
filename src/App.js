@@ -9,7 +9,10 @@ import AccessibilityOptions from './components/Accessibility/AccessibilityOption
 import { AccessibilityProvider } from './components/Accessibility/AccessibilityContext.jsx';
 
 function App() {
- 
+  useEffect(() => {
+    // ניקוי ה-Local Storage בעת עליית האפליקציה
+    localStorage.clear();
+  }, []);
   return (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
