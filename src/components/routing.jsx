@@ -5,7 +5,7 @@ import UserManagementComponent from "./adminEditing";
 import ActivityLog from './ActivityLog';
 import Login from "./login/login";
 import PasswordResetSuccess from "./resetPassword/passwordResetSuccess";
-import ResetPassword from "./resetPassword/reserPassword";
+import ResetPassword from "./resetPassword/resetPassword";
 import SecurityQuestions from "./resetPassword/securityQuestions";
 import Register from "./login/register";
 import Profile from "./personalArea/profile";
