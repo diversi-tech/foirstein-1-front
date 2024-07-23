@@ -52,6 +52,7 @@ const Login = () => {
         try {
           const exists = await userService.verifyIdNumber(tz);
           setUserExists(exists);
+          setIsAdminOrLibrarian(exists.role === 'Admin' || exists.role === 'Librarian');
         } catch (err) {
           console.error('Error verifying ID number:', err);
         }
@@ -61,8 +62,6 @@ const Login = () => {
     };
     checkUserExists();
   }, [tz]);
-
-
 
   const handleLogin = async () => {
     setError('');
