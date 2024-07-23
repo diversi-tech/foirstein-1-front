@@ -65,6 +65,7 @@ const Login = () => {
       });
       if (response.data.token) {
         sessionStorage.setItem('jwt', response.data.token);
+        sendTokenToOtherProjects();
         dispatch(FillData(response.data));
         navigate('/search');
         window.location.reload();
@@ -78,6 +79,16 @@ const Login = () => {
       setError('שגיאה נסה שוב מאוחר יותר');
     }
   };
+
+  function sendTokenToOtherProjects() {
+    const token = sessionStorage.getItem('jwt');
+    const targetOrigins = [
+      'https://diversi-tech.github.io/foirstein-3-front/#/',
+      'https://foirstein-2-front-1.onrender.com/'
+    ];    // שולח את ההודעה עם התוקן
+    targetOrigins.forEach(origin => {
+      window.postMessage({ token: token }, origin);
+    });  }
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import ReactDOM from 'react-dom';
 import theme from './theme'; // Path to your general design theme file
@@ -9,6 +9,10 @@ import AccessibilityOptions from './components/Accessibility/AccessibilityOption
 import { AccessibilityProvider } from './components/Accessibility/AccessibilityContext.jsx';
 
 function App() {
+  useEffect(() => {
+    // ניקוי ה-Local Storage בעת עליית האפליקציה
+    localStorage.clear();
+  }, []);
   return (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
