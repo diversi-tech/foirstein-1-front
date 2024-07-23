@@ -1,13 +1,16 @@
+
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { Person as PersonIcon } from '@mui/icons-material';
+import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment } from '@mui/material';
+import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import theme from '../theme';
 import { FillData } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
+import ActivityLogService from '../axios/ActivityLogAxios';
+import { getUserIdFromTokenid } from './decipheringToken';
 
 const ChangePermission = () => {
   const dispatch = useDispatch();
@@ -15,6 +18,7 @@ const ChangePermission = () => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     userService.getAllUsers()
@@ -40,6 +44,25 @@ const ChangePermission = () => {
             user.userId === selectedUser.userId ? { ...user, role: newRole } : user
           );
           dispatch(FillData(updatedUsers));
+
+          const currentUserId = getUserIdFromTokenid();
+          const activityLog = {
+            LogId: 0, 
+            UserId: selectedUser.tz,
+            Activity: 'שינוי הרשאה',
+            Timestamp: new Date(),
+            UserId1: currentUserId,
+            UserId1NavigationUserId: currentUserId
+          };
+
+          ActivityLogService.addActivityLog(activityLog)
+            .then(activityResponse => {
+              console.log('Activity log added successfully:', activityResponse);
+            })
+            .catch(activityError => {
+              console.error('Error adding activity log:', activityError);
+            });
+
         } else {
           alert('Error updating role');
         }
@@ -76,21 +99,45 @@ const ChangePermission = () => {
     }
   };
 
+  // Filter users based on search query
+  const filteredUsers = users.filter(user => 
+    user.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.passwordHash.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.tz.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Typography variant="h1" align="center">שינוי הרשאות</Typography>
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            fullWidth
+            placeholder="חפש לפי שם משתמש, סיסמה, תעודת זהות או הרשאה"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell align="right">הרשאה</TableCell>
                 <TableCell align="right">סיסמה</TableCell>
-                <TableCell align="right">שם משתמש</TableCell>
+                <TableCell align="right">שם פרטי</TableCell>
+                <TableCell align="right">תעודת זהות</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map(user => (
+              {filteredUsers.map(user => (
                 <TableRow key={user.userId}>
                   <TableCell align="right" style={{ width: '200px' }}>
                     <Box display="flex" alignItems="center" justifyContent="flex-start">
@@ -108,6 +155,7 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">{user.passwordHash}</TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
+                  <TableCell align="right">{user.tz}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

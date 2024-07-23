@@ -24,6 +24,7 @@ export const getRoleFromToken = () => {
     }
   };
   export const getUserIdFromToken = () => {
+    debugger
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
@@ -34,6 +35,20 @@ export const getRoleFromToken = () => {
       return null;
     }
   };
+
+  export const getUserIdFromTokenid = () => {
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode(token);
+      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
+      return parseInt(decoded['userId'], 10); // Convert userId to integer
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  };
+
+
   export const validateToken = async () => {
     const token = sessionStorage.getItem('jwt');
     if (!token) return false;
