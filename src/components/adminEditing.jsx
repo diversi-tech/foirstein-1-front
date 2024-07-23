@@ -16,6 +16,8 @@ import {
 import { Delete, Edit, ExpandMore, ExpandLess, Visibility, VisibilityOff, Bolt } from '@mui/icons-material';
 import userService from '../axios/userAxios';
 import { FillData } from '../redux/actions/userAction';
+import { getUserIdFromTokenid } from './decipheringToken';
+import ActivityLogService from '../axios/ActivityLogAxios';
 
 const UserManagementComponent = () => {
   const [users, setUsers] = useState([]);
@@ -53,7 +55,7 @@ const UserManagementComponent = () => {
   const myDispatch = useDispatch();
 
   useEffect(() => {
-    debugger
+    
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
@@ -147,13 +149,14 @@ const UserManagementComponent = () => {
       setUsers(updatedUsers);
       myDispatch(FillData(users));
       setDeleteDialogOpen(false);
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error deleting user:', error);
     }
   };
 
   const handleAddUser = async () => {
-    debugger
+    
     try {
       const formData = new FormData();
       formData.append('Tz', newUserTz);
