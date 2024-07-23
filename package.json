@@ -1,5 +1,4 @@
 {
-  "homepage": "https://diversi-tech.github.io/foirstein-1-front0/",
   "name": "userloginfronted",
   "version": "0.1.0",
   "private": true,
@@ -21,6 +20,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "jwt-decode": "^4.0.0",
+    "nodemailer": "^6.9.14",
     "react": "^18.3.1",
     "react-datepicker": "^7.2.0",
     "react-dom": "^18.3.1",

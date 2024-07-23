@@ -34,9 +34,15 @@ const cacheRtl = createCache({
 const Login = () => {
   const [tz, setTz] = useState('');
   const [password, setPassword] = useState('');
+  const [secondaryPassword, setSecondaryPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showSecondaryPassword, setShowSecondaryPassword] = useState(false);
   const [error, setError] = useState('');
   const [userExists, setUserExists] = useState(false);
+  const [isAdminOrLibrarian, setIsAdminOrLibrarian] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [secondaryPasswordFromEmail, setSecondaryPasswordFromEmail] = useState(''); // לשמור את הסיסמה השנייה
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -44,8 +50,9 @@ const Login = () => {
     const checkUserExists = async () => {
       if (tz.length === 9) {
         try {
-          const exists = await userService.verifyIdNumber(tz);
-          setUserExists(exists);
+          const user = await userService.verifyIdNumber(tz);
+          setUserExists(user.exists);
+          setIsAdminOrLibrarian(user.role === 'Admin' || user.role === 'Librarian');
         } catch (err) {
           console.error('Error verifying ID number:', err);
         }
@@ -63,11 +70,28 @@ const Login = () => {
         tz: tz,
         pass: password
       });
+
       if (response.data.token) {
-        sessionStorage.setItem('jwt', response.data.token);
-        dispatch(FillData(response.data));
-        navigate('/search');
-        window.location.reload();
+        if (isAdminOrLibrarian) {
+          try {
+            const response1 = await userService.getAllUsers();
+            const email1 = response1.find(user => user.tz === response.data.user.tz).email;
+            const result = await axios.get(`https://foirstein-1-back.onrender.com/api/Users/password2/${email1}`);
+            setSecondaryPasswordFromEmail(result.data); // הנחת את הסיסמה השנייה
+            debugger
+            setModalMessage("נשלחה אליך סיסמה שנייה למייל לצרכי אבטחה");
+            setShowSuccessMessage(true);
+            setShowSecondaryPassword(true);
+          } catch (error) {
+            console.error('Error sending secondary password to user:', error);
+            setError('נכשל בהבאת נתונים מהשרת');
+          }
+        } else {
+          sessionStorage.setItem('jwt', response.data.token);
+          dispatch(FillData(response.data));
+          navigate('/search');
+          window.location.reload();
+        }
       } else if (response.data.token === null) {
         setError('סיסמה לא נכונה');
       } else {
@@ -79,12 +103,36 @@ const Login = () => {
     }
   };
 
+  const handleSecondaryLogin = async () => {
+    debugger
+    
+      if (secondaryPassword == secondaryPasswordFromEmail) {
+        const response = await axios.post("https://foirstein-1-back.onrender.com/api/Users/login", {
+          tz: tz,
+          pass: password
+        });
+        sessionStorage.setItem('jwt', response.data.token);
+          dispatch(FillData(response.data));
+          navigate('/search');
+          window.location.reload();
+          navigate('/search');
+        } else {
+          setError('הסיסמה השנייה אינה נכונה');
+        }
+      } 
+
+
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleClickShowSecondaryPassword = () => {
+    setShowSecondaryPassword(!showSecondaryPassword);
   };
 
   const handlePasswordReset = async () => {
@@ -109,6 +157,7 @@ const Login = () => {
           <Paper elevation={3} sx={{ padding: 4, mt: 8 }}>
             <Typography variant="h4" gutterBottom align="center">התחברות</Typography>
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            {showSuccessMessage && <Alert severity="success" sx={{ mb: 2 }}>{modalMessage}</Alert>}
             <Box
               component="form"
               sx={{
@@ -150,6 +199,31 @@ const Login = () => {
                   ),
                 }}
               />
+              {isAdminOrLibrarian && showSecondaryPassword && (
+                <TextField
+                  label="סיסמה שנייה*"
+                  dir='rtl'
+                  type={showSecondaryPassword ? 'text' : 'password'}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={secondaryPassword}
+                  onChange={(e) => setSecondaryPassword(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowSecondaryPassword}
+                          onMouseDown={(event) => event.preventDefault()}
+                          edge="end"
+                        >
+                          {showSecondaryPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
               {userExists && (
                 <Button
                   variant="text"
@@ -164,7 +238,7 @@ const Login = () => {
                 color="primary"
                 fullWidth
                 sx={{ mt: 2 }}
-                onClick={handleLogin}
+                onClick={showSecondaryPassword ? handleSecondaryLogin : handleLogin}
               >
                 התחברות
               </Button>
