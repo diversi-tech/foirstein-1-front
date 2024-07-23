@@ -61,14 +61,14 @@ const AccessibilityOptions = () => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState({
-    useScreenReader: JSON.parse(localStorage.getItem('useScreenReader')) || false,
-    keyboardNavigation: JSON.parse(localStorage.getItem('keyboardNavigation')) || false,
-    changeColors: JSON.parse(localStorage.getItem('changeColors')) || false,
-    highContrast: JSON.parse(localStorage.getItem('highContrast')) || false,
-    stopAnimations: JSON.parse(localStorage.getItem('stopAnimations')) || false,
-    increaseTextSize: JSON.parse(localStorage.getItem('increaseTextSize')) || false,
-    addUnderlines: JSON.parse(localStorage.getItem('addUnderlines')) || false,
-    grayscale: JSON.parse(localStorage.getItem('grayscale')) || false,
+    useScreenReader: JSON.parse(sessionStorage.getItem('useScreenReader')) || false,
+    keyboardNavigation: JSON.parse(sessionStorage.getItem('keyboardNavigation')) || false,
+    changeColors: JSON.parse(sessionStorage.getItem('changeColors')) || false,
+    highContrast: JSON.parse(sessionStorage.getItem('highContrast')) || false,
+    stopAnimations: JSON.parse(sessionStorage.getItem('stopAnimations')) || false,
+    increaseTextSize: JSON.parse(sessionStorage.getItem('increaseTextSize')) || false,
+    addUnderlines: JSON.parse(sessionStorage.getItem('addUnderlines')) || false,
+    grayscale: JSON.parse(sessionStorage.getItem('grayscale')) || false,
   });
 
   useEffect(() => {
@@ -171,7 +171,7 @@ const AccessibilityOptions = () => {
     styleSheet.innerText = css;
     document.head.appendChild(styleSheet);
 
-    // Apply settings from localStorage on component mount
+    // Apply settings from sessionStorage on component mount
     Object.keys(settings).forEach((option) => {
       if (settings[option]) {
         handleToggle(option, true);
@@ -193,7 +193,7 @@ const AccessibilityOptions = () => {
   const handleToggle = (option, initialLoad = false) => {
     const newSettings = { ...settings, [option]: initialLoad ? settings[option] : !settings[option] };
     setSettings(newSettings);
-    localStorage.setItem(option, JSON.stringify(newSettings[option]));
+    sessionStorage.setItem(option, JSON.stringify(newSettings[option]));
 
     if (option === 'highContrast') {
       document.body.classList.toggle('high-contrast', newSettings.highContrast);

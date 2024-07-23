@@ -22,7 +22,7 @@ const Footer = () => {
           <Grid container spacing={4}>
             <Grid item xs={12} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="../../../assets/pic/logo.jpg" alt="Logo" style={{ maxWidth: '100%', maxHeight: '80px' }} />
+                <img src="../../../assets/pic/logo.png" alt="Logo" style={{ maxWidth: '100%', maxHeight: '80px' }} />
               </Box>
             </Grid>
             <Grid item xs={12} md={3}>
