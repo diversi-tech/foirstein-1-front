@@ -17,9 +17,9 @@ import { prefixer } from 'stylis';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { createTheme } from '@mui/material/styles';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
-const ResetPassword = ({ encryptionKey }) => {
+const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -59,7 +59,6 @@ const ResetPassword = ({ encryptionKey }) => {
     }
   }, [location.search]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -71,11 +70,10 @@ const ResetPassword = ({ encryptionKey }) => {
       return;
     }
     try {
-      debugger
       await axios.put("https://foirstein-1-back.onrender.com/api/Users/reset-password", {
         userId,
         newPassword,
-    });
+      });
       navigate("/password-reset-success");
     } catch (err) {
       setMessage("שגיאה באיפוס הסיסמא");
@@ -120,6 +118,7 @@ const ResetPassword = ({ encryptionKey }) => {
                 name="newPassword"
                 label="סיסמה חדשה"
                 id="newPassword"
+                type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -141,6 +140,7 @@ const ResetPassword = ({ encryptionKey }) => {
                 name="confirmPassword"
                 label="אימות סיסמה"
                 id="confirmPassword"
+                type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
