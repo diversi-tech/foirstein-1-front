@@ -140,6 +140,26 @@ const Login = () => {
       setError('שגיאה בודקת את התפקיד, נסה שוב מאוחר יותר');
     }
   };
+  const handleSecondaryLogin = async () => {
+    debugger 
+    if (secondaryPassword == secondaryPasswordFromEmail) {
+        const response = await axios.post("https://foirstein-1-back.onrender.com/api/Users/login", {
+          tz: tz,
+          pass: password
+        });
+        if (response.data.token) {
+          sessionStorage.setItem('jwt', response.data.token);
+          dispatch(FillData(response.data));
+          navigate('/search');
+          window.location.reload();
+        } else {
+          setError('הסיסמה השנייה אינה נכונה');
+        }
+    } else {
+      setError('הסיסמה השנייה אינה נכונה');
+    }
+  };
+
 
   return (
     <CacheProvider value={cacheRtl}>
