@@ -132,6 +132,7 @@ const Login = () => {
       if (user.role === 'Student') {
         setError('בשביל לאפס סיסמא נא לגשת לספרנית');
       } else {
+        sessionStorage.setItem('userEmail', user.email);
         navigate('/passwordRecovery');
       }
     } catch (err) {
