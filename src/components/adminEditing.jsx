@@ -56,6 +56,7 @@ const UserManagementComponent = () => {
 
   useEffect(() => {
     
+  
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
@@ -93,8 +94,27 @@ const UserManagementComponent = () => {
   };
 
   const handleSaveEditUser = async () => {
-    debugger
+    
     try {
+      const currentUserId = getUserIdFromTokenid();
+      
+      const activityLog = {
+        
+        LogId: 0, 
+        UserId: editUserTz,
+        Activity: 'עריכת פרטים ע"י מנהל',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
       const updatedUser = await userService.updateUser({
         userId: editUserId,
         tz:editUserTz,
@@ -144,6 +164,26 @@ const UserManagementComponent = () => {
 
   const handleDeleteUser = async () => {
     try {
+      
+      const currentUserId = getUserIdFromTokenid();
+      debugger
+      const activityLog = {
+        LogId: 0, 
+        UserId: null,
+        Activity:' '+ users.find(user => user.userId === userIdToDelete).fname+'נמחק מהמערכת',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
+      debugger
       await userService.deleteUser(userIdToDelete);
       const updatedUsers = users.filter((user) => user.userId !== userIdToDelete);
       setUsers(updatedUsers);
@@ -186,6 +226,26 @@ const UserManagementComponent = () => {
       setnewPhoneNumber('');
       setnewUserDob('');
       setAddUserDialogOpen(false);
+
+      const currentUserId = getUserIdFromTokenid();
+      
+      const activityLog = {
+        
+        LogId: 0, 
+        UserId: newUser.tz,
+        Activity: 'נוסף למערכת',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
     } catch (error) {
       console.error('Error adding user:', error);
     }
