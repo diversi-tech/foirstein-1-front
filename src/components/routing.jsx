@@ -42,8 +42,8 @@ export const Routing=()=>{
       
      <Route path='/' element={<Home></Home>}></Route>
      <Route path='/home' element={<Home></Home>}></Route>
-     <Route path='/search' element={<iframe src="https://foirstein-2-front-1.onrender.com" title="ProjectB" width="100%" height="600px" />}></Route>
-     <Route path='/Librarian' element={<iframe src="https://diversi-tech.github.io/foirstein-3-front" title="ProjectC" width="100%" height="600px" />}></Route>
+     <Route path='/search' element={<iframe src="https://foirstein-2-front-1.onrender.com/" title="ProjectB" width="100%" height="600px" />}></Route>
+     <Route path='/Librarian' element={<iframe src="https://diversi-tech.github.io/foirstein-3-front/#/" title="ProjectC" width="100%" height="600px" />}></Route>
      <Route path='/Charts' element={<Charts></Charts>}></Route>
      <Route path='login/home' element={<Home></Home>}></Route>
      <Route path='/ActivityLog' element={<ActivityLog></ActivityLog>}></Route>
