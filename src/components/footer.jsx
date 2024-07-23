@@ -1,8 +1,14 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link } from '@mui/material';
+import { Box, Container, Grid, Typography, Link, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/system';
 import theme from '../theme';
 import { Link as RouterLink } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import LoginIcon from '@mui/icons-material/Login';
+import SearchIcon from '@mui/icons-material/Search';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import FaxIcon from '@mui/icons-material/Print';
 
 const Footer = () => {
   return (
@@ -21,57 +27,93 @@ const Footer = () => {
         <Container maxWidth="lg">
           <Grid container spacing={4}>
             <Grid item xs={12} md={3}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="../../../assets/pic/logo.jpg" alt="Logo" style={{ maxWidth: '100%', maxHeight: '80px' }} />
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src="../../../assets/pic/logo.png"
+                  alt="Logo"
+                  style={{ maxWidth: '100%', maxHeight: '80px' }}
+                />
               </Box>
             </Grid>
             <Grid item xs={12} md={3}>
               <Typography variant="h6" gutterBottom>
-                כתובתנו
+                סמינר הליכות בית יעקב
               </Typography>
               <Typography variant="body1">
-                סמטת ויצ"ו 4 בית שמש
+                רח' נתיבות המשפט 111
                 <br />
-                מען למכתבים
-                <br />
-                ת.ד. 88 בית שמש 9910002
+                מודיעין עילית
               </Typography>
             </Grid>
             <Grid item xs={12} md={3}>
               <Typography variant="h6" gutterBottom>
-                הספריה העירונית בית שמש
+                מרחבית - מרחב התוכן של בית יעקב
               </Typography>
               <Typography variant="body1">
-                sifriyab.s1@gmail.com
+                <IconButton color="inherit">
+                  <EmailIcon />
+                </IconButton>
+                cc@hby.org.il
                 <br />
-                טלפון: 02-9912385
+                <IconButton color="inherit">
+                  <PhoneIcon />
+                </IconButton>
+                טלפון: 08-9147130
                 <br />
-                פקס: 02-9991715
+                <IconButton color="inherit">
+                  <FaxIcon />
+                </IconButton>
+                פקס: 08-9147103
               </Typography>
             </Grid>
             <Grid item xs={12} md={3}>
               <Typography variant="h6" gutterBottom>
                 קישורים מהירים
               </Typography>
-              <Link component={RouterLink} to="/" color="inherit" underline="none" sx={{ display: 'block', marginBottom: theme.spacing(1) }}>
+              <Link
+                component={RouterLink}
+                to="/"
+                color="inherit"
+                underline="none"
+                sx={{ display: 'block', marginBottom: theme.spacing(1), display: 'flex', alignItems: 'center' }}
+              >
+                <HomeIcon sx={{ marginRight: theme.spacing(1) }} />
                 דף הבית
               </Link>
-              <Link component={RouterLink} to="/login" color="inherit" underline="none" sx={{ display: 'block', marginBottom: theme.spacing(1) }}>
+              <Link
+                component={RouterLink}
+                to="/login"
+                color="inherit"
+                underline="none"
+                sx={{ display: 'block', marginBottom: theme.spacing(1), display: 'flex', alignItems: 'center' }}
+              >
+                <LoginIcon sx={{ marginRight: theme.spacing(1) }} />
                 התחברות
               </Link>
-              <Link component={RouterLink} to="/ActivityLog" color="inherit" underline="none" sx={{ display: 'block', marginBottom: theme.spacing(1) }}>
-                יומן פעילות
+              <Link
+                component={RouterLink}
+                to="/search"
+                color="inherit"
+                underline="none"
+                sx={{ display: 'block', marginBottom: theme.spacing(1), display: 'flex', alignItems: 'center' }}
+              >
+                <SearchIcon sx={{ marginRight: theme.spacing(1) }} />
+                חיפוש
               </Link>
             </Grid>
-            {/* כיתוב מרחבית מרחב התוכן של בית יעקב */}
             <Grid item xs={12}>
-              <Typography variant="body2" align="center" fontSize={18} style={{ color: '#FFD700' }}>
+              <Typography variant="body2" align="center" fontSize={18} sx={{ color: '#FFD700' }}>
                 מרחבית - מרחב התוכן של בית יעקב
               </Typography>
             </Grid>
           </Grid>
         </Container>
- 
       </Box>
     </ThemeProvider>
   );

@@ -16,6 +16,8 @@ import {
 import { Delete, Edit, ExpandMore, ExpandLess, Visibility, VisibilityOff, Bolt } from '@mui/icons-material';
 import userService from '../axios/userAxios';
 import { FillData } from '../redux/actions/userAction';
+import { getUserIdFromTokenid } from './decipheringToken';
+import ActivityLogService from '../axios/ActivityLogAxios';
 
 const UserManagementComponent = () => {
   const [users, setUsers] = useState([]);
@@ -53,7 +55,8 @@ const UserManagementComponent = () => {
   const myDispatch = useDispatch();
 
   useEffect(() => {
-    debugger
+    
+  
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
@@ -91,8 +94,27 @@ const UserManagementComponent = () => {
   };
 
   const handleSaveEditUser = async () => {
-    debugger
+    
     try {
+      const currentUserId = getUserIdFromTokenid();
+      
+      const activityLog = {
+        
+        LogId: 0, 
+        UserId: editUserTz,
+        Activity: 'עריכת פרטים ע"י מנהל',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
       const updatedUser = await userService.updateUser({
         userId: editUserId,
         tz:editUserTz,
@@ -142,18 +164,39 @@ const UserManagementComponent = () => {
 
   const handleDeleteUser = async () => {
     try {
+      
+      const currentUserId = getUserIdFromTokenid();
+      debugger
+      const activityLog = {
+        LogId: 0, 
+        UserId: null,
+        Activity:' '+ users.find(user => user.userId === userIdToDelete).fname+'נמחק מהמערכת',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
+      debugger
       await userService.deleteUser(userIdToDelete);
       const updatedUsers = users.filter((user) => user.userId !== userIdToDelete);
       setUsers(updatedUsers);
       myDispatch(FillData(users));
       setDeleteDialogOpen(false);
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error deleting user:', error);
     }
   };
 
   const handleAddUser = async () => {
-    debugger
+    
     try {
       const formData = new FormData();
       formData.append('Tz', newUserTz);
@@ -183,6 +226,26 @@ const UserManagementComponent = () => {
       setnewPhoneNumber('');
       setnewUserDob('');
       setAddUserDialogOpen(false);
+
+      const currentUserId = getUserIdFromTokenid();
+      
+      const activityLog = {
+        
+        LogId: 0, 
+        UserId: newUser.tz,
+        Activity: 'נוסף למערכת',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        });
     } catch (error) {
       console.error('Error adding user:', error);
     }

@@ -14,5 +14,18 @@ const ActivityLogService = {
             console.log(error);
             throw  error;
         }
-}};
+},
+addActivityLog: async (activityLog) => {
+    try {
+        debugger
+        const response = await axios.post(`${userUrl}/addActivity`, activityLog);
+        return response.data;
+    }
+    catch (error) {
+        debugger
+        console.log(error);
+        throw error;
+    }
+}
+};
 export default ActivityLogService;

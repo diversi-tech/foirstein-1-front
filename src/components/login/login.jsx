@@ -87,10 +87,11 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-          sessionStorage.setItem('jwt', response.data.token);
-          dispatch(FillData(response.data));
-          navigate('/search');
-          window.location.reload();
+        sessionStorage.setItem('jwt', response.data.token);
+        sendTokenToOtherProjects();
+        dispatch(FillData(response.data));
+        navigate('/search');
+        window.location.reload();
         }
       } else if (response.data.token === null) {
         setError('סיסמה לא נכונה');
@@ -103,25 +104,15 @@ const Login = () => {
     }
   };
 
-  const handleSecondaryLogin = async () => {
-    debugger
-    
-      if (secondaryPassword == secondaryPasswordFromEmail) {
-        const response = await axios.post("https://foirstein-1-back.onrender.com/api/Users/login", {
-          tz: tz,
-          pass: password
-        });
-        sessionStorage.setItem('jwt', response.data.token);
-          dispatch(FillData(response.data));
-          navigate('/search');
-          window.location.reload();
-          navigate('/search');
-        } else {
-          setError('הסיסמה השנייה אינה נכונה');
-        }
-      } 
-
-
+  function sendTokenToOtherProjects() {
+    const token = sessionStorage.getItem('jwt');
+    const targetOrigins = [
+      'https://diversi-tech.github.io/foirstein-3-front/#/',
+      'https://foirstein-2-front-1.onrender.com/'
+    ];    // שולח את ההודעה עם התוקן
+    targetOrigins.forEach(origin => {
+      window.postMessage({ token: token }, origin);
+    });  }
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
