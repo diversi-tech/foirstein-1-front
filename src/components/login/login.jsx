@@ -10,6 +10,9 @@ import { useDispatch } from 'react-redux';
 import { FillData } from '../../redux/actions/userAction';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import userService from '../../axios/userAxios';
+import Swal from 'sweetalert2'
+
+
 
 const theme = createTheme({
   direction: 'rtl',
@@ -30,6 +33,25 @@ const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [rtlPlugin],
 });
+
+function alertLogin(){
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  Toast.fire({
+    icon: "success",
+    title: "Signed in successfully"
+  });
+  }
+
 
 const Login = () => {
   const [tz, setTz] = useState('');
@@ -88,7 +110,6 @@ const Login = () => {
           }
         } else {
         sessionStorage.setItem('jwt', response.data.token);
-        sendTokenToOtherProjects();
         dispatch(FillData(response.data));
         navigate('/search');
         window.location.reload();
@@ -148,6 +169,8 @@ const Login = () => {
           pass: password
         });
         if (response.data.token) {
+          alertLogin();
+          sendTokenToOtherProjects(); 
           sessionStorage.setItem('jwt', response.data.token);
           dispatch(FillData(response.data));
           navigate('/search');
