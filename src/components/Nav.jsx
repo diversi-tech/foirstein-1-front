@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList } from '@mui/material';
 import { styled } from '@mui/system';
-import { getRoleFromToken, getUserNameFromToken } from './decipheringToken';
+import { getRoleFromToken, getUserNameFromToken, getCookie } from './decipheringToken';
 
 const Root = styled('div')(({ theme }) => ({
   flexGrow: 1,
@@ -77,12 +76,13 @@ const getGreetingMessage = () => {
 export const Nav = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem('jwt'));
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [adminAnchorEl, setAdminAnchorEl] = useState(null);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const greetingMessage = getGreetingMessage();
   const role = isLoggedIn ? getRoleFromToken() : null;
+
   const userName = isLoggedIn ? getUserNameFromToken() : null;
 
   useEffect(() => {

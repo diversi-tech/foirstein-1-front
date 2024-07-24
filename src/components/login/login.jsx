@@ -54,7 +54,6 @@ function alertLogin(){
   });
   }
 
-
 const Login = () => {
   const [tz, setTz] = useState('');
   const [password, setPassword] = useState('');
@@ -69,6 +68,7 @@ const Login = () => {
   const [secondaryPasswordFromEmail, setSecondaryPasswordFromEmail] = useState(''); // לשמור את הסיסמה השנייה
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const checkUserExists = async () => {
@@ -195,9 +195,7 @@ const Login = () => {
           alertLogin();
           sendTokenToOtherProjects(); 
           const token = response.data.token;
-          // הגדרת ה-cookie עם ה-token
           document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
-          document.cookie = "jwt=response.data.token; path=/; domain=.foirstein.diversitech.co.il; Secure";
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
