@@ -273,7 +273,7 @@ const Login = () => {
                 color="primary"
                 fullWidth
                 sx={{ mt: 2 }}
-                onClick={showSecondaryPassword ? handleSecondaryLogin : handleLogin}
+                onClick={showSecondaryPassword ? handleSecondaryLogi : handleLogin}
               >
                 התחברות
               </Button>
