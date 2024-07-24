@@ -44,7 +44,7 @@ export const Routing = () => {
             <Route path='/' element={<Home />} />
             <Route path='/home' element={<Home />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il" />} />
-            <Route path='/Librarian' element={<ExternalRedirect url="https://login.foirstein.diversitech.co.il" />} />
+            <Route path='/Librarian' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il" />} />
             <Route path='/Charts' element={<Charts />} />
             <Route path='login/home' element={<Home />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
