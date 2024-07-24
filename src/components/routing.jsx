@@ -43,8 +43,8 @@ export const Routing = () => {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/home' element={<Home />} />
-            <Route path='/search' element={<iframe src="https://foirstein-2-front-1.onrender.com/" title="ProjectB" width="100%" height="600px" />} />
-            <Route path='/Librarian' element={<ExternalRedirect url="https://diversi-tech.github.io/foirstein-3-front/#/" />} />
+            <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il" />} />
+            <Route path='/Librarian' element={<ExternalRedirect url="https://login.foirstein.diversitech.co.il" />} />
             <Route path='/Charts' element={<Charts />} />
             <Route path='login/home' element={<Home />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
