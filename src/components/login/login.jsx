@@ -11,6 +11,8 @@ import { FillData } from '../../redux/actions/userAction';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import userService from '../../axios/userAxios';
 import Swal from 'sweetalert2'
+import ActivityLogService from '../../axios/ActivityLogAxios';
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -111,6 +113,24 @@ const Login = () => {
         } else {
         sessionStorage.setItem('jwt', response.data.token);
         dispatch(FillData(response.data));
+        const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
+        const activityLog = {
+          
+          LogId: 0, 
+          UserId: response.data.user.tz,
+          Activity: 'התחברות',
+          Timestamp: new Date(),
+          UserId1: decoded,
+          UserId1NavigationUserId: decoded
+        };
+  
+         await ActivityLogService.addActivityLog(activityLog)
+          .then(activityResponse => {
+            console.log('Activity log added successfully:', activityResponse);
+          })
+          .catch(activityError => {
+            console.error('Error adding activity log:', activityError);
+          });
         navigate('/search');
         window.location.reload();
         }
@@ -173,6 +193,24 @@ const Login = () => {
           sendTokenToOtherProjects(); 
           sessionStorage.setItem('jwt', response.data.token);
           dispatch(FillData(response.data));
+          const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
+          const activityLog = {
+            LogId: 0, 
+            UserId: response.data.user.tz,
+            Activity: 'התחברות',
+            Timestamp: new Date(),
+            UserId1: decoded,
+            UserId1NavigationUserId: decoded
+          };
+    
+           await ActivityLogService.addActivityLog(activityLog)
+            .then(activityResponse => {
+              console.log('Activity log added successfully:', activityResponse);
+            })
+            .catch(activityError => {
+              console.error('Error adding activity log:', activityError);
+            });
+            
           navigate('/search');
           window.location.reload();
         } else {
