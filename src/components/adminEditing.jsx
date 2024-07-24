@@ -8,7 +8,7 @@ import {
   Container, Grid, Card, CardContent, Typography, Table,
   TableContainer, TableHead, TableBody, TableRow, TableCell, IconButton,
   Paper, Avatar, TextField, Button, Collapse,
-  Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, InputAdornment,createTheme,
+  Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, InputAdornment, createTheme,
   Select,
   InputLabel,
   FormControl,
@@ -55,8 +55,8 @@ const UserManagementComponent = () => {
   const myDispatch = useDispatch();
 
   useEffect(() => {
-    
-  
+
+
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
@@ -74,12 +74,12 @@ const UserManagementComponent = () => {
     fetchUsers();
   }, [f]);
 
-  const handleEditUser = (userId) => {  
+  const handleEditUser = (userId) => {
     const userToEdit = users.find((user) => user.userId === userId);
     if (userToEdit) {
       setEditUserId(userId);
       setEditUserTZ(userToEdit.tz);
-      setEditPasswordHash(userToEdit.passwordHash); 
+      setEditPasswordHash(userToEdit.passwordHash);
       setEditEmail(userToEdit.email);
       setEditRole(userToEdit.role);
       setEditProfilePicture(userToEdit.profilePicture);
@@ -87,20 +87,20 @@ const UserManagementComponent = () => {
       setEditPhoneNumber(userToEdit.phoneNumber);
       setEditUserDob(userToEdit.userDob);
       setEditFirstName(userToEdit.fname);
-      setEditLastName(userToEdit.sname);
+      setEditLastName(userToEdit.Lname);
       setEditMegama(userToEdit.megama);
       setEditUserDialogOpen(true);
     }
   };
 
   const handleSaveEditUser = async () => {
-    
+
     try {
       const currentUserId = getUserIdFromTokenid();
-      
+
       const activityLog = {
-        
-        LogId: 0, 
+
+        LogId: 0,
         UserId: editUserTz,
         Activity: 'עריכת פרטים ע"י מנהל',
         Timestamp: new Date(),
@@ -117,7 +117,7 @@ const UserManagementComponent = () => {
         });
       const updatedUser = await userService.updateUser({
         userId: editUserId,
-        tz:editUserTz,
+        tz: editUserTz,
         fname: editFirstName,
         sname: editLastName,
         passwordHash: editPasswordHash,
@@ -164,13 +164,13 @@ const UserManagementComponent = () => {
 
   const handleDeleteUser = async () => {
     try {
-      
+
       const currentUserId = getUserIdFromTokenid();
       debugger
       const activityLog = {
-        LogId: 0, 
+        LogId: 0,
         UserId: null,
-        Activity:' '+ users.find(user => user.userId === userIdToDelete).fname+'נמחק מהמערכת',
+        Activity: ' ' + users.find(user => user.userId === userIdToDelete).fname + 'נמחק מהמערכת',
         Timestamp: new Date(),
         UserId1: currentUserId,
         UserId1NavigationUserId: currentUserId
@@ -189,14 +189,14 @@ const UserManagementComponent = () => {
       setUsers(updatedUsers);
       myDispatch(FillData(users));
       setDeleteDialogOpen(false);
-    } 
+    }
     catch (error) {
       console.error('Error deleting user:', error);
     }
   };
 
   const handleAddUser = async () => {
-    
+
     try {
       const formData = new FormData();
       formData.append('Tz', newUserTz);
@@ -228,10 +228,10 @@ const UserManagementComponent = () => {
       setAddUserDialogOpen(false);
 
       const currentUserId = getUserIdFromTokenid();
-      
+
       const activityLog = {
-        
-        LogId: 0, 
+
+        LogId: 0,
         UserId: newUser.tz,
         Activity: 'נוסף למערכת',
         Timestamp: new Date(),
@@ -301,349 +301,349 @@ const UserManagementComponent = () => {
   };
 
 
-const sortUsers = (users) => {
-  const roleOrder = {
-    Admin: 1,
-    Librarian: 2,
-    Student: 3,
+  const sortUsers = (users) => {
+    const roleOrder = {
+      Admin: 1,
+      Librarian: 2,
+      Student: 3,
+    };
+
+    return [...users].sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
   };
 
-  return [...users].sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-};
-  
-const sortedUsers = sortUsers(users);
+  const sortedUsers = sortUsers(users);
 
 
   return (
     <Container>
       <div dir='rtl'>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" component="h2" gutterBottom align="right">
-                רשימת משתמשים
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h5" component="h2" gutterBottom align="right">
+                  רשימת משתמשים
               </Typography>
-              <Button style={{ float: 'right' }} variant="contained" color="primary" onClick={() => setAddUserDialogOpen(true)}>
-                הוסף משתמש
+                <Button style={{ float: 'right' }} variant="contained" color="primary" onClick={() => setAddUserDialogOpen(true)}>
+                  הוסף משתמש
               </Button>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                    <TableCell align="right">#</TableCell>
-                    <TableCell align="right">שם משתמש</TableCell>
-                    <TableCell align="right">מייל</TableCell>
-                    <TableCell align="right">תפקיד</TableCell>
-                    <TableCell align="right">תמונת פרופיל</TableCell>
-                    <TableCell align="right">פעולות</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    
-                    {sortedUsers.map((user, index) => (
-                      <React.Fragment key={user.userId}>
-                        <TableRow>
-                        <TableCell align="right">{index + 1}</TableCell>
-                        <TableCell align="right">{user.fname}</TableCell>
-                        <TableCell align="right">{user.email}</TableCell>
-                        <TableCell align="right">{getRoleInHebrew(user.role)}</TableCell>
-                        <TableCell align="right">
-                            <Avatar src={user.profilePicture} alt={user.fname}>
-                              {!user.profilePicture && getInitial(user.fname)}
-                            </Avatar>
-                          </TableCell>
-                          <TableCell align="right">
-                            <IconButton onClick={() => toggleRowExpansion(user.userId)}>
-                              {expandedRows[user.userId] ? <ExpandLess /> : <ExpandMore />}
-                            </IconButton>
-                            <IconButton onClick={() => handleEditUser(user.userId)}>
-                              <Edit />
-                            </IconButton>
-                            <IconButton onClick={() => confirmDeleteUser(user.userId)}>
-                              <Delete />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                            <Collapse in={expandedRows[user.userId]} timeout="auto" unmountOnExit>
-                                <div dir='rtl'>
-                                <TableRow>
-                           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                            <Collapse in={expandedRows[user.userId]} timeout="auto" unmountOnExit>
-                               <CardContent>
-                                 <Typography variant="h6" fontWeight="bold">פרטים נוספים:</Typography>
-                                  <Typography>שם פרטי: {user.fname}</Typography>
-                                  <Typography>שם משפחה: {user.sname}</Typography>
-                                  <Typography>ת"ז: {user.tz}</Typography>
-                               <Typography>נוצר בתאריך: {new Date(user.createdAt).toLocaleDateString()}</Typography>                                 
-                               <Typography>עודכן בתאריך: {new Date(user.updatedAt).toLocaleDateString()}</Typography>
-                                 <Typography>תאריך לידה: {new Date(user.userDob).toLocaleDateString()}</Typography>
-                                 <Typography>טלפון: {user.phoneNumber}</Typography>
-                                    <Typography>מגמה : {user.megama}</Typography>
-                               </CardContent>
-                             </Collapse>
-                          </TableCell>
-                        </TableRow></div>
-                            </Collapse>
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="right">#</TableCell>
+                        <TableCell align="right">שם משתמש</TableCell>
+                        <TableCell align="right">מייל</TableCell>
+                        <TableCell align="right">תפקיד</TableCell>
+                        <TableCell align="right">תמונת פרופיל</TableCell>
+                        <TableCell align="right">פעולות</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
 
-      {/* Add User Dialog */}
-      <Dialog open={isAddUserDialogOpen} onClose={() => setAddUserDialogOpen(false)} maxWidth="md" fullWidth>
-  <DialogTitle align="right">הוסף משתמש חדש</DialogTitle>
-  <DialogContent>
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <div dir="rtl">
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="אימייל"
-                fullWidth
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="שם פרטי"
-                fullWidth
-                value={newFname}
-                onChange={(e) => setnewFname(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="שם משפחה"
-                fullWidth
-                value={newLname}
-                onChange={(e) => setnewLname(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="תעודת זהות"
-                fullWidth
-                value={newUserTz}
-                onChange={(e) => setnewUserTz(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="מגמה"
-                fullWidth
-                value={newUserMegama}
-                onChange={(e) => setnewUserMegama(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="תאריך לידה"
-                fullWidth
-                type='date'
-                value={newUserDob}
-                onChange={(e) => setnewUserDob(e.target.value)}
-                required
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="מספר טלפון"
-                fullWidth
-                value={newPhoneNumber}
-                onChange={(e) => setnewPhoneNumber(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="סיסמא"
-                fullWidth
-                type={showPassword ? 'text' : 'password'}
-                value={newPasswordHash}
-                onChange={(e) => setNewPasswordHash(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handlePasswordVisibility}>
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-            <FormControl fullWidth required>
-            <InputLabel id="role-label">תפקיד</InputLabel>
-          <Select
-            label="תפקיד"
-            fullWidth
-            value={newRole}
-            onChange={(e)=>setNewRole(e.target.value)}
-            required
-          >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-            <MenuItem value="Librarian">Librarian</MenuItem>
-          </Select></FormControl>
-      </Grid>
+                      {sortedUsers.map((user, index) => (
+                        <React.Fragment key={user.userId}>
+                          <TableRow>
+                            <TableCell align="right">{index + 1}</TableCell>
+                            <TableCell align="right">{user.fname}</TableCell>
+                            <TableCell align="right">{user.email}</TableCell>
+                            <TableCell align="right">{getRoleInHebrew(user.role)}</TableCell>
+                            <TableCell align="right">
+                              <Avatar src={user.profilePicture} alt={user.fname}>
+                                {!user.profilePicture && getInitial(user.fname)}
+                              </Avatar>
+                            </TableCell>
+                            <TableCell align="right">
+                              <IconButton onClick={() => toggleRowExpansion(user.userId)}>
+                                {expandedRows[user.userId] ? <ExpandLess /> : <ExpandMore />}
+                              </IconButton>
+                              <IconButton onClick={() => handleEditUser(user.userId)}>
+                                <Edit />
+                              </IconButton>
+                              <IconButton onClick={() => confirmDeleteUser(user.userId)}>
+                                <Delete />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                              <Collapse in={expandedRows[user.userId]} timeout="auto" unmountOnExit>
+                                <div dir='rtl'>
+                                  <TableRow>
+                                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                      <Collapse in={expandedRows[user.userId]} timeout="auto" unmountOnExit>
+                                        <CardContent>
+                                          <Typography variant="h6" fontWeight="bold">פרטים נוספים:</Typography>
+                                          <Typography>שם פרטי: {user.fname}</Typography>
+                                          <Typography>שם משפחה: {user.sname}</Typography>
+                                          <Typography>ת"ז: {user.tz}</Typography>
+                                          <Typography>נוצר בתאריך: {new Date(user.createdAt).toLocaleDateString()}</Typography>
+                                          <Typography>עודכן בתאריך: {new Date(user.updatedAt).toLocaleDateString()}</Typography>
+                                          <Typography>תאריך לידה: {new Date(user.userDob).toLocaleDateString()}</Typography>
+                                          <Typography>טלפון: {user.phoneNumber}</Typography>
+                                          <Typography>מגמה : {user.megama}</Typography>
+                                        </CardContent>
+                                      </Collapse>
+                                    </TableCell>
+                                  </TableRow></div>
+                              </Collapse>
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
           </Grid>
-        </div>
-      </ThemeProvider>
-    </CacheProvider>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={() => setAddUserDialogOpen(false)} color="primary">
-      ביטול
+        </Grid>
+
+        {/* Add User Dialog */}
+        <Dialog open={isAddUserDialogOpen} onClose={() => setAddUserDialogOpen(false)} maxWidth="md" fullWidth>
+          <DialogTitle align="right">הוסף משתמש חדש</DialogTitle>
+          <DialogContent>
+            <CacheProvider value={cacheRtl}>
+              <ThemeProvider theme={theme}>
+                <div dir="rtl">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="אימייל"
+                        fullWidth
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="שם פרטי"
+                        fullWidth
+                        value={newFname}
+                        onChange={(e) => setnewFname(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="שם משפחה"
+                        fullWidth
+                        value={newLname}
+                        onChange={(e) => setnewLname(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="תעודת זהות"
+                        fullWidth
+                        value={newUserTz}
+                        onChange={(e) => setnewUserTz(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="מגמה"
+                        fullWidth
+                        value={newUserMegama}
+                        onChange={(e) => setnewUserMegama(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="תאריך לידה"
+                        fullWidth
+                        type='date'
+                        value={newUserDob}
+                        onChange={(e) => setnewUserDob(e.target.value)}
+                        required
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="מספר טלפון"
+                        fullWidth
+                        value={newPhoneNumber}
+                        onChange={(e) => setnewPhoneNumber(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="סיסמא"
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        value={newPasswordHash}
+                        onChange={(e) => setNewPasswordHash(e.target.value)}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handlePasswordVisibility}>
+                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth required>
+                        <InputLabel id="role-label">תפקיד</InputLabel>
+                        <Select
+                          label="תפקיד"
+                          fullWidth
+                          value={newRole}
+                          onChange={(e) => setNewRole(e.target.value)}
+                          required
+                        >
+                          <MenuItem value="Student">Student</MenuItem>
+                          <MenuItem value="Admin">Admin</MenuItem>
+                          <MenuItem value="Librarian">Librarian</MenuItem>
+                        </Select></FormControl>
+                    </Grid>
+                  </Grid>
+                </div>
+              </ThemeProvider>
+            </CacheProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAddUserDialogOpen(false)} color="primary">
+              ביטול
     </Button>
-    <Button onClick={handleAddUser} color="primary">
-      שמור
+            <Button onClick={handleAddUser} color="primary">
+              שמור
     </Button>
-  </DialogActions>
-</Dialog>
-      {/* Edit User Dialog */}
-      <Dialog open={isEditUserDialogOpen} onClose={handleCancelEditUser} maxWidth="md" fullWidth>
-  <DialogTitle align="right">ערוך משתמש</DialogTitle>
-  <DialogContent>
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <div dir="rtl">
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="אימייל"
-                fullWidth
-                value={editEmail}
-                onChange={(e) => setEditEmail(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="שם פרטי"
-                fullWidth
-                value={editFirstName}
-                onChange={(e) => setEditFirstName(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="שם משפחה"
-                fullWidth
-                value={editLastName}
-                onChange={(e) => setEditLastName(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="מגמה"
-                fullWidth
-                value={editMegama}
-                onChange={(e) => setEditMegama(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="תאריך לידה"
-                fullWidth
-                type='date'
-                value={editUserDob}
-                onChange={(e) => setEditUserDob(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="מספר טלפון"
-                fullWidth
-                value={editPhoneNumber}
-                onChange={(e) => setEditPhoneNumber(e.target.value)}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="תמונת פרופיל"
-                fullWidth
-                value={editProfilePicture}
-                onChange={(e) => setEditProfilePicture(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="סיסמא"
-                fullWidth
-                type={showPassword ? 'text' : 'password'}
-                value={editPasswordHash}
-                onChange={(e) => setEditPasswordHash(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handlePasswordVisibility}>
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                required
-              />
-            </Grid>
-          </Grid>
-        </div>
-      </ThemeProvider>
-    </CacheProvider>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleCancelEditUser} color="primary">
-      ביטול
+          </DialogActions>
+        </Dialog>
+        {/* Edit User Dialog */}
+        <Dialog open={isEditUserDialogOpen} onClose={handleCancelEditUser} maxWidth="md" fullWidth>
+          <DialogTitle align="right">ערוך משתמש</DialogTitle>
+          <DialogContent>
+            <CacheProvider value={cacheRtl}>
+              <ThemeProvider theme={theme}>
+                <div dir="rtl">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="אימייל"
+                        fullWidth
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="שם פרטי"
+                        fullWidth
+                        value={editFirstName}
+                        onChange={(e) => setEditFirstName(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="שם משפחה"
+                        fullWidth
+                        value={editLastName}
+                        onChange={(e) => setEditLastName(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="מגמה"
+                        fullWidth
+                        value={editMegama}
+                        onChange={(e) => setEditMegama(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="תאריך לידה"
+                        fullWidth
+                        type='date'
+                        value={editUserDob}
+                        onChange={(e) => setEditUserDob(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="מספר טלפון"
+                        fullWidth
+                        value={editPhoneNumber}
+                        onChange={(e) => setEditPhoneNumber(e.target.value)}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="תמונת פרופיל"
+                        fullWidth
+                        value={editProfilePicture}
+                        onChange={(e) => setEditProfilePicture(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="שינוי סיסמא"
+                        fullWidth
+                        type={showPassword ? 'text' : 'password'}
+                        onChange={(e) => setEditPasswordHash(e.target.value)}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handlePasswordVisibility}>
+                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        required={false} // הסיסמא לא חובה
+                      />
+                    </Grid>
+
+                  </Grid>
+                </div>
+              </ThemeProvider>
+            </CacheProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelEditUser} color="primary">
+              ביטול
     </Button>
-    <Button onClick={handleSaveEditUser} color="primary">
-      שמור
+            <Button onClick={handleSaveEditUser} color="primary">
+              שמור
     </Button>
-  </DialogActions>
-</Dialog>
-      {/* Delete User Dialog */}
-      <Dialog open={isDeleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle align="right">מחיקת משתמש</DialogTitle>
-        <DialogContent>
-          <Typography align="right">
-           ?האם אתה בטוח שברצונך למחוק את המשתמש הזה
+          </DialogActions>
+        </Dialog>
+        {/* Delete User Dialog */}
+        <Dialog open={isDeleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+          <DialogTitle align="right">מחיקת משתמש</DialogTitle>
+          <DialogContent>
+            <Typography align="right">
+              ?האם אתה בטוח שברצונך למחוק את המשתמש הזה
           </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
-            ביטול
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+              ביטול
           </Button>
-          <Button onClick={handleDeleteUser} color="primary" sx={{ color: 'red' }}>
-            מחק
+            <Button onClick={handleDeleteUser} color="primary" sx={{ color: 'red' }}>
+              מחק
           </Button>
-        </DialogActions>
-      </Dialog></div>
-        </Container>
+          </DialogActions>
+        </Dialog></div>
+    </Container>
 
   );
 };
