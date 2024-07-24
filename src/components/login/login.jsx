@@ -111,7 +111,7 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-        sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
+        // sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
         const token = response.data.token;
         // הגדרת ה-cookie עם ה-token
         document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;

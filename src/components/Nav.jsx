@@ -82,7 +82,6 @@ export const Nav = () => {
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const greetingMessage = getGreetingMessage();
   const role = isLoggedIn ? getRoleFromToken() : null;
-
   const userName = isLoggedIn ? getUserNameFromToken() : null;
 
   useEffect(() => {
@@ -92,7 +91,7 @@ export const Nav = () => {
   }, [isLoggedIn, location.pathname, navigate]);
 
   useEffect(() => {
-    setIsLoggedIn(!!sessionStorage.getItem('jwt'));
+    setIsLoggedIn(!!getCookie('jwt'));
   }, [location.pathname]);
 
   const handleLogout = () => {
