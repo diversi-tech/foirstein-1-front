@@ -111,7 +111,7 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-        sessionStorage.setItem('jwt', response.data.token);
+        sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
         dispatch(FillData(response.data));
         const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {
@@ -191,7 +191,7 @@ const Login = () => {
         if (response.data.token) {
           alertLogin();
           sendTokenToOtherProjects(); 
-          sessionStorage.setItem('jwt', response.data.token);
+          sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
