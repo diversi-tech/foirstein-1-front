@@ -50,9 +50,9 @@ const Login = () => {
     const checkUserExists = async () => {
       if (tz.length === 9) {
         try {
-          const user = await userService.verifyIdNumber(tz);
-          setUserExists(user.exists);
-          setIsAdminOrLibrarian(user.role === 'Admin' || user.role === 'Librarian');
+          const exists = await userService.verifyIdNumber(tz);
+          setUserExists(exists);
+          setIsAdminOrLibrarian(exists.role === 'Admin' || exists.role === 'Librarian');
         } catch (err) {
           console.error('Error verifying ID number:', err);
         }
@@ -107,8 +107,8 @@ const Login = () => {
   function sendTokenToOtherProjects() {
     const token = sessionStorage.getItem('jwt');
     const targetOrigins = [
-      'https://diversi-tech.github.io/foirstein-3-front/#/',
-      'https://foirstein-2-front-1.onrender.com/'
+      'https://diversi-tech.github.io',
+      'https://foirstein-2-front-1.onrender.com'
     ];    // שולח את ההודעה עם התוקן
     targetOrigins.forEach(origin => {
       window.postMessage({ token: token }, origin);
@@ -140,6 +140,26 @@ const Login = () => {
       setError('שגיאה בודקת את התפקיד, נסה שוב מאוחר יותר');
     }
   };
+  const handleSecondaryLogin = async () => {
+    debugger 
+    if (secondaryPassword == secondaryPasswordFromEmail) {
+        const response = await axios.post("https://foirstein-1-back.onrender.com/api/Users/login", {
+          tz: tz,
+          pass: password
+        });
+        if (response.data.token) {
+          sessionStorage.setItem('jwt', response.data.token);
+          dispatch(FillData(response.data));
+          navigate('/search');
+          window.location.reload();
+        } else {
+          setError('הסיסמה השנייה אינה נכונה');
+        }
+    } else {
+      setError('הסיסמה השנייה אינה נכונה');
+    }
+  };
+
 
   return (
     <CacheProvider value={cacheRtl}>
