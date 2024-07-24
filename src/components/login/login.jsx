@@ -111,7 +111,7 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-        // sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
+        sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
         document.cookie = "jwt=response.data.token; path=/; domain=.foirstein.diversitech.co.il; Secure";
         dispatch(FillData(response.data));
         const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
@@ -192,7 +192,7 @@ const Login = () => {
         if (response.data.token) {
           alertLogin();
           sendTokenToOtherProjects(); 
-          // sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
+          sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
           document.cookie = "jwt=response.data.token; path=/; domain=.foirstein.diversitech.co.il; Secure";
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
