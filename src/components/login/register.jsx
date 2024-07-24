@@ -10,6 +10,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ActivityLogService from '../../axios/ActivityLogAxios';
 const theme = createTheme({
   direction: 'rtl',
   typography: {
@@ -138,6 +139,16 @@ const Register = () => {
         },
       });
       if (response.data) {
+          const activityLog = {
+            LogId: 0, 
+            UserId: response.data.tz,
+            Activity: 'הרשמה',
+            Timestamp: new Date(),
+            UserId1: response.data.userId,
+            UserId1NavigationUserId: response.data.userId,
+          };
+    
+           await ActivityLogService.addActivityLog(activityLog)
         navigate('/login');
       } else {
         setError('הרשמה נכשלה, נסה שוב');

@@ -10,6 +10,11 @@ import { useDispatch } from 'react-redux';
 import { FillData } from '../../redux/actions/userAction';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import userService from '../../axios/userAxios';
+import Swal from 'sweetalert2'
+import ActivityLogService from '../../axios/ActivityLogAxios';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 const theme = createTheme({
   direction: 'rtl',
@@ -30,6 +35,25 @@ const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [rtlPlugin],
 });
+
+function alertLogin(){
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  Toast.fire({
+    icon: "success",
+    title: "התחברת בהצלחה"
+  });
+  }
+
 
 const Login = () => {
   const [tz, setTz] = useState('');
@@ -87,9 +111,29 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-        sessionStorage.setItem('jwt', response.data.token);
-        sendTokenToOtherProjects();
+        sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
+        const token = response.data.token;
+        // הגדרת ה-cookie עם ה-token
+        document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
         dispatch(FillData(response.data));
+        const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
+        const activityLog = {
+          
+          LogId: 0, 
+          UserId: response.data.user.tz,
+          Activity: 'התחברות',
+          Timestamp: new Date(),
+          UserId1: decoded,
+          UserId1NavigationUserId: decoded
+        };
+  
+         await ActivityLogService.addActivityLog(activityLog)
+          .then(activityResponse => {
+            console.log('Activity log added successfully:', activityResponse);
+          })
+          .catch(activityError => {
+            console.error('Error adding activity log:', activityError);
+          });
         navigate('/search');
         window.location.reload();
         }
@@ -107,7 +151,7 @@ const Login = () => {
   function sendTokenToOtherProjects() {
     const token = sessionStorage.getItem('jwt');
     const targetOrigins = [
-      'https://diversi-tech.github.io/foirstein-3-front',
+      'https://librarian.foirstein.diversitech.co.il',
       'https://foirstein-2-front-1.onrender.com'
     ];    // שולח את ההודעה עם התוקן
     targetOrigins.forEach(origin => {
@@ -148,8 +192,31 @@ const Login = () => {
           pass: password
         });
         if (response.data.token) {
-          sessionStorage.setItem('jwt', response.data.token);
+          alertLogin();
+          sendTokenToOtherProjects(); 
+          const token = response.data.token;
+          // הגדרת ה-cookie עם ה-token
+          document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
+          document.cookie = "jwt=response.data.token; path=/; domain=.foirstein.diversitech.co.il; Secure";
           dispatch(FillData(response.data));
+          const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
+          const activityLog = {
+            LogId: 0, 
+            UserId: response.data.user.tz,
+            Activity: 'התחברות',
+            Timestamp: new Date(),
+            UserId1: decoded,
+            UserId1NavigationUserId: decoded
+          };
+    
+           await ActivityLogService.addActivityLog(activityLog)
+            .then(activityResponse => {
+              console.log('Activity log added successfully:', activityResponse);
+            })
+            .catch(activityError => {
+              console.error('Error adding activity log:', activityError);
+            });
+            
           navigate('/search');
           window.location.reload();
         } else {
