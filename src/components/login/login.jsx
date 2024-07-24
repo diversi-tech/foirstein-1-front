@@ -39,7 +39,7 @@ function alertLogin(){
     toast: true,
     position: "top-end",
     showConfirmButton: false,
-    timer: 3000,
+    timer: 5000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.onmouseenter = Swal.stopTimer;
@@ -48,7 +48,7 @@ function alertLogin(){
   });
   Toast.fire({
     icon: "success",
-    title: "Signed in successfully"
+    title: "התחברת בהצלחה"
   });
   }
 
