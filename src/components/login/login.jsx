@@ -107,8 +107,8 @@ const Login = () => {
   function sendTokenToOtherProjects() {
     const token = sessionStorage.getItem('jwt');
     const targetOrigins = [
-      'https://diversi-tech.github.io/foirstein-3-front/#/',
-      'https://foirstein-2-front-1.onrender.com/'
+      'https://diversi-tech.github.io/foirstein-3-front',
+      'https://foirstein-2-front-1.onrender.com'
     ];    // שולח את ההודעה עם התוקן
     targetOrigins.forEach(origin => {
       window.postMessage({ token: token }, origin);
