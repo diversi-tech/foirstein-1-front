@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+
 export const getCookie=(name)=> {
-  const value = `; ${document.cookie.value}`;
+  const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 const token = getCookie('jwt');
+console.log(token);
 
 export const getRoleFromToken = () => {
     if (!token) return null;
