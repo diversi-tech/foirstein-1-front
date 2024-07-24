@@ -142,7 +142,7 @@ const Register = () => {
           const activityLog = {
             LogId: 0, 
             UserId: response.data.tz,
-            Activity: 'התחברות',
+            Activity: 'הרשמה',
             Timestamp: new Date(),
             UserId1: response.data.userId,
             UserId1NavigationUserId: response.data.userId,
