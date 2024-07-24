@@ -95,7 +95,8 @@ export const Nav = () => {
   }, [location.pathname]);
 
   const handleLogout = () => {
-    sessionStorage.removeItem('jwt');
+    document.cookie = `jwt=; path=/; domain=.foirstein.diversitech.co.il; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+    // sessionStorage.removeItem('jwt');
     setIsLoggedIn(false);
     navigate('/home');
     console.log('Logging out...');
