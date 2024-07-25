@@ -1,8 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment } from '@mui/material';
+import {
+  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead,
+  TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, Button, TextField, InputAdornment, FormControl, InputLabel, Checkbox, ListItemText
+} from '@mui/material';
 import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
@@ -11,14 +14,17 @@ import { FillData } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
 import ActivityLogService from '../axios/ActivityLogAxios';
 import { getUserIdFromTokenid } from './decipheringToken';
+import {jwtDecode} from 'jwt-decode';
 
 const ChangePermission = () => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.userReducer.userList);
-  const [open, setOpen] = useState(false);
+  const [openRoleDialog, setOpenRoleDialog] = useState(false);
+  const [openPermissionsDialog, setOpenPermissionsDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [permissions, setPermissions] = useState([]);
 
   useEffect(() => {
     userService.getAllUsers()
@@ -33,7 +39,7 @@ const ChangePermission = () => {
   const handleRoleChange = (userId, newRole) => {
     setSelectedUser(users.find(user => user.userId === userId));
     setNewRole(newRole);
-    setOpen(true);
+    setOpenRoleDialog(true);
   };
 
   const confirmRoleChange = () => {
@@ -44,33 +50,75 @@ const ChangePermission = () => {
             user.userId === selectedUser.userId ? { ...user, role: newRole } : user
           );
           dispatch(FillData(updatedUsers));
-
-          const currentUserId = getUserIdFromTokenid();
-          const activityLog = {
-            LogId: 0, 
-            UserId: selectedUser.tz,
-            Activity: 'שינוי הרשאה',
-            Timestamp: new Date(),
-            UserId1: currentUserId,
-            UserId1NavigationUserId: currentUserId
-          };
-
-          ActivityLogService.addActivityLog(activityLog)
-            .then(activityResponse => {
-              console.log('Activity log added successfully:', activityResponse);
-            })
-            .catch(activityError => {
-              console.error('Error adding activity log:', activityError);
-            });
-
+          logActivity(selectedUser.tz, 'שינוי הרשאה');
         } else {
           alert('Error updating role');
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error updating role:', error);
       });
-    setOpen(false);
+    setOpenRoleDialog(false);
+  };
+
+  const getPermissionsFromToken = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode(token);
+      const permissions = decoded['permissions'];
+      return {
+        permissions: permissions || []
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  };
+
+  const handlePermissionsChange = (userId, newPermissions) => {
+    setSelectedUser(users.find(user => user.userId === userId));
+    setPermissions(newPermissions);
+    setOpenPermissionsDialog(true);
+  };
+
+  const confirmPermissionsChange = () => {
+    userService.updateUserPermissions(selectedUser.userId, permissions)
+      .then(response => {
+        if (response.succes) {
+          const updatedUsers = users.map(user => 
+            user.userId === selectedUser.userId ? { ...user, permissions } : user
+          );
+          dispatch(FillData(updatedUsers));
+          logActivity(selectedUser.tz, 'שינוי הרשאות');
+        } else {
+          alert('Error updating permissions');
+        }
+      })
+      .catch(error => {
+        console.error('Error updating permissions:', error);
+      });
+    setOpenPermissionsDialog(false);
+  };
+
+  const logActivity = (userId, activity) => {
+    const currentUserId = getUserIdFromTokenid();
+    const activityLog = {
+      LogId: 0, 
+      UserId: userId,
+      Activity: activity,
+      Timestamp: new Date(),
+      UserId1: currentUserId,
+      UserId1NavigationUserId: currentUserId
+    };
+
+    ActivityLogService.addActivityLog(activityLog)
+      .then(activityResponse => {
+        console.log('Activity log added successfully:', activityResponse);
+      })
+      .catch(activityError => {
+        console.error('Error adding activity log:', activityError);
+      });
   };
 
   const getIconByRole = (role) => {
@@ -99,12 +147,10 @@ const ChangePermission = () => {
     }
   };
 
-  // Filter users based on search query
   const filteredUsers = users.filter(user => 
     user.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.passwordHash.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.tz.toLowerCase().includes(searchQuery.toLowerCase())
+    user.tz.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -114,7 +160,7 @@ const ChangePermission = () => {
         <Box sx={{ mb: 2 }}>
           <TextField
             fullWidth
-            placeholder="חפש לפי שם משתמש, סיסמה, תעודת זהות או הרשאה"
+            placeholder="חפש לפי שם משתמש, תעודת זהות או הרשאה"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
@@ -131,9 +177,9 @@ const ChangePermission = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="right">הרשאה</TableCell>
-                <TableCell align="right">סיסמה</TableCell>
                 <TableCell align="right">שם פרטי</TableCell>
                 <TableCell align="right">תעודת זהות</TableCell>
+                <TableCell align="right">הרשאות</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,9 +199,30 @@ const ChangePermission = () => {
                       </Select>
                     </Box>
                   </TableCell>
-                  <TableCell align="right">{user.passwordHash}</TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
+                  {user.role === 'Librarian' && (
+                    <TableCell align="right">
+                      <FormControl fullWidth>
+                        <InputLabel id="permissions-label">הרשאות</InputLabel>
+                        <Select
+                          labelId="permissions-label"
+                          id="permissions"
+                          multiple
+                          value={permissions}
+                          onChange={(e) => handlePermissionsChange(user.userId, e.target.value)}
+                          renderValue={(selected) => selected.join(', ')}
+                        >
+                          {['File', 'Book', 'Physical'].map((name) => (
+                            <MenuItem key={name} value={name}>
+                              <Checkbox checked={permissions.indexOf(name) > -1} />
+                              <ListItemText primary={name} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -163,22 +230,48 @@ const ChangePermission = () => {
         </TableContainer>
 
         <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          open={openRoleDialog}
+          onClose={() => setOpenRoleDialog(false)}
+          aria-labelledby="role-dialog-title"
+          aria-describedby="role-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title" style={{ fontSize: '24px', color: 'red', textShadow: '1px 1px 2px rgba(255, 0, 0, 0.7)' }}>אישור שינוי הרשאה</DialogTitle>
+          <DialogTitle id="role-dialog-title" style={{ fontSize: '24px', color: 'red', textShadow: '1px 1px 2px rgba(255, 0, 0, 0.7)' }}>
+            אישור שינוי הרשאה
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{ fontSize: '18px', color: 'black', textAlign: 'center' }}>
+            <DialogContentText id="role-dialog-description" style={{ fontSize: '18px', color: 'black', textAlign: 'center' }}>
               האם אתה בטוח כי ברצונך לשנות ל{selectedUser?.fname} את ההרשאה ל{getRoleNameInHebrew(newRole)}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">
+            <Button onClick={() => setOpenRoleDialog(false)} color="primary">
               ביטול
             </Button>
             <Button onClick={confirmRoleChange} color="primary" autoFocus>
+              אישור
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openPermissionsDialog}
+          onClose={() => setOpenPermissionsDialog(false)}
+          aria-labelledby="permissions-dialog-title"
+          aria-describedby="permissions-dialog-description"
+        >
+          <DialogTitle id="permissions-dialog-title" style={{ fontSize: '24px', color: 'red', textShadow: '1px 1px 2px rgba(255, 0, 0, 0.7)' }}>
+            אישור שינוי הרשאות
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="permissions-dialog-description" style={{ fontSize: '18px', color: 'black', textAlign: 'center' }}>
+              האם אתה בטוח כי ברצונך לשנות את ההרשאות של {selectedUser?.fname}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
+              ביטול
+            </Button>
+            <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
               אישור
             </Button>
           </DialogActions>
