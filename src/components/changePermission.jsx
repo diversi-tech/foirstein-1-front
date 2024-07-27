@@ -175,6 +175,16 @@ const ChangePermission = () => {
     user.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  useEffect(() => {
+    // Logging permissionsData to verify it is being set correctly
+    console.log('Permissions Data:', permissionsData);
+  }, [permissionsData]);
+
+  useEffect(() => {
+    // Logging filtered users to verify they are being filtered correctly
+    console.log('Filtered Users:', filteredUsers);
+  }, [filteredUsers]);
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
@@ -225,16 +235,14 @@ const ChangePermission = () => {
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
                   <TableCell align="right">
-                    {user.role === 'Librarian' && (
-                      <Typography style={{ color: 'red', fontWeight: 'bold' }}>
-                        {getUserPermissions(user.userId).join(', ')}
-                      </Typography>
-                    )}
+                    <Typography style={{ color: 'red', fontWeight: 'bold' }}>
+                      {getUserPermissions(user.userId).join(', ')}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    {user.role === 'Librarian' && (
-                      <Button onClick={() => handlePermissionsChange(user.userId)}>שנה הרשאות</Button>
-                    )}
+                    <Button onClick={() => handlePermissionsChange(user.userId)} color="primary">
+                      שנה הרשאות
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
