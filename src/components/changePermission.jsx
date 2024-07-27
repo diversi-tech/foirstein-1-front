@@ -24,12 +24,8 @@ const ChangePermission = () => {
 
   useEffect(() => {
     userService.getAllUsers()
-      .then(async (response) => {
-        const usersWithPermissions = await Promise.all(response.map(async (user) => {
-          const userPermissions = await userService.getUserPermissions(user.userId);
-          return { ...user, permissions: userPermissions };
-        }));
-        dispatch(FillData(usersWithPermissions));
+      .then(response => {
+        dispatch(FillData(response));
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -168,6 +164,11 @@ const ChangePermission = () => {
     });
   };
 
+  const getUserPermissions = (userId) => {
+    const userPermissionsObj = permissionsData.find(permission => permission.UserId === userId);
+    return userPermissionsObj ? userPermissionsObj.Permissions : [];
+  };
+
   const filteredUsers = users.filter(user => 
     user.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.tz.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -223,20 +224,14 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
+                  <TableCell align="right" style={{ color: 'red', fontWeight: 'bold' }}>
+                    {user.role === 'Librarian' && getUserPermissions(user.userId).join(', ')}
+                  </TableCell>
                   <TableCell align="right">
-                    {user.role === 'Librarian' ? (
-                      <Typography style={{ color: 'red', fontWeight: 'bold' }}>
-                        {user.permissions.join(', ')}
-                      </Typography>
-                    ) : (
-                      user.permissions.join(', ')
+                    {user.role === 'Librarian' && (
+                      <Button onClick={() => handlePermissionsChange(user.userId)}>שנה הרשאות</Button>
                     )}
                   </TableCell>
-                  {user.role === 'Librarian' && (
-                    <TableCell align="right">
-                      <Button onClick={() => handlePermissionsChange(user.userId)}>שנה הרשאות</Button>
-                    </TableCell>
-                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -273,12 +268,12 @@ const ChangePermission = () => {
           <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
           <DialogContent>
             {permissionsData.map(permission => (
-              <Box key={permission} display="flex" alignItems="center">
+              <Box key={permission.name} display="flex" alignItems="center">
                 <Checkbox
-                  checked={newPermissions.includes(permission)}
-                  onChange={() => handlePermissionToggle(permission)}
+                  checked={newPermissions.includes(permission.name)}
+                  onChange={() => handlePermissionToggle(permission.name)}
                 />
-                <Typography>{permission}</Typography>
+                <Typography>{permission.name}</Typography>
               </Box>
             ))}
           </DialogContent>
