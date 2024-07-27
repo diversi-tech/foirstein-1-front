@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox } from '@mui/material';
+import {
+  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox
+} from '@mui/material';
 import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
@@ -21,6 +23,8 @@ const ChangePermission = () => {
   const [newPermissions, setNewPermissions] = useState([]);
   const [permissionsData, setPermissionsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const allPermissions = ["Book", "File", "Physical"];
 
   useEffect(() => {
     userService.getAllUsers()
@@ -48,7 +52,7 @@ const ChangePermission = () => {
 
   const handlePermissionsChange = (userId) => {
     const user = users.find(user => user.userId === userId);
-    const userPermissions = getUserPermissions(userId);
+    const userPermissions = permissionsData.find(perm => perm.userId === userId)?.permissions || [];
     setSelectedUser(user);
     setNewPermissions(userPermissions);
     setOpenPermissionsDialog(true);
@@ -91,43 +95,6 @@ const ChangePermission = () => {
     setOpenRoleDialog(false);
   };
 
-  const confirmPermissionsChange = () => {
-    userService.updateUserPermissions(selectedUser.userId, newPermissions)
-      .then(response => {
-        if (response.success) {
-          const updatedUsers = users.map(user => 
-            user.userId === selectedUser.userId ? { ...user, permissions: newPermissions } : user
-          );
-          dispatch(FillData(updatedUsers));
-
-          const currentUserId = getUserIdFromTokenid();
-          const activityLog = {
-            LogId: 0,
-            UserId: selectedUser.tz,
-            Activity: 'שינוי הרשאות',
-            Timestamp: new Date(),
-            UserId1: currentUserId,
-            UserId1NavigationUserId: currentUserId
-          };
-
-          ActivityLogService.addActivityLog(activityLog)
-            .then(activityResponse => {
-              console.log('Activity log added successfully:', activityResponse);
-            })
-            .catch(activityError => {
-              console.error('Error adding activity log:', activityError);
-            });
-
-        } else {
-          alert('Error updating permissions');
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating permissions:', error);
-      });
-    setOpenPermissionsDialog(false);
-  };
-
   const getIconByRole = (role) => {
     switch (role) {
       case 'Admin':
@@ -164,26 +131,15 @@ const ChangePermission = () => {
     });
   };
 
-  const getUserPermissions = (userId) => {
-    const userPermissionsObj = permissionsData.find(permission => permission.userId === userId);
-    return userPermissionsObj ? userPermissionsObj.permissions : [];
-  };
-
   const filteredUsers = users.filter(user => 
     user.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.tz.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  useEffect(() => {
-    // Logging permissionsData to verify it is being set correctly
-    console.log('Permissions Data:', permissionsData);
-  }, [permissionsData]);
-
-  useEffect(() => {
-    // Logging filtered users to verify they are being filtered correctly
-    console.log('Filtered Users:', filteredUsers);
-  }, [filteredUsers]);
+  const getUserPermissions = (userId) => {
+    const userPermissionsObj = permissionsData.find(permission => permission.userId === userId);
+    return userPermissionsObj ? userPermissionsObj.permissions : [];
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -235,8 +191,8 @@ const ChangePermission = () => {
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
                   <TableCell align="right">
-                    <Typography style={{ color: 'red', fontWeight: 'bold' }}>
-                      {getUserPermissions(user.userId).join(', ')}
+                    <Typography style={{ color: 'red' }}>
+                      {user.role === 'Librarian' && getUserPermissions(user.userId).join(', ')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -285,22 +241,24 @@ const ChangePermission = () => {
         >
           <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
           <DialogContent>
-            {permissionsData.map(permission => (
-              <Box key={permission} display="flex" alignItems="center">
-                <Checkbox
-                  checked={newPermissions.includes(permission)}
-                  onChange={() => handlePermissionToggle(permission)}
-                />
-                <Typography>{permission}</Typography>
-              </Box>
-            ))}
+            <DialogContentText id="permissions-dialog-description">
+              סמן את ההרשאות שברצונך להקצות לספרנית:
+            </DialogContentText>
+            <Box>
+              {allPermissions.map(permission => (
+                <Box key={permission}>
+                  <Checkbox
+                    checked={newPermissions.includes(permission)}
+                    onChange={() => handlePermissionToggle(permission)}
+                  />
+                  {permission}
+                </Box>
+              ))}
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
-              ביטול
-            </Button>
-            <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
-              אשר
+              סגור
             </Button>
           </DialogActions>
         </Dialog>
