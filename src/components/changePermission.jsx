@@ -240,9 +240,11 @@ const ChangePermission = () => {
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <Button onClick={() => handlePermissionsChange(user.userId)} color="primary">
-                      שנה הרשאות
-                    </Button>
+                    {user.role === 'Librarian' && (
+                      <Button onClick={() => handlePermissionsChange(user.userId)} color="primary">
+                        שנה הרשאות
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
