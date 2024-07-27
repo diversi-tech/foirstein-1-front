@@ -165,8 +165,8 @@ const ChangePermission = () => {
   };
 
   const getUserPermissions = (userId) => {
-    const userPermissionsObj = permissionsData.find(permission => permission.UserId === userId);
-    return userPermissionsObj ? userPermissionsObj.Permissions : [];
+    const userPermissionsObj = permissionsData.find(permission => permission.userId === userId);
+    return userPermissionsObj ? userPermissionsObj.permissions : [];
   };
 
   const filteredUsers = users.filter(user => 
@@ -241,7 +241,11 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">
                     {user.role === 'Librarian' && (
-                      <Button onClick={() => handlePermissionsChange(user.userId)} color="primary">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePermissionsChange(user.userId)}
+                      >
                         שנה הרשאות
                       </Button>
                     )}
