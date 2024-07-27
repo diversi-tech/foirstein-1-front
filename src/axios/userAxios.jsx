@@ -26,10 +26,20 @@ const userService = {
   },
   updateUserPermissions: async (userId, permissions) => {
     try {
-      const response = await axios.post(`${API_URL}/updatePermissions/${userId}`, { permissions });
+      const response = await axios.post(`${API_URL}/addPermissions`, { userId, permissions });
       return response.data;
     } catch (error) {
       console.error('Error updating permissions:', error);
+      throw error;
+    }
+  },
+
+  removeUserPermissions: async (userId, permissions) => {
+    try {
+      const response = await axios.post(`${API_URL}/removePermissions`, { userId, permissions });
+      return response.data;
+    } catch (error) {
+      console.error('Error removing permissions:', error);
       throw error;
     }
   },

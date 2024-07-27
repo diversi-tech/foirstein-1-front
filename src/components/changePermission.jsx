@@ -24,8 +24,12 @@ const ChangePermission = () => {
 
   useEffect(() => {
     userService.getAllUsers()
-      .then(response => {
-        dispatch(FillData(response));
+      .then(async (response) => {
+        const usersWithPermissions = await Promise.all(response.map(async (user) => {
+          const userPermissions = await userService.getUserPermissions(user.userId);
+          return { ...user, permissions: userPermissions };
+        }));
+        dispatch(FillData(usersWithPermissions));
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -48,7 +52,7 @@ const ChangePermission = () => {
 
   const handlePermissionsChange = (userId) => {
     const user = users.find(user => user.userId === userId);
-    const userPermissions = permissionsData.find(perm => perm.userId === userId)?.permissions || [];
+    const userPermissions = user.permissions || [];
     setSelectedUser(user);
     setNewPermissions(userPermissions);
     setOpenPermissionsDialog(true);
@@ -196,6 +200,7 @@ const ChangePermission = () => {
                 <TableCell align="right">הרשאה</TableCell>
                 <TableCell align="right">שם פרטי</TableCell>
                 <TableCell align="right">תעודת זהות</TableCell>
+                <TableCell align="right">הרשאות נוכחיות</TableCell>
                 <TableCell align="right">פעולות</TableCell>
               </TableRow>
             </TableHead>
@@ -218,6 +223,7 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
+                  <TableCell align="right">{user.permissions.join(', ')}</TableCell>
                   {user.role === 'Librarian' && (
                     <TableCell align="right">
                       <Button onClick={() => handlePermissionsChange(user.userId)}>שנה הרשאות</Button>
@@ -245,40 +251,40 @@ const ChangePermission = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={confirmRoleChange} color="primary" autoFocus>
-אשר
-</Button>
-</DialogActions>
-</Dialog>
-  <Dialog
-      open={openPermissionsDialog}
-      onClose={() => setOpenPermissionsDialog(false)}
-      aria-labelledby="permissions-dialog-title"
-      aria-describedby="permissions-dialog-description"
-    >
-      <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
-      <DialogContent>
-        {permissionsData.map(permission => (
-          <Box key={permission} display="flex" alignItems="center">
-            <Checkbox
-              checked={newPermissions.includes(permission)}
-              onChange={() => handlePermissionToggle(permission)}
-            />
-            <Typography>{permission}</Typography>
-          </Box>
-        ))}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
-          ביטול
-        </Button>
-        <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
-          אשר
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </Container>
-</ThemeProvider>
-);
+              אשר
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openPermissionsDialog}
+          onClose={() => setOpenPermissionsDialog(false)}
+          aria-labelledby="permissions-dialog-title"
+          aria-describedby="permissions-dialog-description"
+        >
+          <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
+          <DialogContent>
+            {permissionsData.map(permission => (
+              <Box key={permission} display="flex" alignItems="center">
+                <Checkbox
+                  checked={newPermissions.includes(permission)}
+                  onChange={() => handlePermissionToggle(permission)}
+                />
+                <Typography>{permission}</Typography>
+              </Box>
+            ))}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
+              ביטול
+            </Button>
+            <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
+              אשר
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </ThemeProvider>
+  );
 };
 
 export default ChangePermission;
