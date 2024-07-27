@@ -48,7 +48,7 @@ const ChangePermission = () => {
 
   const handlePermissionsChange = (userId) => {
     const user = users.find(user => user.userId === userId);
-    const userPermissions = user.permissions || [];
+    const userPermissions = getUserPermissions(userId);
     setSelectedUser(user);
     setNewPermissions(userPermissions);
     setOpenPermissionsDialog(true);
@@ -282,12 +282,12 @@ const ChangePermission = () => {
           <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
           <DialogContent>
             {permissionsData.map(permission => (
-              <Box key={permission.name} display="flex" alignItems="center">
+              <Box key={permission} display="flex" alignItems="center">
                 <Checkbox
-                  checked={newPermissions.includes(permission.name)}
-                  onChange={() => handlePermissionToggle(permission.name)}
+                  checked={newPermissions.includes(permission)}
+                  onChange={() => handlePermissionToggle(permission)}
                 />
-                <Typography>{permission.name}</Typography>
+                <Typography>{permission}</Typography>
               </Box>
             ))}
           </DialogContent>
