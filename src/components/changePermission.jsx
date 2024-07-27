@@ -224,8 +224,12 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
-                  <TableCell align="right" style={{ color: 'red', fontWeight: 'bold' }}>
-                    {user.role === 'Librarian' && getUserPermissions(user.userId).join(', ')}
+                  <TableCell align="right">
+                    {user.role === 'Librarian' && (
+                      <Typography style={{ color: 'red', fontWeight: 'bold' }}>
+                        {getUserPermissions(user.userId).join(', ')}
+                      </Typography>
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     {user.role === 'Librarian' && (
