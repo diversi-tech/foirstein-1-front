@@ -14,6 +14,26 @@ const userService = {
       throw error;
     }
   },
+  getAllPermissions: async () => {
+    try {
+        debugger
+      const response = await axios.get(`${API_URL}/getPermissions`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
+    }
+  },
+  updateUserPermissions: async (userId, permissions) => {
+    try {
+      const response = await axios.post(`${API_URL}/updatePermissions/${userId}`, { permissions });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating permissions:', error);
+      throw error;
+    }
+  },
+
   verifyIdNumber: async (idNumber) => {
     debugger
     try {

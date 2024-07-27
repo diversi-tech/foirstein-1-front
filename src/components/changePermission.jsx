@@ -19,6 +19,7 @@ const ChangePermission = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
   const [newPermissions, setNewPermissions] = useState([]);
+  const [permissionsData, setPermissionsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -28,6 +29,14 @@ const ChangePermission = () => {
       })
       .catch(error => {
         console.error('Error fetching users:', error);
+      });
+
+    userService.getAllPermissions()
+      .then(response => {
+        setPermissionsData(response);
+      })
+      .catch(error => {
+        console.error('Error fetching permissions:', error);
       });
   }, [dispatch]);
 
@@ -39,8 +48,9 @@ const ChangePermission = () => {
 
   const handlePermissionsChange = (userId) => {
     const user = users.find(user => user.userId === userId);
+    const userPermissions = permissionsData.find(perm => perm.userId === userId)?.permissions || [];
     setSelectedUser(user);
-    setNewPermissions(user.permissions || []);
+    setNewPermissions(userPermissions);
     setOpenPermissionsDialog(true);
   };
 
@@ -234,64 +244,41 @@ const ChangePermission = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenRoleDialog(false)} color="primary">
-              ביטול
-            </Button>
             <Button onClick={confirmRoleChange} color="primary" autoFocus>
-              אישור
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          open={openPermissionsDialog}
-          onClose={() => setOpenPermissionsDialog(false)}
-          aria-labelledby="permissions-dialog-title"
-          aria-describedby="permissions-dialog-description"
-        >
-          <DialogTitle id="permissions-dialog-title" style={{ fontSize: '24px', color: 'red', textShadow: '1px 1px 2px rgba(255, 0, 0, 0.7)' }}>
-            שינוי הרשאות ספרנית
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="permissions-dialog-description" style={{ fontSize: '18px', color: 'black', textAlign: 'center' }}>
-              בחר את ההרשאות החדשות עבור {selectedUser?.fname}:
-            </DialogContentText>
-            <Box sx={{ mt: 2 }}>
-              <Box>
-                <Checkbox
-                  checked={newPermissions.includes('File')}
-                  onChange={() => handlePermissionToggle('File')}
-                />
-                <Typography variant="body1">File</Typography>
-              </Box>
-              <Box>
-                <Checkbox
-                  checked={newPermissions.includes('Book')}
-                  onChange={() => handlePermissionToggle('Book')}
-                />
-                <Typography variant="body1">Book</Typography>
-              </Box>
-              <Box>
-                <Checkbox
-                  checked={newPermissions.includes('Physical')}
-                  onChange={() => handlePermissionToggle('Physical')}
-                />
-                <Typography variant="body1">Physical</Typography>
-              </Box>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
-              ביטול
-            </Button>
-            <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
-              אישור
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Container>
-    </ThemeProvider>
-  );
+אשר
+</Button>
+</DialogActions>
+</Dialog>
+  <Dialog
+      open={openPermissionsDialog}
+      onClose={() => setOpenPermissionsDialog(false)}
+      aria-labelledby="permissions-dialog-title"
+      aria-describedby="permissions-dialog-description"
+    >
+      <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
+      <DialogContent>
+        {permissionsData.map(permission => (
+          <Box key={permission} display="flex" alignItems="center">
+            <Checkbox
+              checked={newPermissions.includes(permission)}
+              onChange={() => handlePermissionToggle(permission)}
+            />
+            <Typography>{permission}</Typography>
+          </Box>
+        ))}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
+          ביטול
+        </Button>
+        <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
+          אשר
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </Container>
+</ThemeProvider>
+);
 };
 
 export default ChangePermission;
