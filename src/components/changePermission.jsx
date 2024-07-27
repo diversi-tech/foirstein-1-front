@@ -223,7 +223,15 @@ const ChangePermission = () => {
                   </TableCell>
                   <TableCell align="right">{user.fname}</TableCell>
                   <TableCell align="right">{user.tz}</TableCell>
-                  <TableCell align="right">{user.permissions.join(', ')}</TableCell>
+                  <TableCell align="right">
+                    {user.role === 'Librarian' ? (
+                      <Typography style={{ color: 'red', fontWeight: 'bold' }}>
+                        {user.permissions.join(', ')}
+                      </Typography>
+                    ) : (
+                      user.permissions.join(', ')
+                    )}
+                  </TableCell>
                   {user.role === 'Librarian' && (
                     <TableCell align="right">
                       <Button onClick={() => handlePermissionsChange(user.userId)}>שנה הרשאות</Button>
@@ -255,6 +263,7 @@ const ChangePermission = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
         <Dialog
           open={openPermissionsDialog}
           onClose={() => setOpenPermissionsDialog(false)}
