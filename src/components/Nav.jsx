@@ -79,7 +79,9 @@ export const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [adminAnchorEl, setAdminAnchorEl] = useState(null);
+  const [libarianAnchorEl, setlibarianAnchorEl] = useState(null);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const [islibarianMenuOpen, setIslibarianMenuOpen] = useState(false);
   const greetingMessage = getGreetingMessage();
   const role = isLoggedIn ? getRoleFromToken() : null;
   const userName = isLoggedIn ? getUserNameFromToken() : null;
@@ -123,6 +125,14 @@ export const Nav = () => {
   const handleAdminMenuClose = () => {
     setAdminAnchorEl(null);
     setIsAdminMenuOpen(false);
+  };
+  const handleLibarianMenuOpen = (event) => {
+    setlibarianAnchorEl(event.currentTarget);
+    setIslibarianMenuOpen(true);
+  };
+  const handleLibarianMenuClose = () => {
+    setlibarianAnchorEl(null);
+    setIslibarianMenuOpen(false);
   };
 
   const renderUserAvatar = (name) => {
@@ -205,18 +215,18 @@ export const Nav = () => {
                              ניהול משתמשים
                        </StyledLink>
                        <AdminButton
-                onMouseEnter={handleAdminMenuOpen}
-                onMouseLeave={handleAdminMenuClose}
-                active={isAdminMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
+                onMouseEnter={handleLibarianMenuOpen}
+                onMouseLeave={handleLibarianMenuClose}
+                active={islibarianMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
                 ref={(node) => {
-                  setAdminAnchorEl(node);
+                  setlibarianAnchorEl(node);
                 }}
               >
                  אזור ספרנית
               </AdminButton>
               <Popper
-                open={isAdminMenuOpen}
-                anchorEl={adminAnchorEl}
+                open={islibarianMenuOpen}
+                anchorEl={libarianAnchorEl}
                 role={undefined}
                 transition
                 disablePortal
@@ -228,9 +238,9 @@ export const Nav = () => {
                       transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
                     }}
                   >
-                    <Paper onMouseEnter={handleAdminMenuOpen} onMouseLeave={handleAdminMenuClose}>
-                      <ClickAwayListener onClickAway={handleAdminMenuClose}>
-                        <MenuList autoFocusItem={isAdminMenuOpen} id="menu-list-grow">
+                    <Paper onMouseEnter={handleLibarianMenuOpen} onMouseLeave={handleLibarianMenuClose}>
+                      <ClickAwayListener onClickAway={handleLibarianMenuClose}>
+                        <MenuList autoFocusItem={islibarianMenuOpen} id="menu-list-grow">
                           <MenuItem onClick={() => navigate('/items')}>כל הפריטים</MenuItem>
                           <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור </MenuItem>
                           <MenuItem onClick={() => navigate('/studentRequest')}>בקשות של תלמידות</MenuItem>
