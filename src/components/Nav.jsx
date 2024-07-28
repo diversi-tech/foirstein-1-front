@@ -157,9 +157,6 @@ export const Nav = () => {
               מרחבית 
             </Typography>
           </RightSection>
-          <StyledLink to="/" active={location.pathname === '/' || location.pathname === '/login/home' || location.pathname === '/home'}>
-            דף הבית
-          </StyledLink>
           {!isLoggedIn && (
             <StyledLink to="/login" active={location.pathname === '/login' || location.pathname === '/login/security-question/reset-password/password-reset-success/login'}>
               התחברות
