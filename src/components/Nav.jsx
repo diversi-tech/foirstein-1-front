@@ -98,9 +98,8 @@ export const Nav = () => {
 
   const handleLogout = () => {
     document.cookie = `jwt=; path=/; domain=.foirstein.diversitech.co.il; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-    // sessionStorage.removeItem('jwt');
     setIsLoggedIn(false);
-    navigate('/home');
+    navigate('/login');
     console.log('Logging out...');
   };
 
@@ -134,7 +133,10 @@ export const Nav = () => {
     setlibarianAnchorEl(null);
     setIslibarianMenuOpen(false);
   };
-
+  const handleProfileClickToRequestStatus = () => {
+    navigate('/StatusListView');
+    handleMenuClose();
+  };
   const renderUserAvatar = (name) => {
     if (name) {
       return name.charAt(0).toUpperCase();

@@ -14,14 +14,12 @@ import ViewReports from "./reports/showReport";
 import ReportPage from "./reports/showReport1";
 import Charts from "./AllCharts/charts";
 import Footer from "./footer";
-import { Home } from "./login/home";
 import PasswordRecovery from "./resetPassword/passwordRecovery";
 import '../App.css';
 import ProfileForm from "./personalArea/profileForm";
 import AccessibilityOptions from "./Accessibility/AccessibilityOptions";
 import { AccessibilityProvider } from "./Accessibility/AccessibilityContext";
 import { useEffect } from "react";
-import StatusListView from "./personalArea/StatusListView";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -42,15 +40,13 @@ export const Routing = () => {
             <AccessibilityOptions />
           </div>
           <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/home' element={<Home />} />
+            <Route path="/" element={<Login />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
             <Route path='/itemsPendingApproval' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/itemsPendingApproval" />} />
             <Route path='/studentRequest' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/studentRequest" />} />
             <Route path='/tag-list' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/tag-list" />} />
             <Route path='/Charts' element={<Charts />} />
-            <Route path='login/home' element={<Home />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
             <Route path='/changePermission' element={<ChangePermission />} />
             <Route path='/UserManagementComponent' element={<UserManagementComponent />} />
@@ -58,7 +54,6 @@ export const Routing = () => {
             <Route path="/" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profileform" element={<ProfileForm />} />
-            <Route path="home" element={<Home />} />
             <Route path="/ManagerDashboard" element={<ManagerDashboard />} />
             <Route path="/view-reports" element={<ViewReports />} />
             <Route path="/report/:reportId" element={<ReportPage />} />
@@ -67,9 +62,8 @@ export const Routing = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/password-reset-success" element={<PasswordResetSuccess />} />
             <Route path="login/security-question/reset-password/password-reset-success/login" element={<Login />} />
-            <Route path="login/security-question/reset-password/password-reset-success/login/home" element={<Home />} />
             <Route path="/passwordRecovery" element={<PasswordRecovery />} />
-            <Route path="/StatusListView" element={<StatusListView />} />
+            <Route path='/StatusListView' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/StatusListView" />} />
           </Routes>
           <Footer />
         </div>
