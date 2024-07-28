@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox,
+  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Button, TextField, InputAdornment, Checkbox,
   createTheme
 } from '@mui/material';
 import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
-import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -34,14 +34,17 @@ const ChangePermission = () => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.userReducer.userList);
   const [openRoleDialog, setOpenRoleDialog] = useState(false);
-  const [openPermissionsDialog, setOpenPermissionsDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
   const [newPermissions, setNewPermissions] = useState([]);
   const [permissionsData, setPermissionsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const allPermissions = ["Book", "File", "Physical"];
+  const allPermissions = {
+    "Book": "ספר",
+    "File": "קובץ",
+    "Physical": "פס קול"
+  };
 
   useEffect(() => {
     userService.getAllUsers()
@@ -67,12 +70,9 @@ const ChangePermission = () => {
     setOpenRoleDialog(true);
   };
 
-  const handlePermissionsChange = (userId) => {
-    const user = users.find(user => user.userId === userId);
-    const userPermissions = permissionsData.find(perm => perm.userId === userId)?.permissions || [];
-    setSelectedUser(user);
-    setNewPermissions(userPermissions);
-    setOpenPermissionsDialog(true);
+  const handlePermissionsChange = (userId, permissions) => {
+    setSelectedUser(users.find(user => user.userId === userId));
+    setNewPermissions(permissions);
   };
 
   const confirmRoleChange = () => {
@@ -112,12 +112,12 @@ const ChangePermission = () => {
     setOpenRoleDialog(false);
   };
 
-  const confirmPermissionsChange = () => {
-    userService.updateUserPermissions(selectedUser.userId, newPermissions)
+  const confirmPermissionsChange = (userId) => {
+    userService.updateUserPermissions(userId, newPermissions)
       .then(response => {
         if (response.success) {
           const updatedPermissionsData = permissionsData.map(perm => 
-            perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
+            perm.userId === userId ? { ...perm, permissions: newPermissions } : perm
           );
           setPermissionsData(updatedPermissionsData);
 
@@ -146,7 +146,6 @@ const ChangePermission = () => {
       .catch((error) => {
         console.error('Error updating permissions:', error);
       });
-    setOpenPermissionsDialog(false);
   };
 
   const getIconByRole = (role) => {
@@ -249,20 +248,16 @@ const ChangePermission = () => {
                       <TableCell align="right" style={{ width: '200px' }}>
                         {user.role === 'Librarian' && (
                           <Box display="flex" alignItems="center" justifyContent="flex-start">
-                            <Select
-                              multiple
-                              value={getUserPermissions(user.userId)}
-                              onChange={(e) => handlePermissionsChange(user.userId)}
-                              renderValue={(selected) => selected.join(', ')}
-                              style={{ marginLeft: 8, flexGrow: 1 }}
-                            >
-                              {allPermissions.map(permission => (
-                                <MenuItem key={permission} value={permission}>
-                                  <Checkbox checked={getUserPermissions(user.userId).includes(permission)} />
-                                  {permission}
-                                </MenuItem>
-                              ))}
-                            </Select>
+                            {Object.keys(allPermissions).map(permission => (
+                              <Box key={permission} display="flex" alignItems="center" ml={1}>
+                                <Checkbox
+                                  checked={getUserPermissions(user.userId).includes(permission)}
+                                  onChange={() => handlePermissionToggle(permission)}
+                                  style={{ marginLeft: 8 }}
+                                />
+                                {allPermissions[permission]}
+                              </Box>
+                            ))}
                           </Box>
                         )}
                       </TableCell>
@@ -271,63 +266,11 @@ const ChangePermission = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            <Dialog
-              open={openRoleDialog}
-              onClose={() => setOpenRoleDialog(false)}
-              aria-labelledby="role-dialog-title"
-              aria-describedby="role-dialog-description"
-            >
-              <DialogTitle id="role-dialog-title" style={{ fontSize: '24px', color: 'red', textShadow: '1px 1px 2px rgba(255, 0, 0, 0.7)' }}>
-                אישור שינוי הרשאה
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="role-dialog-description" style={{ fontSize: '18px', color: 'black', textAlign: 'center' }}>
-                  האם אתה בטוח כי ברצונך לשנות ל{selectedUser?.fname} את ההרשאה ל{getRoleNameInHebrew(newRole)}
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setOpenRoleDialog(false)} color="primary">
-                  ביטול
-                </Button>
-                <Button onClick={confirmRoleChange} color="primary" autoFocus>
-                  אישור
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-            <Dialog
-              open={openPermissionsDialog}
-              onClose={() => setOpenPermissionsDialog(false)}
-              aria-labelledby="permissions-dialog-title"
-              aria-describedby="permissions-dialog-description"
-            >
-              <DialogTitle id="permissions-dialog-title">שינוי הרשאות</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="permissions-dialog-description">
-                  סמן את ההרשאות שברצונך להקצות לספרנית:
-                </DialogContentText>
-                <Box>
-                  {allPermissions.map(permission => (
-                    <Box key={permission}>
-                      <Checkbox
-                        checked={newPermissions.includes(permission)}
-                        onChange={() => handlePermissionToggle(permission)}
-                      />
-                      {permission}
-                    </Box>
-                  ))}
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
-                  סגור
-                </Button>
-                <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
-                  אישור
-                </Button>
-              </DialogActions>
-            </Dialog>
+            <Box display="flex" justifyContent="center" mt={2}>
+              <Button variant="contained" color="primary" onClick={() => confirmPermissionsChange(selectedUser?.userId)}>
+                אישור
+              </Button>
+            </Box>
           </Container>
         </div>
       </ThemeProvider>
