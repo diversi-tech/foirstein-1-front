@@ -183,16 +183,17 @@ const ChangePermission = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="right">הרשאה</TableCell>
                     <TableCell align="right">שם פרטי</TableCell>
                     <TableCell align="right">תעודת זהות</TableCell>
+                    <TableCell align="right">הרשאה</TableCell>
                     <TableCell align="right">הרשאות נוכחיות</TableCell>
-                    <TableCell align="right">פעולות</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredUsers.map(user => (
                     <TableRow key={user.userId}>
+                      <TableCell align="right">{user.fname}</TableCell>
+                      <TableCell align="right">{user.tz}</TableCell>
                       <TableCell align="right" style={{ width: '200px' }}>
                         <Box display="flex" alignItems="center" justifyContent="flex-start">
                           {getIconByRole(user.role)}
@@ -207,14 +208,10 @@ const ChangePermission = () => {
                           </Select>
                         </Box>
                       </TableCell>
-                      <TableCell align="right">{user.fname}</TableCell>
-                      <TableCell align="right">{user.tz}</TableCell>
                       <TableCell align="right">
                         <Typography style={{ color: 'red' }}>
-                          {user.role === 'Librarian' && getUserPermissions(user.userId).join(', ')}
+                          {getUserPermissions(user.userId).join(', ')}
                         </Typography>
-                      </TableCell>
-                      <TableCell align="right">
                         {user.role === 'Librarian' && (
                           <Button
                             variant="contained"
