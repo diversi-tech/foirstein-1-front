@@ -21,6 +21,7 @@ import ProfileForm from "./personalArea/profileForm";
 import AccessibilityOptions from "./Accessibility/AccessibilityOptions";
 import { AccessibilityProvider } from "./Accessibility/AccessibilityContext";
 import { useEffect } from "react";
+import StatusListView from "./personalArea/StatusListView";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -68,6 +69,7 @@ export const Routing = () => {
             <Route path="login/security-question/reset-password/password-reset-success/login" element={<Login />} />
             <Route path="login/security-question/reset-password/password-reset-success/login/home" element={<Home />} />
             <Route path="/passwordRecovery" element={<PasswordRecovery />} />
+            <Route path="/StatusListView" element={<StatusListView />} />
           </Routes>
           <Footer />
         </div>

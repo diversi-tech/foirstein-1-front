@@ -272,6 +272,7 @@ export const Nav = () => {
                   onClose={handleMenuClose}
                 >
                   <MenuItem onClick={handleProfileClick}>ניהול חשבון</MenuItem>
+                  <MenuItem onClick={handleProfileClickToRequestStatus}>רשימת השאלות</MenuItem>
                   <MenuItem onClick={handleLogout}>התנתקות</MenuItem>
                 </Menu>
               </>
