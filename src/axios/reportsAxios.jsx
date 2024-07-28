@@ -2,6 +2,8 @@ import axios from 'axios';
 
 let userUrl = 'https://foirstein-1-back.onrender.com/api/Report';
 
+
+
 const ReportService = {
     getAllReports: async () => {
         try {
@@ -13,27 +15,28 @@ const ReportService = {
         }
     },
 
-    createSearchLogsReport: async (reportName) => {
+    createSearchLogsReport: async (reportName,userid) => {
         try {
-            const response = await axios.get(`${userUrl}/GetSearchLogsBorrowRequests?reportName=${reportName}&type=חיפושים`);
+            const response = await axios.get(`${userUrl}/GetSearchLogsBorrowRequests?reportName=${reportName}&type=חיפושים&userid=${userid}`);
             return response.data;
         } catch (error) {
             console.error('Error creating search logs report:', error);
             throw error;
         }
     },
-    createAnnualReport: async (reportName) => {
+    createAnnualReport: async (reportName,userid) => {
         try {
-            const response = await axios.get(`${userUrl}/getCountByDate?reportName=${reportName}&type=שנתי`);
+            debugger
+            const response = await axios.get(`${userUrl}/getCountByDate?reportName=${reportName}&type=שנתי&userid=${userid}`);
             return response.data;
         } catch (error) {
             console.error('Error creating annual report:', error);
             throw error;
         }
     },
-    createActivityReport: async (reportName) => {
+    createActivityReport: async (reportName,userid) => {
         try {
-            const response = await axios.get(`${userUrl}/activity-report?reportName=${reportName}&type=פעילות`);
+            const response = await axios.get(`${userUrl}/activity-report?reportName=${reportName}&type=פעילות&userid=${userid}`);
             return response.data;
         } catch (error) {
             console.error('Error creating activity report:', error);

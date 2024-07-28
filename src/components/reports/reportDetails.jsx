@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../theme';
 import ReportService from '../../axios/reportsAxios';
-import { getUserNameFromToken } from '../decipheringToken';
+import { getUserIdFromTokenid, getUserNameFromToken } from '../decipheringToken';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -60,6 +60,7 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const username = getUserNameFromToken();
+  const userid=getUserIdFromTokenid();
 
   const handleGenerateReport = async () => {
     if (!reportName.trim()) {
@@ -71,11 +72,13 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
     try {
       let response;
       if (report.title === 'פעילות') {
-        response = await ReportService.createActivityReport(reportName, username);
+        debugger
+        response = await ReportService.createActivityReport(reportName,userid);
       } else if (report.title === 'חיפושים') {
-        response = await ReportService.createSearchLogsReport(reportName, username);
+        response = await ReportService.createSearchLogsReport(reportName,userid);
       } else if (report.title === 'שנתי') {
-        response = await ReportService.createAnnualReport(reportName, username);
+        debugger
+        response = await ReportService.createAnnualReport(reportName,userid);
       } else {
         alert('לא תקין');
         return;

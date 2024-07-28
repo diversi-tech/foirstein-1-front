@@ -163,7 +163,7 @@ const alefFont = 'AAEAAAARAQAABAAQR0RFRgd0CPgAAAGgAAAAOkdQT1Ne0vuhAAASmAAAA4ZHU1
 const ReportPage = () => {
   const location = useLocation();
   const { report, type } = location.state;
-
+debugger
   const parseReportData = (reportData) => {
     const rows = reportData.trim().split('\n');
     return rows.map(row => {
@@ -185,9 +185,9 @@ const ReportPage = () => {
     doc.setLanguage('he-IL');
     doc.setR2L(true);
 
-    doc.text(`חודה םש: ${report.reportName}`, 190, 10, { align: 'right' });
+    doc.text(`שם הדוח: ${report.reportName}`, 190, 10, { align: 'right' });
     doc.text(`נוצר בתאריך: ${new Date(report.generatedAt).toLocaleString()}`, 190, 20, { align: 'right' });
-    doc.text(`ידי לע רצונ ${report.generatedBy}`, 190, 30, { align: 'right' });
+    doc.text(`נוצר על ידי ${report.generatedBy}`, 190, 30, { align: 'right' });
 
     const data = parseReportData(report.reportData);
 
@@ -197,7 +197,7 @@ const ReportPage = () => {
     switch (type) {
       case 'פעילות':
         columns = ['מספר פעולות', 'שם משתמש'];
-        rows = data.map(item => [item.b, item.a.split('').reverse().join('')]);
+        rows = data.map(item => [ item.b.split('').reverse().join(''),item.a]);
         break;
       case 'חיפושים':
         columns = ['תאריך הבקשה', 'קוד הבקשה', 'תאריך החיפוש', 'תוכן החיפוש', 'קוד משתמש'];
@@ -205,7 +205,7 @@ const ReportPage = () => {
         break;
       case 'שנתי':
         columns = ['כמות המשתמשים שנוספו בשנה זו', 'שנה'];
-        rows = data.map(item => [item.b, item.a.split('').reverse().join('')]);
+        rows = data.map(item => [item.b.split('').reverse().join(''), item.a.split('').reverse().join('')]);
         break;
       default:
         break;
@@ -318,11 +318,6 @@ const ReportPage = () => {
           >
             הורד ל-PDF
           </Button>
-        </Box>
-        <Box sx={{ marginTop: 2 }}>
-          <Typography variant="h6" align="right">שם הדוח: {report.reportName}</Typography>
-          <Typography variant="h6" align="right">נוצר בתאריך: {new Date(report.generatedAt).toLocaleString()}</Typography>
-          <Typography variant="h6" align="right">נוצר על ידי: {report.generatedBy}</Typography>
         </Box>
         {renderReportContent()}
       </Container>
