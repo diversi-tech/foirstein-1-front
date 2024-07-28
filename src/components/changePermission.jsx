@@ -247,25 +247,24 @@ const ChangePermission = () => {
                         </Box>
                       </TableCell>
                       <TableCell align="right" style={{ width: '200px' }}>
-                        <Box display="flex" alignItems="center" justifyContent="flex-start">
-                          <Typography style={{ color: 'red' }}>
-                            {getUserPermissions(user.userId).join(', ')}
-                          </Typography>
-                          <Select
-                            multiple
-                            value={getUserPermissions(user.userId)}
-                            onChange={(e) => handlePermissionsChange(user.userId)}
-                            renderValue={(selected) => selected.join(', ')}
-                            style={{ marginLeft: 8, flexGrow: 1 }}
-                          >
-                            {allPermissions.map(permission => (
-                              <MenuItem key={permission} value={permission}>
-                                <Checkbox checked={getUserPermissions(user.userId).includes(permission)} />
-                                {permission}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </Box>
+                        {user.role === 'Librarian' && (
+                          <Box display="flex" alignItems="center" justifyContent="flex-start">
+                            <Select
+                              multiple
+                              value={getUserPermissions(user.userId)}
+                              onChange={(e) => handlePermissionsChange(user.userId)}
+                              renderValue={(selected) => selected.join(', ')}
+                              style={{ marginLeft: 8, flexGrow: 1 }}
+                            >
+                              {allPermissions.map(permission => (
+                                <MenuItem key={permission} value={permission}>
+                                  <Checkbox checked={getUserPermissions(user.userId).includes(permission)} />
+                                  {permission}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </Box>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
