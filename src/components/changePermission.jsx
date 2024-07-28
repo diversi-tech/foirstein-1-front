@@ -36,9 +36,9 @@ const ChangePermission = () => {
   const [openRoleDialog, setOpenRoleDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
-  const [newPermissions, setNewPermissions] = useState([]);
   const [permissionsData, setPermissionsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [newPermissions, setNewPermissions] = useState([]); // Added
 
   const allPermissions = {
     "Book": "ספר",
@@ -71,7 +71,8 @@ const ChangePermission = () => {
   };
 
   const handlePermissionsChange = (userId, permissions) => {
-    setSelectedUser(users.find(user => user.userId === userId));
+    const user = users.find(user => user.userId === userId);
+    setSelectedUser(user);
     setNewPermissions(permissions);
   };
 
@@ -112,12 +113,12 @@ const ChangePermission = () => {
     setOpenRoleDialog(false);
   };
 
-  const confirmPermissionsChange = (userId) => {
-    userService.updateUserPermissions(userId, newPermissions)
+  const confirmPermissionsChange = (userId, permissions) => {
+    userService.updateUserPermissions(userId, permissions)
       .then(response => {
         if (response.success) {
           const updatedPermissionsData = permissionsData.map(perm => 
-            perm.userId === userId ? { ...perm, permissions: newPermissions } : perm
+            perm.userId === userId ? { ...perm, permissions: permissions } : perm
           );
           setPermissionsData(updatedPermissionsData);
 
@@ -247,9 +248,9 @@ const ChangePermission = () => {
                       </TableCell>
                       <TableCell align="right" style={{ width: '200px' }}>
                         {user.role === 'Librarian' && (
-                          <Box display="flex" alignItems="center" justifyContent="flex-start">
+                          <Box display="flex" flexDirection="column" alignItems="flex-start">
                             {Object.keys(allPermissions).map(permission => (
-                              <Box key={permission} display="flex" alignItems="center" ml={1}>
+                              <Box key={permission} display="flex" alignItems="center">
                                 <Checkbox
                                   checked={getUserPermissions(user.userId).includes(permission)}
                                   onChange={() => handlePermissionToggle(permission)}
@@ -258,6 +259,9 @@ const ChangePermission = () => {
                                 {allPermissions[permission]}
                               </Box>
                             ))}
+                            <Button variant="contained" color="primary" onClick={() => confirmPermissionsChange(user.userId, newPermissions)}>
+                              אישור
+                            </Button>
                           </Box>
                         )}
                       </TableCell>
@@ -266,11 +270,6 @@ const ChangePermission = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box display="flex" justifyContent="center" mt={2}>
-              <Button variant="contained" color="primary" onClick={() => confirmPermissionsChange(selectedUser?.userId)}>
-                אישור
-              </Button>
-            </Box>
           </Container>
         </div>
       </ThemeProvider>
