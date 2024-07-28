@@ -191,8 +191,6 @@ export const Nav = () => {
                           <MenuItem onClick={() => navigate('/changePermission')}>שינוי הרשאות</MenuItem>
                           <MenuItem onClick={() => navigate('/Charts')}>גרפים</MenuItem>
                           <MenuItem onClick={() => navigate('/ManagerDashboard')}>דוחות</MenuItem>
-                          {/* <MenuItem onClick={() => navigate('/UserManagementComponent')}>ניהול משתמשים</MenuItem> */}
-                          {/* <MenuItem onClick={() => navigate('/Librarian')}>הרשאות ספרנית</MenuItem> */}
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
@@ -206,9 +204,44 @@ export const Nav = () => {
                         <StyledLink to="/UserManagementComponent" active={location.pathname === '/UserManagementComponent'}>
                              ניהול משתמשים
                        </StyledLink>
-                         <StyledLink to="/Librarian" active={location.pathname === '/Librarian'}>
-                         הרשאות ספרנית
-                      </StyledLink></>
+                       <AdminButton
+                onMouseEnter={handleAdminMenuOpen}
+                onMouseLeave={handleAdminMenuClose}
+                active={isAdminMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
+                ref={(node) => {
+                  setAdminAnchorEl(node);
+                }}
+              >
+                 אזור ספרנית
+              </AdminButton>
+              <Popper
+                open={isAdminMenuOpen}
+                anchorEl={adminAnchorEl}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
+                    <Paper onMouseEnter={handleAdminMenuOpen} onMouseLeave={handleAdminMenuClose}>
+                      <ClickAwayListener onClickAway={handleAdminMenuClose}>
+                        <MenuList autoFocusItem={isAdminMenuOpen} id="menu-list-grow">
+                          <MenuItem onClick={() => navigate('/items')}>כל הפריטים</MenuItem>
+                          <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור </MenuItem>
+                          <MenuItem onClick={() => navigate('/studentRequest')}>בקשות של תלמידות</MenuItem>
+                          <MenuItem onClick={() => navigate('/tag-list')}>ניהול תגיות</MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+                    </>
                     )}
           <LeftSection>
             {isLoggedIn ? (
