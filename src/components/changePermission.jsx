@@ -112,6 +112,43 @@ const ChangePermission = () => {
     setOpenRoleDialog(false);
   };
 
+  const confirmPermissionsChange = () => {
+    userService.updateUserPermissions(selectedUser.userId, newPermissions)
+      .then(response => {
+        if (response.success) {
+          const updatedPermissionsData = permissionsData.map(perm => 
+            perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
+          );
+          setPermissionsData(updatedPermissionsData);
+
+          const currentUserId = getUserIdFromTokenid();
+          const activityLog = {
+            LogId: 0,
+            UserId: selectedUser.tz,
+            Activity: 'שינוי הרשאות',
+            Timestamp: new Date(),
+            UserId1: currentUserId,
+            UserId1NavigationUserId: currentUserId
+          };
+
+          ActivityLogService.addActivityLog(activityLog)
+            .then(activityResponse => {
+              console.log('Activity log added successfully:', activityResponse);
+            })
+            .catch(activityError => {
+              console.error('Error adding activity log:', activityError);
+            });
+
+        } else {
+          alert('Error updating permissions');
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating permissions:', error);
+      });
+    setOpenPermissionsDialog(false);
+  };
+
   const getIconByRole = (role) => {
     switch (role) {
       case 'Admin':
@@ -209,20 +246,25 @@ const ChangePermission = () => {
                           </Select>
                         </Box>
                       </TableCell>
-                      <TableCell align="right">
-                        <Box display="flex" flexDirection="column">
+                      <TableCell align="right" style={{ width: '200px' }}>
+                        <Box display="flex" alignItems="center" justifyContent="flex-start">
                           <Typography style={{ color: 'red' }}>
                             {getUserPermissions(user.userId).join(', ')}
                           </Typography>
-                          {user.role === 'Librarian' && (
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() => handlePermissionsChange(user.userId)}
-                            >
-                              שנה הרשאות
-                            </Button>
-                          )}
+                          <Select
+                            multiple
+                            value={getUserPermissions(user.userId)}
+                            onChange={(e) => handlePermissionsChange(user.userId)}
+                            renderValue={(selected) => selected.join(', ')}
+                            style={{ marginLeft: 8, flexGrow: 1 }}
+                          >
+                            {allPermissions.map(permission => (
+                              <MenuItem key={permission} value={permission}>
+                                <Checkbox checked={getUserPermissions(user.userId).includes(permission)} />
+                                {permission}
+                              </MenuItem>
+                            ))}
+                          </Select>
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -281,6 +323,9 @@ const ChangePermission = () => {
               <DialogActions>
                 <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
                   סגור
+                </Button>
+                <Button onClick={confirmPermissionsChange} color="primary" autoFocus>
+                  אישור
                 </Button>
               </DialogActions>
             </Dialog>
