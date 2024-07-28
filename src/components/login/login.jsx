@@ -54,9 +54,6 @@ function alertLogin(){
   });
   }
 
- window.addEventListener('beforeunload', () => { deleteTokenCookie(); });
-
-
 const Login = () => {
   const [tz, setTz] = useState('');
   const [password, setPassword] = useState('');
