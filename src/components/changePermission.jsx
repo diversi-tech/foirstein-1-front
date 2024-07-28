@@ -153,6 +153,7 @@ const ChangePermission = () => {
     user.tz.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   const getUserPermissions = (userId) => {
     const userPermissionsObj = permissionsData.find(permission => permission.userId === userId);
     return userPermissionsObj ? userPermissionsObj.permissions : [];
@@ -186,7 +187,7 @@ const ChangePermission = () => {
                     <TableCell align="right">שם פרטי</TableCell>
                     <TableCell align="right">תעודת זהות</TableCell>
                     <TableCell align="right">הרשאה</TableCell>
-                    <TableCell align="right">הרשאות נוכחיות</TableCell>
+                    <TableCell align="right">הרשאות ספרנית</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -209,18 +210,20 @@ const ChangePermission = () => {
                         </Box>
                       </TableCell>
                       <TableCell align="right">
-                        <Typography style={{ color: 'red' }}>
-                          {getUserPermissions(user.userId).join(', ')}
-                        </Typography>
-                        {user.role === 'Librarian' && (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handlePermissionsChange(user.userId)}
-                          >
-                            שנה הרשאות
-                          </Button>
-                        )}
+                        <Box display="flex" flexDirection="column">
+                          <Typography style={{ color: 'red' }}>
+                            {getUserPermissions(user.userId).join(', ')}
+                          </Typography>
+                          {user.role === 'Librarian' && (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handlePermissionsChange(user.userId)}
+                            >
+                              שנה הרשאות
+                            </Button>
+                          )}
+                        </Box>
                       </TableCell>
                     </TableRow>
                   ))}
