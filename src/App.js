@@ -10,8 +10,11 @@ import { AccessibilityProvider } from './components/Accessibility/AccessibilityC
 
 function App() {
   useEffect(() => {
-    // ניקוי ה-Local Storage בעת עליית האפליקציה
-    localStorage.clear();
+    function deleteTokenCookie() { 
+      document.cookie = 'token=; path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT'; 
+    }
+    window.addEventListener('beforeunload', deleteTokenCookie); // ניקוי המאזין בעת הסרת הקומפוננטה מה-
+    return () => { window.removeEventListener('beforeunload', deleteTokenCookie);};
   }, []);
   return (
   <Provider store={store}>

@@ -54,6 +54,9 @@ function alertLogin(){
   });
   }
 
+ window.addEventListener('beforeunload', () => { deleteTokenCookie(); });
+
+
 const Login = () => {
   const [tz, setTz] = useState('');
   const [password, setPassword] = useState('');
@@ -114,7 +117,7 @@ const Login = () => {
         // sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
         const token = response.data.token;
         // הגדרת ה-cookie עם ה-token
-        document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
+        document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
         dispatch(FillData(response.data));
         const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {
@@ -195,7 +198,7 @@ const Login = () => {
           alertLogin();
           sendTokenToOtherProjects(); 
           const token = response.data.token;
-          document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
+          document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
