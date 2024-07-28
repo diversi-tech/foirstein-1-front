@@ -217,7 +217,7 @@ export const Nav = () => {
                        <AdminButton
                 onMouseEnter={handleLibarianMenuOpen}
                 onMouseLeave={handleLibarianMenuClose}
-                active={islibarianMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
+                active={islibarianMenuOpen || ['/items', '/itemsPendingApproval', '/studentRequest', ,'/tag-list'].includes(location.pathname)}
                 ref={(node) => {
                   setlibarianAnchorEl(node);
                 }}
