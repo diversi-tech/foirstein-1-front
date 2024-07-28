@@ -44,10 +44,10 @@ export const Routing = () => {
             <Route path='/' element={<Home />} />
             <Route path='/home' element={<Home />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/" />} />
-            <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/items" />} />
-            <Route path='/itemsPendingApproval' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/itemsPendingApproval" />} />
-            <Route path='/studentRequest' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/studentRequest" />} />
-            <Route path='/tag-list' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/tag-list" />} />
+            <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
+            <Route path='/itemsPendingApproval' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/itemsPendingApproval" />} />
+            <Route path='/studentRequest' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/studentRequest" />} />
+            <Route path='/tag-list' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/tag-list" />} />
             <Route path='/Charts' element={<Charts />} />
             <Route path='login/home' element={<Home />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
