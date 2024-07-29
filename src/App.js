@@ -5,17 +5,9 @@ import theme from './theme'; // Path to your general design theme file
 import { Provider } from 'react-redux';
 import { store } from './redux/store.jsx';
 import { Routing } from './components/routing.jsx';
-import AccessibilityOptions from './components/Accessibility/AccessibilityOptions.jsx';
-import { AccessibilityProvider } from './components/Accessibility/AccessibilityContext.jsx';
 
 function App() {
-  // useEffect(() => {
-  //   function deleteTokenCookie() { 
-  //     document.cookie = 'token=; path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT'; 
-  //   }
-  //   window.addEventListener('beforeunload', deleteTokenCookie); // ניקוי המאזין בעת הסרת הקומפוננטה מה-
-  //   return () => { window.removeEventListener('beforeunload', deleteTokenCookie);};
-  // }, []);
+
   return (
   <Provider store={store}>
     <ThemeProvider theme={theme}>

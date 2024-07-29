@@ -41,12 +41,13 @@ export const Routing = () => {
           </div>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
-                        {/* <Route path='/search' element={<Login/>} /> */}
+            {/* <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} /> */}
+                        <Route path='/search' element={<Login/>} />
             <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
             <Route path='/itemsPendingApproval' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/itemsPendingApproval" />} />
             <Route path='/studentRequest' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/studentRequest" />} />
             <Route path='/tag-list' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/tag-list" />} />
+            <Route path="/items/borrowingItems" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items/borrowingItems" />} />
             <Route path='/Charts' element={<Charts />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
             <Route path='/changePermission' element={<ChangePermission />} />

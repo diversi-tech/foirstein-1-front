@@ -13,10 +13,10 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
-import { Delete, Edit, ExpandMore, ExpandLess, Visibility, VisibilityOff, Bolt } from '@mui/icons-material';
+import { Delete, Edit, ExpandMore, ExpandLess, Visibility, VisibilityOff, Bolt, Search } from '@mui/icons-material';
 import userService from '../axios/userAxios';
 import { FillData } from '../redux/actions/userAction';
-import { getUserIdFromTokenid } from './decipheringToken';
+import { getRoleFromToken, getUserIdFromTokenid } from './decipheringToken';
 import ActivityLogService from '../axios/ActivityLogAxios';
 import Swal from 'sweetalert2';
 
@@ -76,6 +76,9 @@ const UserManagementComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const roll = getRoleFromToken();
 
   const f = useSelector(j => j.userReducer.userList);
   const myDispatch = useDispatch();
@@ -84,10 +87,12 @@ const UserManagementComponent = () => {
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
+        setFilteredUsers(f);
       } else {
         try {
           const data = await userService.getAllUsers();
           setUsers(data);
+          setFilteredUsers(data);
           myDispatch(FillData(data));
         } catch (error) {
           console.error('Error fetching users:', error);
@@ -97,6 +102,29 @@ const UserManagementComponent = () => {
 
     fetchUsers();
   }, [f]);
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    filterUsers(query);
+  };
+
+  const filterUsers = (query) => {
+    const filtered = users.filter(user => 
+      user.fname.toLowerCase().includes(query) ||
+      user.sname.toLowerCase().includes(query) ||
+      user.tz.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query) ||
+      user.phoneNumber.toLowerCase().includes(query) ||
+      new Date(user.userDob).toLocaleDateString().toLowerCase().includes(query) ||
+      new Date(user.createdAt).toLocaleDateString().toLowerCase().includes(query) ||
+      new Date(user.updatedAt).toLocaleDateString().toLowerCase().includes(query) ||
+      getRoleInHebrew(user.role).includes(query) ||
+      user.megama.toLowerCase().includes(query)
+      ||getActivityInHebrew(user.activity).includes(query)
+    );
+    setFilteredUsers(filtered);
+  };
 
   const handleEditUser = (userId) => {  
     const userToEdit = users.find((user) => user.userId === userId);
@@ -230,8 +258,10 @@ const UserManagementComponent = () => {
       formData.append('Sname', newLname);
       formData.append('PasswordHash', newPasswordHash);
       formData.append('Email', newEmail);
-      formData.append('Role', newRole);
-      formData.append('CreatedAt', new Date().toDateString());
+      if (roll === 'Admin')
+        formData.append('Role', newRole);
+      else
+      formData.append('Role', 'Student');
       formData.append('UpdatedAt', new Date().toISOString().split('T')[0]);
       formData.append('UserDob', newUserDob);
       formData.append('PhoneNumber', newPhoneNumber);
@@ -325,6 +355,12 @@ const UserManagementComponent = () => {
         return role;
     }
   };
+  const getActivityInHebrew = (active) => {
+    if(active)
+      return 'פעיל';
+    return 'לא פעיל' ;
+    };
+  
 
 
   const sortUsers = (users) => {
@@ -334,7 +370,7 @@ const UserManagementComponent = () => {
       Student: 3,
     };
   
-    return [...users].sort((a, b) => {
+    return [...filteredUsers].sort((a, b) => {
       if (a.activity === b.activity) {
         return roleOrder[a.role] - roleOrder[b.role];
       }
@@ -353,6 +389,25 @@ const sortedUsers = sortUsers(users);
         <Grid item xs={12}>
           <Card>
             <CardContent>
+            <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <div dir="rtl">
+            <TextField
+    label="חיפוש"
+    variant="outlined"
+    fullWidth
+    value={searchQuery}
+    onChange={handleSearchChange}
+    placeholder="חפש לפי שם, ת.ז., טלפון, תאריך, אימייל וכו'"
+    style={{ marginBottom: '20px' }}
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <Search />
+        </InputAdornment>
+      ),
+    }}
+  /></div></ThemeProvider></CacheProvider>
               <Typography variant="h5" component="h2" gutterBottom align="right">
                 רשימת משתמשים
               </Typography>
@@ -447,6 +502,7 @@ const sortedUsers = sortUsers(users);
         <div dir="rtl">
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
+              <br></br>
               <TextField
                 label="אימייל"
                 fullWidth
@@ -455,7 +511,8 @@ const sortedUsers = sortUsers(users);
                 required
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}> 
+              <br></br>
               <TextField
                 label="שם פרטי"
                 fullWidth
@@ -532,6 +589,7 @@ const sortedUsers = sortUsers(users);
                 required
               />
             </Grid>
+            {roll=='Admin' &&(
             <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
             <InputLabel id="role-label">תפקיד</InputLabel>
@@ -542,11 +600,11 @@ const sortedUsers = sortUsers(users);
             onChange={(e)=>setNewRole(e.target.value)}
             required
           >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-            <MenuItem value="Librarian">Librarian</MenuItem>
+            <MenuItem value="Student">סטודנט</MenuItem>
+            <MenuItem value="Admin">מנהל</MenuItem>
+            <MenuItem value="Librarian">ספרנית</MenuItem>
           </Select></FormControl>
-      </Grid>
+      </Grid>)}
           </Grid>
         </div>
       </ThemeProvider>
@@ -570,6 +628,7 @@ const sortedUsers = sortUsers(users);
         <div dir="rtl">
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
+              <br></br>
               <TextField
                 label="אימייל"
                 fullWidth
@@ -579,6 +638,7 @@ const sortedUsers = sortUsers(users);
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <br></br>
               <TextField
                 label="שם פרטי"
                 fullWidth

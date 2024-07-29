@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList } from '@mui/material';
+import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList, Grid, Tooltip, Badge } from '@mui/material';
 import { styled } from '@mui/system';
+import MailIcon from '@mui/icons-material/Mail';
 import { getRoleFromToken, getUserNameFromToken, getCookie } from './decipheringToken';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const Root = styled('div')(({ theme }) => ({
   flexGrow: 1,
@@ -244,15 +246,46 @@ export const Nav = () => {
                           <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור </MenuItem>
                           <MenuItem onClick={() => navigate('/studentRequest')}>בקשות של תלמידות</MenuItem>
                           <MenuItem onClick={() => navigate('/tag-list')}>ניהול תגיות</MenuItem>
+                          <MenuItem onClick={() => navigate('/items/borrowingItems')}>פריטים מושאלים</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
                   </Grow>
                 )}
               </Popper>
+
                     </>
                     )}
           <LeftSection>
+          {(role === 'Librarian'||role === 'Admin') && (
+          <Grid container spacing={4} style={{ width: '40%', marginLeft: '40px' }}>
+              <Grid item xs={6}>
+                <Tooltip title="בקשות השאלה של תלמידות" arrow>
+                  <IconButton size="large"
+                    aria-label="show 4 new mails"
+                    color="inherit"
+                    onClick={() => navigate('/studentRequest')}>
+                    <Badge  color="primary">
+                      <MailIcon/>
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={6}>
+                <Tooltip title="פריטים שמחכים לטיפול" arrow>
+                  <IconButton
+                    size="large"
+                    aria-label="show 17 new notifications"
+                    color="inherit"
+                    onClick={() => navigate('/itemsPendingApproval')}
+                  >
+                    <Badge color="warning">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid> )}
             {isLoggedIn ? (
               <>
                 <IconButton
