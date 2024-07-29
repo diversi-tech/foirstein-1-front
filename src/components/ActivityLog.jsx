@@ -51,7 +51,7 @@ const ActivityLog = () => {
   const [activity, setActivity] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   useEffect(() => {
     fetchUsers();
@@ -124,17 +124,15 @@ const ActivityLog = () => {
     setPage(0);
   };
 
-  const handleRowToggle = (index) => {
-    setExpandedRow(expandedRow === index ? null : index);
+  const handleRowToggle = (logId) => {
+    setExpandedRow(expandedRow === logId ? null : logId);
   };
-
   const adjustPagination = () => {
-    debugger;
     const remainder = filteredLogs.length % rowsPerPage;
-    if (remainder > 0 && remainder < 3) {
-      setRowsPerPage(rowsPerPage - 3 + remainder);
+    if (remainder > 0 && filteredLogs.length > rowsPerPage) {
+      setRowsPerPage(20);
     } else {
-      setRowsPerPage(6);
+      setRowsPerPage(20);
     }
   };
 
@@ -166,18 +164,24 @@ const ActivityLog = () => {
 
   const Pagination = ({ count, page, rowsPerPage, onChangePage }) => {
     const pages = Math.max(1, Math.ceil(count / rowsPerPage));
+    const maxButtons = 8;
+    const halfMaxButtons = Math.floor(maxButtons / 2);
+    
+    const startPage = Math.max(0, Math.min(page - halfMaxButtons, pages - maxButtons));
+    const endPage = Math.min(pages, startPage + maxButtons);
+  
     const handleClick = (event, value) => {
       onChangePage(event, value);
     };
-
+  
     const handleBackButtonClick = () => {
       onChangePage(null, page - 1);
     };
-
+  
     const handleNextButtonClick = () => {
       onChangePage(null, page + 1);
     };
-
+  
     return (
       <Box
         sx={{
@@ -195,14 +199,14 @@ const ActivityLog = () => {
         >
           <ChevronLeft />
         </IconButton>
-        {Array.from({ length: pages }, (_, index) => (
+        {Array.from({ length: endPage - startPage }, (_, index) => (
           <Button
             key={index}
-            variant={page === index ? "contained" : "outlined"}
-            onClick={(event) => handleClick(event, index)}
+            variant={page === startPage + index ? "contained" : "outlined"}
+            onClick={(event) => handleClick(event, startPage + index)}
             sx={{ minWidth: "40px", mx: 0.5 }}
           >
-            {index + 1}
+            {startPage + index + 1}
           </Button>
         ))}
         <IconButton
@@ -215,7 +219,6 @@ const ActivityLog = () => {
       </Box>
     );
   };
-
   return (
     <Box sx={{ maxWidth: 1200, margin: "auto", padding: "20px" }}>
       <Grid
@@ -397,14 +400,14 @@ const ActivityLog = () => {
                       (user) => user.tz === log.userId
                     );
                     const fullName = user ? `${user.fname} ${user.sname}` : "";
-                    
+
                     const user1 = usersList.find(
                       (user1) => user1.userId === log.userId1
                     );
                     const fullName1 = user1
                       ? `${user1.fname} ${user1.sname}`
                       : "";
-                      debugger
+                    debugger;
 
                     return (
                       <React.Fragment key={log.logId}>
@@ -421,16 +424,15 @@ const ActivityLog = () => {
                           </TableCell>
                           <TableCell align="center">
                             <IconButton
-                              onClick={() =>
-                                handleRowToggle(page * rowsPerPage + index)
-                              }
+                              onClick={() => handleRowToggle(log.logId)}
                             >
-                              {expandedRow === page * rowsPerPage + index ? (
+                              {expandedRow === log.logId ? (
                                 <ExpandLess />
                               ) : (
                                 <ExpandMore />
                               )}
                             </IconButton>
+
                             {log.activity.length > 10
                               ? log.activity.substring(0, 10) + "..."
                               : log.activity}
@@ -445,22 +447,21 @@ const ActivityLog = () => {
                             colSpan={5}
                           >
                             <Collapse
-                              in={expandedRow === index}
+                              in={expandedRow === log.logId}
                               timeout="auto"
                               unmountOnExit
                             >
                               <Box sx={{ margin: 1 }}>
                                 <Typography variant="body2">
-                                  {`הפעילות נעשתה על משתמש: ${
-                                    fullName1
-                                    // user1 ? `${user1.fname} ${user1.sname}` : ""
+                                  {`הפעילות נעשתה על ידי משתמש: ${fullName1}`}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {`תעודת זהות: ${
+                                    user1 ? user1.tz : "לא ידוע"
                                   }`}
                                 </Typography>
                                 <Typography variant="body2">
-                                  {` תעודת זהות: ${user1.tz}`}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {` פעילות: ${log.activity}`}
+                                  {`פעילות: ${log.activity}`}
                                 </Typography>
                               </Box>
                             </Collapse>
