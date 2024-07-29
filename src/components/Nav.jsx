@@ -216,6 +216,7 @@ export const Nav = () => {
                              ניהול משתמשים
                        </StyledLink>
                        <AdminButton
+                onClick={()=>navigate('/items')}
                 onMouseEnter={handleLibarianMenuOpen}
                 onMouseLeave={handleLibarianMenuClose}
                 active={islibarianMenuOpen || ['/items', '/itemsPendingApproval', '/studentRequest', ,'/tag-list'].includes(location.pathname)}
