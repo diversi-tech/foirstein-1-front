@@ -4,7 +4,8 @@ import { styled } from '@mui/material/styles';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../theme';
 import ReportService from '../../axios/reportsAxios';
-import { getUserNameFromToken } from '../decipheringToken';
+import { getUserIdFromTokenid, getUserNameFromToken } from '../decipheringToken';
+import ActivityLogService from '../../axios/ActivityLogAxios';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -60,6 +61,7 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const username = getUserNameFromToken();
+  const userid=getUserIdFromTokenid();
 
   const handleGenerateReport = async () => {
     if (!reportName.trim()) {
@@ -71,11 +73,13 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
     try {
       let response;
       if (report.title === 'פעילות') {
-        response = await ReportService.createActivityReport(reportName, username);
+        debugger
+        response = await ReportService.createActivityReport(reportName,userid);
       } else if (report.title === 'חיפושים') {
-        response = await ReportService.createSearchLogsReport(reportName, username);
+        response = await ReportService.createSearchLogsReport(reportName,userid);
       } else if (report.title === 'שנתי') {
-        response = await ReportService.createAnnualReport(reportName, username);
+        debugger
+        response = await ReportService.createAnnualReport(reportName,userid);
       } else {
         alert('לא תקין');
         return;
@@ -84,7 +88,24 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
       setSnackbarMessage('נוצר בהצלחה!');
       setOpenSnackbar(true);
       handleClose();
-      onReportGenerated(); // Call the handler after generating the report
+      onReportGenerated();
+      const currentUserId = getUserIdFromTokenid();
+      const activityLog = {
+        LogId: 0,
+        UserId: null,
+        Activity: 'יצירת דוח',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        }); // Call the handler after generating the report
     } catch (error) {
       console.error('שגיאה ביצירת הדו"ח:', error);
       setSnackbarMessage('נכשל ביצירת הדו"ח.');
