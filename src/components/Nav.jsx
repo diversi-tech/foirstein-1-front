@@ -114,7 +114,7 @@ export const Nav = () => {
   };
 
   const handleProfileClick = () => {
-    navigate('/profile');
+    navigate('/profileform');
     handleMenuClose();
   };
 
