@@ -79,7 +79,9 @@ export const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [adminAnchorEl, setAdminAnchorEl] = useState(null);
+  const [libarianAnchorEl, setlibarianAnchorEl] = useState(null);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const [islibarianMenuOpen, setIslibarianMenuOpen] = useState(false);
   const greetingMessage = getGreetingMessage();
   const role = isLoggedIn ? getRoleFromToken() : null;
   const userName = isLoggedIn ? getUserNameFromToken() : null;
@@ -96,9 +98,8 @@ export const Nav = () => {
 
   const handleLogout = () => {
     document.cookie = `jwt=; path=/; domain=.foirstein.diversitech.co.il; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-    // sessionStorage.removeItem('jwt');
     setIsLoggedIn(false);
-    navigate('/home');
+    navigate('/login');
     console.log('Logging out...');
   };
 
@@ -124,7 +125,18 @@ export const Nav = () => {
     setAdminAnchorEl(null);
     setIsAdminMenuOpen(false);
   };
-
+  const handleLibarianMenuOpen = (event) => {
+    setlibarianAnchorEl(event.currentTarget);
+    setIslibarianMenuOpen(true);
+  };
+  const handleLibarianMenuClose = () => {
+    setlibarianAnchorEl(null);
+    setIslibarianMenuOpen(false);
+  };
+  const handleProfileClickToRequestStatus = () => {
+    navigate('/StatusListView');
+    handleMenuClose();
+  };
   const renderUserAvatar = (name) => {
     if (name) {
       return name.charAt(0).toUpperCase();
@@ -145,9 +157,6 @@ export const Nav = () => {
               מרחבית 
             </Typography>
           </RightSection>
-          <StyledLink to="/" active={location.pathname === '/' || location.pathname === '/login/home' || location.pathname === '/home'}>
-            דף הבית
-          </StyledLink>
           {!isLoggedIn && (
             <StyledLink to="/login" active={location.pathname === '/login' || location.pathname === '/login/security-question/reset-password/password-reset-success/login'}>
               התחברות
@@ -191,8 +200,6 @@ export const Nav = () => {
                           <MenuItem onClick={() => navigate('/changePermission')}>שינוי הרשאות</MenuItem>
                           <MenuItem onClick={() => navigate('/Charts')}>גרפים</MenuItem>
                           <MenuItem onClick={() => navigate('/ManagerDashboard')}>דוחות</MenuItem>
-                          {/* <MenuItem onClick={() => navigate('/UserManagementComponent')}>ניהול משתמשים</MenuItem> */}
-                          {/* <MenuItem onClick={() => navigate('/Librarian')}>הרשאות ספרנית</MenuItem> */}
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
@@ -206,9 +213,44 @@ export const Nav = () => {
                         <StyledLink to="/UserManagementComponent" active={location.pathname === '/UserManagementComponent'}>
                              ניהול משתמשים
                        </StyledLink>
-                         <StyledLink to="/Librarian" active={location.pathname === '/Librarian'}>
-                         הרשאות ספרנית
-                      </StyledLink></>
+                       <AdminButton
+                onMouseEnter={handleLibarianMenuOpen}
+                onMouseLeave={handleLibarianMenuClose}
+                active={islibarianMenuOpen || ['/items', '/itemsPendingApproval', '/studentRequest', ,'/tag-list'].includes(location.pathname)}
+                ref={(node) => {
+                  setlibarianAnchorEl(node);
+                }}
+              >
+                 אזור ספרנית
+              </AdminButton>
+              <Popper
+                open={islibarianMenuOpen}
+                anchorEl={libarianAnchorEl}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
+                    <Paper onMouseEnter={handleLibarianMenuOpen} onMouseLeave={handleLibarianMenuClose}>
+                      <ClickAwayListener onClickAway={handleLibarianMenuClose}>
+                        <MenuList autoFocusItem={islibarianMenuOpen} id="menu-list-grow">
+                          <MenuItem onClick={() => navigate('/items')}>כל הפריטים</MenuItem>
+                          <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור </MenuItem>
+                          <MenuItem onClick={() => navigate('/studentRequest')}>בקשות של תלמידות</MenuItem>
+                          <MenuItem onClick={() => navigate('/tag-list')}>ניהול תגיות</MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+                    </>
                     )}
           <LeftSection>
             {isLoggedIn ? (
@@ -229,6 +271,7 @@ export const Nav = () => {
                   onClose={handleMenuClose}
                 >
                   <MenuItem onClick={handleProfileClick}>ניהול חשבון</MenuItem>
+                  <MenuItem onClick={handleProfileClickToRequestStatus}>רשימת השאלות</MenuItem>
                   <MenuItem onClick={handleLogout}>התנתקות</MenuItem>
                 </Menu>
               </>

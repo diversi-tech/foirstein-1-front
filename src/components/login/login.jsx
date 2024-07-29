@@ -63,6 +63,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [userExists, setUserExists] = useState(false);
   const [isAdminOrLibrarian, setIsAdminOrLibrarian] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [secondaryPasswordFromEmail, setSecondaryPasswordFromEmail] = useState(''); // לשמור את הסיסמה השנייה
@@ -71,12 +72,14 @@ const Login = () => {
 
 
   useEffect(() => {
+    debugger
     const checkUserExists = async () => {
       if (tz.length === 9) {
         try {
           const exists = await userService.verifyIdNumber(tz);
           setUserExists(exists);
           setIsAdminOrLibrarian(exists.role === 'Admin' || exists.role === 'Librarian');
+          setIsActive(exists.activity);
         } catch (err) {
           console.error('Error verifying ID number:', err);
         }
@@ -95,7 +98,7 @@ const Login = () => {
         pass: password
       });
 
-      if (response.data.token) {
+      if (response.data.token && isActive) {
         if (isAdminOrLibrarian) {
           try {
             const response1 = await userService.getAllUsers();
@@ -111,14 +114,12 @@ const Login = () => {
             setError('נכשל בהבאת נתונים מהשרת');
           }
         } else {
-        // sessionStorage.setItem('jwt', response.data.token, { domain: '.foirstein.diversitech.co.il' });
         const token = response.data.token;
         // הגדרת ה-cookie עם ה-token
-        document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
+        document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
         dispatch(FillData(response.data));
         const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
-        const activityLog = {
-          
+        const activityLog = {      
           LogId: 0, 
           UserId: response.data.user.tz,
           Activity: 'התחברות',
@@ -139,7 +140,8 @@ const Login = () => {
         }
       } else if (response.data.token === null) {
         setError('סיסמה לא נכונה');
-      } else {
+      }
+      else{
         setError('לא קיים במערכת');
       }
     } catch (error) {
@@ -148,15 +150,6 @@ const Login = () => {
     }
   };
 
-  function sendTokenToOtherProjects() {
-    const token = sessionStorage.getItem('jwt');
-    const targetOrigins = [
-      'https://librarian.foirstein.diversitech.co.il',
-      'https://foirstein-2-front-1.onrender.com'
-    ];    // שולח את ההודעה עם התוקן
-    targetOrigins.forEach(origin => {
-      window.postMessage({ token: token }, origin);
-    });  }
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -191,11 +184,10 @@ const Login = () => {
           tz: tz,
           pass: password
         });
-        if (response.data.token) {
+        if (response.data.token && isActive) {
           alertLogin();
-          sendTokenToOtherProjects(); 
           const token = response.data.token;
-          document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure`;
+          document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {

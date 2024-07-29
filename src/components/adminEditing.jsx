@@ -55,8 +55,6 @@ const UserManagementComponent = () => {
   const myDispatch = useDispatch();
 
   useEffect(() => {
-    
-  
     const fetchUsers = async () => {
       if (f.length > 0) {
         setUsers(f);
@@ -336,6 +334,7 @@ const sortedUsers = sortUsers(users);
                     <TableCell align="right">מייל</TableCell>
                     <TableCell align="right">תפקיד</TableCell>
                     <TableCell align="right">תמונת פרופיל</TableCell>
+                    <TableCell align="right">סטטוס</TableCell>
                     <TableCell align="right">פעולות</TableCell>
                     </TableRow>
                   </TableHead>
@@ -347,12 +346,18 @@ const sortedUsers = sortUsers(users);
                         <TableCell align="right">{index + 1}</TableCell>
                         <TableCell align="right">{user.fname}</TableCell>
                         <TableCell align="right">{user.email}</TableCell>
+     
                         <TableCell align="right">{getRoleInHebrew(user.role)}</TableCell>
                         <TableCell align="right">
                             <Avatar src={user.profilePicture} alt={user.fname}>
                               {!user.profilePicture && getInitial(user.fname)}
                             </Avatar>
                           </TableCell>
+                          <TableCell align="right">
+        <Typography style={{ color: user.activity ? 'green' : 'red' }}>
+          {user.activity ? 'פעיל' : 'לא פעיל'}
+        </Typography>
+      </TableCell>
                           <TableCell align="right">
                             <IconButton onClick={() => toggleRowExpansion(user.userId)}>
                               {expandedRows[user.userId] ? <ExpandLess /> : <ExpandMore />}

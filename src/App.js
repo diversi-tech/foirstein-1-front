@@ -9,10 +9,13 @@ import AccessibilityOptions from './components/Accessibility/AccessibilityOption
 import { AccessibilityProvider } from './components/Accessibility/AccessibilityContext.jsx';
 
 function App() {
-  useEffect(() => {
-    // ניקוי ה-Local Storage בעת עליית האפליקציה
-    localStorage.clear();
-  }, []);
+  // useEffect(() => {
+  //   function deleteTokenCookie() { 
+  //     document.cookie = 'token=; path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT'; 
+  //   }
+  //   window.addEventListener('beforeunload', deleteTokenCookie); // ניקוי המאזין בעת הסרת הקומפוננטה מה-
+  //   return () => { window.removeEventListener('beforeunload', deleteTokenCookie);};
+  // }, []);
   return (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
