@@ -5,6 +5,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../theme';
 import ReportService from '../../axios/reportsAxios';
 import { getUserIdFromTokenid, getUserNameFromToken } from '../decipheringToken';
+import ActivityLogService from '../../axios/ActivityLogAxios';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -87,7 +88,24 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
       setSnackbarMessage('נוצר בהצלחה!');
       setOpenSnackbar(true);
       handleClose();
-      onReportGenerated(); // Call the handler after generating the report
+      onReportGenerated();
+      const currentUserId = getUserIdFromTokenid();
+      const activityLog = {
+        LogId: 0,
+        UserId: null,
+        Activity: 'יצירת דוח',
+        Timestamp: new Date(),
+        UserId1: currentUserId,
+        UserId1NavigationUserId: currentUserId
+      };
+
+      ActivityLogService.addActivityLog(activityLog)
+        .then(activityResponse => {
+          console.log('Activity log added successfully:', activityResponse);
+        })
+        .catch(activityError => {
+          console.error('Error adding activity log:', activityError);
+        }); // Call the handler after generating the report
     } catch (error) {
       console.error('שגיאה ביצירת הדו"ח:', error);
       setSnackbarMessage('נכשל ביצירת הדו"ח.');
