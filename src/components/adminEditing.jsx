@@ -19,6 +19,7 @@ import { FillData } from '../redux/actions/userAction';
 import { getRoleFromToken, getUserIdFromTokenid } from './decipheringToken';
 import ActivityLogService from '../axios/ActivityLogAxios';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const aleartadd=()=>{
 Swal.fire({
@@ -79,7 +80,7 @@ const UserManagementComponent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const roll = getRoleFromToken();
-
+  const navigate=useNavigate();
   const f = useSelector(j => j.userReducer.userList);
   const myDispatch = useDispatch();
 
