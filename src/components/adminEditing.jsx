@@ -18,7 +18,33 @@ import userService from '../axios/userAxios';
 import { FillData } from '../redux/actions/userAction';
 import { getUserIdFromTokenid } from './decipheringToken';
 import ActivityLogService from '../axios/ActivityLogAxios';
+import Swal from 'sweetalert2';
 
+const aleartadd=()=>{
+Swal.fire({
+  icon: "success",
+  title: "נוסף בהצלחה",
+  showConfirmButton: false,
+  timer: 1500
+});
+}
+
+const aleartupdate=()=>{
+  Swal.fire({
+    icon: "success",
+    title: "עודכן בהצלחה",
+    showConfirmButton: false,
+    timer: 1500
+  });
+  }
+  const aleartdell=()=>{
+    Swal.fire({
+      icon: "success",
+      title: "נמחק בהצלחה",
+      showConfirmButton: false,
+      timer: 1500
+    });
+    }
 const UserManagementComponent = () => {
   const [users, setUsers] = useState([]);
   const [editUserId, setEditUserId] = useState(null);
@@ -136,6 +162,7 @@ const UserManagementComponent = () => {
         setUsers(updatedUsers);
         myDispatch(FillData(users));
         handleCancelEditUser();
+        aleartupdate();
       } else {
         console.error('Failed to update user on the server.');
       }
@@ -187,6 +214,7 @@ const UserManagementComponent = () => {
       setUsers(updatedUsers);
       myDispatch(FillData(users));
       setDeleteDialogOpen(false);
+      aleartdell();
     } 
     catch (error) {
       console.error('Error deleting user:', error);
@@ -210,7 +238,7 @@ const UserManagementComponent = () => {
       formData.append('Megama', newUserMegama);
       formData.append('ProfilePicture', newProfilePicture);
       const newUser = await userService.addUser(formData);
-
+      aleartadd();
       setUsers([...users, newUser]);
       myDispatch(FillData(users));
       setnewUserMegama('');
@@ -299,15 +327,21 @@ const UserManagementComponent = () => {
   };
 
 
-const sortUsers = (users) => {
-  const roleOrder = {
-    Admin: 1,
-    Librarian: 2,
-    Student: 3,
+  const sortUsers = (users) => {
+    const roleOrder = {
+      Admin: 1,
+      Librarian: 2,
+      Student: 3,
+    };
+  
+    return [...users].sort((a, b) => {
+      if (a.activity === b.activity) {
+        return roleOrder[a.role] - roleOrder[b.role];
+      }
+      return a.activity ? -1 : 1; // פעילים תחילה
+    });
   };
-
-  return [...users].sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-};
+  
   
 const sortedUsers = sortUsers(users);
 

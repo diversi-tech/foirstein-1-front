@@ -39,7 +39,6 @@ const cacheRtl = createCache({
 function alertLogin(){
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-end",
     showConfirmButton: false,
     timer: 5000,
     timerProgressBar: true,
