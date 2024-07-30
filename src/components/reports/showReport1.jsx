@@ -170,9 +170,9 @@ const ReportPage = () => {
       return { 
         a, 
         b, 
-        c: c ? c.split('.')[0] : c, // Trimming milliseconds from the time
+        c: c ? new Date(c).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : c,
         d, 
-        e: e ? e.split('.')[0] : e  // Trimming milliseconds from the time
+        e: e ? new Date(e).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : e
       };
     });
   };
