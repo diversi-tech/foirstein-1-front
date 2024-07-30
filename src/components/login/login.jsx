@@ -20,7 +20,7 @@ import { getRoleFromToken } from '../decipheringToken';
 const theme = createTheme({
   direction: 'rtl',
   typography: {
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Rubik,Arial, sans-serif',
   },
   palette: {
     primary: {
