@@ -40,7 +40,7 @@ export const Routing = () => {
             <AccessibilityOptions />
           </div>
           <Routes>
-            <Route path="/" element={<ActivityLog />} />
+            <Route path="/" element={<Login />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             {/* <Route path='/search' element={<Login/>} /> */}
             <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
