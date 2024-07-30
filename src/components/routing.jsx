@@ -19,8 +19,8 @@ import '../App.css';
 import ProfileForm from "./personalArea/profileForm";
 import AccessibilityOptions from "./Accessibility/AccessibilityOptions";
 import { AccessibilityProvider } from "./Accessibility/AccessibilityContext";
-import { useEffect } from "react";
-import { getRoleFromToken } from "./decipheringToken";
+import { useEffect, useState } from "react";
+import { getCookie, getRoleFromToken } from "./decipheringToken";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -33,10 +33,10 @@ export const Routing = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const role = isLoggedIn ? getRoleFromToken() : null;
-  
+
   useEffect(() => {
     setIsLoggedIn(!!getCookie('jwt'));
-  }, [location.pathname]);
+  }, []);
 
   return (
     <HashRouter>
@@ -51,9 +51,9 @@ export const Routing = () => {
           <Routes>
           {!isLoggedIn && (
             <Route path="/" element={<Login/>} />)}
-          {isLoggedIn && roll=='Admin' &&(
+          {isLoggedIn && role=='Admin' &&(
               <Route path="/" element={<ActivityLog />} />)}
-          {isLoggedIn && roll=='Admin' && (
+          {isLoggedIn && role=='Librarian' && (
              <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}     
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
