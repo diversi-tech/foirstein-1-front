@@ -274,6 +274,7 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [loginDate, setLoginDate] = useState('');
   const [loading, setLoading] = useState(false);
+  const [displayingReport, setDisplayingReport] = useState(false);
 
   const username = getUserNameFromToken();
   const userid = getUserIdFromTokenid();
@@ -311,7 +312,7 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
         return;
       }
 
-      setSnackbarMessage('נוצר בהצלחה!');
+      setSnackbarMessage('נוצר בהצלחה! המתן להצגת הדוח.');
       setOpenSnackbar(true);
       handleClose();
       onReportGenerated();
@@ -332,6 +333,12 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
         .catch(activityError => {
           console.error('Error adding activity log:', activityError);
         });
+
+      setDisplayingReport(true);
+      setTimeout(() => {
+        setDisplayingReport(false);
+        setOpenSnackbar(false);
+      }, 3000); // זמן ההמתנה להצגת הדוח (3 שניות לדוגמה)
     } catch (error) {
       console.error('שגיאה ביצירת הדו"ח:', error);
       setSnackbarMessage('נכשל ביצירת הדו"ח.');
@@ -416,7 +423,11 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
         </StyledDialog>
         {openSnackbar && (
           <CenteredSnackbar>
-            <IconFrame />
+            {displayingReport ? (
+              <CircularProgress size={24} style={{ color: 'white', marginRight: '10px' }} />
+            ) : (
+              <IconFrame />
+            )}
             <MessageTypography>
               {snackbarMessage}
             </MessageTypography>
