@@ -21,6 +21,8 @@ import AccessibilityOptions from "./Accessibility/AccessibilityOptions";
 import { AccessibilityProvider } from "./Accessibility/AccessibilityContext";
 import { useEffect, useState } from "react";
 import { getCookie, getRoleFromToken } from "./decipheringToken";
+import Tasks from "./LibrarianPerformance/Tasks";
+import LibrariansTable from "./LibrarianPerformance/LibrariansTable";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -55,7 +57,7 @@ export const Routing = () => {
               <Route path="/" element={<ActivityLog />} />)}
           {isLoggedIn && role=='Librarian' && (
              <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}     
-            <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
+            {/* <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} /> */}
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             {/* <Route path='/search' element={<Login/>} /> */}
             <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
@@ -81,6 +83,8 @@ export const Routing = () => {
             <Route path="login/security-question/reset-password/password-reset-success/login" element={<Login />} />
             <Route path="/passwordRecovery" element={<PasswordRecovery />} />
             <Route path='/StatusListView' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/StatusListView" />} />
+            <Route path='/LibrariansTable' element={<LibrariansTable />} />
+            <Route path="/tasks/:userId" element={<Tasks />} />
           </Routes>
           <Footer />
         </div>

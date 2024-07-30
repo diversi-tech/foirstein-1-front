@@ -201,6 +201,7 @@ export const Nav = () => {
                           <MenuItem onClick={() => navigate('/changePermission')}>שינוי הרשאות</MenuItem>
                           <MenuItem onClick={() => navigate('/Charts')}>גרפים</MenuItem>
                           <MenuItem onClick={() => navigate('/ManagerDashboard')}>דוחות</MenuItem>
+                          <MenuItem onClick={() => navigate('/LibrariansTable')}>ביצועי ספרניות</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>

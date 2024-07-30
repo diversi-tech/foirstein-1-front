@@ -1,7 +1,6 @@
 
-
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { TextField, Button, Container, Typography, Alert, Paper, Box, CssBaseline, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -11,6 +10,7 @@ import createCache from '@emotion/cache';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ActivityLogService from '../../axios/ActivityLogAxios';
+
 const theme = createTheme({
   direction: 'rtl',
   typography: {
@@ -25,10 +25,12 @@ const theme = createTheme({
     },
   },
 });
+
 const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [rtlPlugin],
 });
+
 const Register = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -42,7 +44,12 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState('');
+  const [preview, setPreview] = useState('');
+
   const navigate = useNavigate();
+
   const validateIDNumber = (id) => {
     id = id.trim();
     if (id.length !== 9 || isNaN(id)) return 'תעודת זהות לא תקינה';
@@ -54,16 +61,20 @@ const Register = () => {
     }
     return sum % 10 === 0 ? '' : 'תעודת זהות לא תקינה';
   };
+
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email) ? '' : 'אימייל לא תקין';
   };
+
   const validatePassword = (password) => {
     return password.length >= 4 ? '' : 'הסיסמה חייבת להכיל לפחות 4 תווים';
   };
+
   const validatePhone = (phone) => {
     return /^\d+$/.test(phone) ? '' : 'מספר הטלפון יכול להכיל רק ספרות';
   };
+
   const handleInputChange = (setter, validator, field) => (e) => {
     const value = e.target.value;
     setter(value);
@@ -75,51 +86,89 @@ const Register = () => {
       }));
     }
   };
+
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
+    setSelectedFile(file);
+    setFileName(file.name);
+    setPreview(URL.createObjectURL(file));
+    setImage(file);
+  }, []);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    setFileName(file.name);
+    setPreview(URL.createObjectURL(file));
+    setImage(file);
+  };
+
   const handleRegister = async () => {
     let formErrors = {};
+
     if (!idNumber) {
       formErrors.idNumber = 'יש להזין תעודת זהות';
     } else {
       const idError = validateIDNumber(idNumber);
       if (idError) formErrors.idNumber = idError;
     }
+
     if (!password) {
       formErrors.password = 'יש להזין סיסמה';
     } else {
       const passwordError = validatePassword(password);
       if (passwordError) formErrors.password = passwordError;
     }
+
     if (!email) {
       formErrors.email = 'יש להזין אימייל';
     } else {
       const emailError = validateEmail(email);
       if (emailError) formErrors.email = emailError;
     }
+
     if (!firstName) {
       formErrors.firstName = 'יש להזין שם פרטי';
     }
+
     if (!lastName) {
       formErrors.lastName = 'יש להזין שם משפחה';
     }
+
     if (!birthDate) {
       formErrors.birthDate = 'יש להזין תאריך לידה';
     }
+
     if (!phone) {
       formErrors.phone = 'יש להזין טלפון';
     } else {
       const phoneError = validatePhone(phone);
       if (phoneError) formErrors.phone = phoneError;
     }
+
     if (!megama) {
       formErrors.megama = 'יש להזין מגמה';
     }
+
     setErrors(formErrors);
+
     if (Object.keys(formErrors).length > 0) {
       return;
     }
+
     setErrors({});
     setError('');
+
     try {
+      const usersResponse = await axios.get('https://foirstein-1-back.onrender.com/api/Users/getUsers');
+      const existingUsers = usersResponse.data;
+      const userExists = existingUsers.some((user) => user.tz === idNumber);
+
+      if (userExists) {
+        setError('משתמש עם תעודת זהות זו כבר קיים במערכת');
+        return;
+      }
+
       const formData = new FormData();
       formData.append('Tz', idNumber);
       formData.append('Fname', firstName);
@@ -130,26 +179,29 @@ const Register = () => {
       formData.append('UserDob', birthDate);
       formData.append('PhoneNumber', phone);
       formData.append('Megama', megama);
+
       if (image) {
         formData.append('ProfilePicture', image, image.name);
       }
+
       const response = await axios.post('https://foirstein-1-back.onrender.com/api/Users/addUser', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       if (response.data) {
-          const activityLog = {
-            LogId: 0, 
-            UserId: response.data.tz,
-            Activity: 'הרשמה',
-            Timestamp: new Date(),
-            UserId1: response.data.userId,
-            UserId1NavigationUserId: response.data.userId,
-          };
-    
-           await ActivityLogService.addActivityLog(activityLog)
-        navigate('/login');
+        const activityLog = {
+          LogId: 0,
+          UserId: response.data.tz,
+          Activity: 'הרשמה',
+          Timestamp: new Date(),
+          UserId1: response.data.userId,
+          UserId1NavigationUserId: response.data.userId,
+        };
+
+        await ActivityLogService.addActivityLog(activityLog);
+        navigate('/home');
       } else {
         setError('הרשמה נכשלה, נסה שוב');
       }
@@ -158,6 +210,9 @@ const Register = () => {
       setError('שגיאת שרת, נסה שוב מאוחר יותר');
     }
   };
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
@@ -209,12 +264,23 @@ const Register = () => {
                 helperText={errors.lastName}
               />
               <TextField
-                label="סיסמה*"
+                label="אימייל*"
                 dir='rtl'
-                type={showPassword ? 'text' : 'password'}
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                value={email}
+                onChange={handleInputChange(setEmail, validateEmail, 'email')}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+              <TextField
+                label="סיסמה*"
+                dir='rtl'
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handleInputChange(setPassword, validatePassword, 'password')}
                 error={!!errors.password}
@@ -227,22 +293,11 @@ const Register = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
                       >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
-              />
-              <TextField
-                label="*אימייל"
-                type="email"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={email}
-                onChange={handleInputChange(setEmail, validateEmail, 'email')}
-                error={!!errors.email}
-                helperText={errors.email}
               />
               <TextField
                 label="*תאריך לידה"
@@ -278,14 +333,25 @@ const Register = () => {
                 error={!!errors.megama}
                 helperText={errors.megama}
               />
+              
+               <div {...getRootProps()} style={{ border: '2px dashed #888', padding: '10px', textAlign: 'center', cursor: 'pointer' }}>
+                <input {...getInputProps()} onChange={handleFileChange} />
+                {selectedFile ? (
+                  <div>
+                    <img src={preview} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                    <Typography>{fileName}</Typography>
+                  </div>
+                ) : (
+                  <p>גרור ושחרר תמונה כאן, או לחץ לבחירת תמונה</p>
+                )}
+              </div>
               <Button
                 variant="contained"
                 color="primary"
-                size="large"
+                fullWidth
                 onClick={handleRegister}
-                sx={{ mt: 3 }}
               >
-                הרשמה
+                הירשם
               </Button>
             </Box>
           </Paper>
@@ -294,4 +360,7 @@ const Register = () => {
     </CacheProvider>
   );
 };
+
 export default Register;
+
+
