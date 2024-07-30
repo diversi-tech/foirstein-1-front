@@ -119,6 +119,7 @@ const ChangePermission = () => {
         userId: selectedUser.userId,
         permissions: newPermissions
       });
+      console.log('Response:', response); 
       if (response.data.success) {
         const updatedPermissionsData = permissionsData.map(perm =>
           perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
