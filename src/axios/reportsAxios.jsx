@@ -42,6 +42,15 @@ const ReportService = {
             console.error('Error creating activity report:', error);
             throw error;
         }
+    },
+    createLoginActivityReport: async (loginDate, reportName,userId) => {
+        try {debugger
+            const response = await axios.get(`${userUrl}/aaa?loginDate=${loginDate}&reportName=${reportName}&type=התחברות&userId=${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating login activity report:', error);
+            throw error;
+        }
     }
 };
 

@@ -22,6 +22,7 @@ const ViewReports = () => {
     "חיפושים": "#0D1E46",
     "פעילות": "#0D1E99",
     "שנתי": "black",
+     "התחברות": "blue"
   };
 
   useEffect(() => {

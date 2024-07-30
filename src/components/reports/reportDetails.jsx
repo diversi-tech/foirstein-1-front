@@ -6,14 +6,15 @@ import theme from '../../theme';
 import ReportService from '../../axios/reportsAxios';
 import { getUserIdFromTokenid, getUserNameFromToken } from '../decipheringToken';
 import ActivityLogService from '../../axios/ActivityLogAxios';
+import { format, parseISO } from 'date-fns';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     borderRadius: '12px',
-    border: `4px solid ${theme.palette.primary.main}`, // Thick border
+    border: `4px solid ${theme.palette.primary.main}`,
     padding: theme.spacing(2),
-    width: '500px', // Fixed width
-    height: '400px', // Fixed height
+    width: '500px',
+    height: '400px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -44,7 +45,7 @@ const CenteredSnackbar = styled(Box)(({ theme }) => ({
 }));
 
 const IconFrame = styled(ThumbUpAltIcon)(({ theme }) => ({
-  fontSize: '4rem', // Smaller icon size
+  fontSize: '4rem',
   color: 'white',
   marginRight: theme.spacing(2),
 }));
@@ -59,9 +60,10 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
   const [reportName, setReportName] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loginDate, setLoginDate] = useState('');
 
   const username = getUserNameFromToken();
-  const userid=getUserIdFromTokenid();
+  const userid = getUserIdFromTokenid();
 
   const handleGenerateReport = async () => {
     if (!reportName.trim()) {
@@ -73,13 +75,21 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
     try {
       let response;
       if (report.title === 'פעילות') {
-        debugger
-        response = await ReportService.createActivityReport(reportName,userid);
+        response = await ReportService.createActivityReport(reportName, userid);
       } else if (report.title === 'חיפושים') {
-        response = await ReportService.createSearchLogsReport(reportName,userid);
+        response = await ReportService.createSearchLogsReport(reportName, userid);
       } else if (report.title === 'שנתי') {
-        debugger
-        response = await ReportService.createAnnualReport(reportName,userid);
+        response = await ReportService.createAnnualReport(reportName, userid);
+      } else if (report.title === 'התחברות') {
+        if (!loginDate) {
+          setSnackbarMessage('אנא הזן תאריך התחברות.');
+          setOpenSnackbar(true);
+          return;
+        }
+        // יצירת תאריך מלא עם שעה ברירת מחדל תוך שמירה על אזור הזמן המקומי
+        const fullDate = new Date(`${loginDate}T00:00:00`);
+        const formattedDate = fullDate.toISOString();
+        response = await ReportService.createLoginActivityReport(formattedDate, reportName, userid);
       } else {
         alert('לא תקין');
         return;
@@ -105,7 +115,7 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
         })
         .catch(activityError => {
           console.error('Error adding activity log:', activityError);
-        }); // Call the handler after generating the report
+        });
     } catch (error) {
       console.error('שגיאה ביצירת הדו"ח:', error);
       setSnackbarMessage('נכשל ביצירת הדו"ח.');
@@ -146,13 +156,38 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
                 },
               }}
             />
+            {report.title === 'התחברות' && (
+              <TextField
+                placeholder="הכנס תאריך התחברות"
+                value={loginDate}
+                onChange={(e) => setLoginDate(e.target.value)}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                required
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: '1.2rem',
+                    '& .MuiOutlinedInput-root': {
+                      '&.Mui-focused fieldset': {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  },
+                }}
+              />
+            )}
           </DialogContent>
           <DialogActions sx={{ justifyContent: 'space-between' }}>
             <StyledButton
               variant="contained"
               color="primary"
               onClick={handleGenerateReport}
-              disabled={!reportName.trim()} // Disable button if reportName is empty
+              disabled={!reportName.trim() || (report.title === 'התחברות' && !loginDate)}
             >
               צור דוח
             </StyledButton>

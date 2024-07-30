@@ -74,10 +74,10 @@ const ManagerDashboard = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const reports = [
-    { title: 'חיפושים', description: 'כאן תוכלו ליצור דוח על חיפושים וצלחים שהביאו לבקשת ספר או חומר', icon: <SearchIcon fontSize="large" /> },
-    { title: 'פעילות', description: 'צור דוח על כמות החיפושים של כל משתמש בחודש האחרון', icon: <ActivityIcon fontSize="large" /> },
-    { title: 'שנתי', description: 'צור דוח על כמות המשתמשים שנוספו בכל שנה', icon: <PeopleIcon fontSize="large" /> }, // Updated icon
-    { title: '...', description: 'דוח נוסף', icon: <SearchIcon fontSize="large" /> },
+    { title: 'התחברות', description: 'הצג רשימת משתמשים שהתחברו למערכת בתאריך מסוים', icon: <SearchIcon fontSize="large" /> },
+    { title: 'פעילות', description: 'הצג לכל משתמש את כמות החיפושים שלו בחודש האחרון', icon: <ActivityIcon fontSize="large" /> },
+    { title: 'שנתי', description: 'הצג את כמות המשתמשים שנוספו למערכת בכל שנה', icon: <PeopleIcon fontSize="large" /> }, // Updated icon
+    { title: 'חיפושים', description: 'הצג את החיפושים שהביאו לבקשת פריט', icon: <SearchIcon fontSize="large" /> }
   ];
 
   useEffect(() => {
@@ -156,9 +156,6 @@ const ManagerDashboard = () => {
                 >
                   <CardContent sx={{ textAlign: 'center' }}>
                     {report.icon}
-                    <Typography variant="h5" component="div">
-                      {report.title}
-                    </Typography>
                     <Typography variant="body2" component="div" sx={{ mt: 2 }}>
                       {report.description}
                     </Typography>
