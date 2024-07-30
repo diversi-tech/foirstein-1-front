@@ -21,7 +21,7 @@ const Footer = () => {
           padding: theme.spacing(4),
           marginTop: theme.spacing(8),
           textAlign: 'right',
-          fontFamily: theme.typography.fontFamily,
+          fontFamily: 'Rubik',
         }}
       >
         <Container maxWidth="lg">

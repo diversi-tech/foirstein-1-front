@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const theme = createTheme({
   direction: 'rtl',
   typography: {
-    fontFamily: 'fontFamily,Arial, sans-serif',
+    fontFamily: 'Rubik,,Arial, sans-serif',
   },
   palette: {
     primary: {
