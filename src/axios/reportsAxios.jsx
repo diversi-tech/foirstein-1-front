@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-let userUrl = 'https://foirstein-1-back.onrender.com/api/Report';
-
+// let userUrl = 'https://foirstein-1-back.onrender.com/api/Report';
+let userUrl = 'http://localhost:5211/api/Report';
 
 
 const ReportService = {
@@ -40,6 +40,15 @@ const ReportService = {
             return response.data;
         } catch (error) {
             console.error('Error creating activity report:', error);
+            throw error;
+        }
+    },
+    createLoginActivityReport: async (loginDate, reportName,userId) => {
+        try {debugger
+            const response = await axios.get(`${userUrl}/aaa?loginDate=${loginDate}&reportName=${reportName}&type=התחברות&userId=${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating login activity report:', error);
             throw error;
         }
     }
