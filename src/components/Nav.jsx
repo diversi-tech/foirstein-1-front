@@ -172,6 +172,7 @@ export const Nav = () => {
           {role === 'Admin' && (
             <>
               <AdminButton
+                onClick={()=>navigate('/ActivityLog')}
                 onMouseEnter={handleAdminMenuOpen}
                 onMouseLeave={handleAdminMenuClose}
                 active={isAdminMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
@@ -258,35 +259,6 @@ export const Nav = () => {
                     </>
                     )}
           <LeftSection>
-          {(role === 'Librarian'||role === 'Admin') && (
-          <Grid container spacing={4} style={{ width: '40%', marginLeft: '40px' }}>
-              <Grid item xs={6}>
-                <Tooltip title="בקשות השאלה של תלמידות" arrow>
-                  <IconButton size="large"
-                    aria-label="show 4 new mails"
-                    color="inherit"
-                    onClick={() => navigate('/studentRequest')}>
-                    <Badge  color="primary">
-                      <MailIcon/>
-                    </Badge>
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={6}>
-                <Tooltip title="פריטים שמחכים לטיפול" arrow>
-                  <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                    onClick={() => navigate('/itemsPendingApproval')}
-                  >
-                    <Badge color="warning">
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid> )}
             {isLoggedIn ? (
               <>
                 <IconButton

@@ -6,7 +6,13 @@ const theme = createTheme({
   direction: 'rtl',
 
   typography: {
-    fontFamily: 'Rubik, Arial, sans-serif',
+    fontFamily: [
+      'Rubik',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+    ].join(','),
     fontSize: 16,
     // ...שאר ההגדרות
     h1: {

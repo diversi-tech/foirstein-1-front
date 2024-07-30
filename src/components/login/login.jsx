@@ -13,6 +13,7 @@ import userService from '../../axios/userAxios';
 import Swal from 'sweetalert2'
 import ActivityLogService from '../../axios/ActivityLogAxios';
 import { jwtDecode } from 'jwt-decode';
+import { getRoleFromToken } from '../decipheringToken';
 
 
 
@@ -116,8 +117,8 @@ const Login = () => {
         } else {
         const token = response.data.token;
         // הגדרת ה-cookie עם ה-token
-        document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
-        // document.cookie = `jwt=${token}; path=/;  Secure; expires=Session`;
+        // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
+        document.cookie = `jwt=${token}; path=/;  Secure; expires=Session`;
         dispatch(FillData(response.data));
         const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {      
@@ -188,8 +189,8 @@ const Login = () => {
         if (response.data.token && isActive) {
           alertLogin();
           const token = response.data.token;
-          document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
-          // document.cookie = `jwt=${token}; path=/;  Secure; expires=Session`;
+          // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il;  Secure; expires=Session`;
+          document.cookie = `jwt=${token}; path=/;  Secure; expires=Session`;
           dispatch(FillData(response.data));
           const decoded = parseInt( jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
@@ -208,8 +209,11 @@ const Login = () => {
             .catch(activityError => {
               console.error('Error adding activity log:', activityError);
             });
-            
-          navigate('/search');
+          const roll=getRoleFromToken();
+          if(roll=='Admin')  
+            navigate('/ActivityLog');
+          else
+            navigate('/items');
           window.location.reload();
         } else {
           setError('הסיסמה השנייה אינה נכונה');
