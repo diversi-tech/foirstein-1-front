@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList, Grid, Tooltip, Badge } from '@mui/material';
+import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList, Tooltip } from '@mui/material';
 import { styled } from '@mui/system';
 import { getRoleFromToken, getUserNameFromToken, getCookie } from './decipheringToken';
 
 const Root = styled('div')(({ theme }) => ({
   flexGrow: 1,
   direction: 'rtl',
+  fontFamily: 'Rubik, sans-serif',
 }));
 
 const StyledLink = styled(Link)(({ theme, active }) => ({
@@ -14,7 +15,7 @@ const StyledLink = styled(Link)(({ theme, active }) => ({
   textDecoration: 'none',
   marginLeft: theme.spacing(2),
   padding: theme.spacing(1),
-  borderRadius: 0,
+  fontWeight: 'normal',
   '&:hover': {
     color: '#FFD700',
   },
@@ -24,7 +25,7 @@ const AdminButton = styled(Button)(({ theme, active }) => ({
   color: active ? '#FFD700' : '#FFFFFF',
   marginLeft: theme.spacing(2),
   padding: theme.spacing(1),
-  borderRadius: 0,
+  fontWeight: 'normal',
   '&:hover': {
     color: '#FFD700',
   },
@@ -32,7 +33,6 @@ const AdminButton = styled(Button)(({ theme, active }) => ({
 
 const NavBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: '#0D1E46',
-  borderRadius: 0,
   position: 'fixed',
   top: 0,
   width: '100%',
@@ -59,6 +59,7 @@ const LeftSection = styled('div')({
 
 const GreetingText = styled(Typography)(({ theme }) => ({
   color: '#FFFFFF',
+  fontWeight: 'normal',
 }));
 
 const getGreetingMessage = () => {
@@ -125,18 +126,22 @@ export const Nav = () => {
     setAdminAnchorEl(null);
     setIsAdminMenuOpen(false);
   };
+
   const handleLibarianMenuOpen = (event) => {
     setlibarianAnchorEl(event.currentTarget);
     setIslibarianMenuOpen(true);
   };
+
   const handleLibarianMenuClose = () => {
     setlibarianAnchorEl(null);
     setIslibarianMenuOpen(false);
   };
+
   const handleProfileClickToRequestStatus = () => {
     navigate('/StatusListView');
     handleMenuClose();
   };
+
   const renderUserAvatar = (name) => {
     if (name) {
       return name.charAt(0).toUpperCase();
@@ -152,9 +157,9 @@ export const Nav = () => {
             <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '50px', marginRight: 'auto' }} />
             <Typography
               variant="body1"
-              style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'bold' }}
+              style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'normal' }}
             >
-              מרחבית 
+              מרחבית
             </Typography>
           </RightSection>
           {!isLoggedIn && (
@@ -170,7 +175,7 @@ export const Nav = () => {
           {role === 'Admin' && (
             <>
               <AdminButton
-                onClick={()=>navigate('/ActivityLog')}
+                onClick={() => navigate('/ActivityLog')}
                 onMouseEnter={handleAdminMenuOpen}
                 onMouseLeave={handleAdminMenuClose}
                 active={isAdminMenuOpen || ['/ActivityLog', '/changePermission', '/Charts', '/ManagerDashboard'].includes(location.pathname)}
@@ -210,21 +215,21 @@ export const Nav = () => {
               </Popper>
             </>
           )}
-                              {(role === 'Librarian'||role === 'Admin') && (
-                      <>
-                        <StyledLink to="/UserManagementComponent" active={location.pathname === '/UserManagementComponent'}>
-                             ניהול משתמשים
-                       </StyledLink>
-                       <AdminButton
-                onClick={()=>navigate('/items')}
+          {(role === 'Librarian' || role === 'Admin') && (
+            <>
+              <StyledLink to="/UserManagementComponent" active={location.pathname === '/UserManagementComponent'}>
+                ניהול משתמשים
+              </StyledLink>
+              <AdminButton
+                onClick={() => navigate('/items')}
                 onMouseEnter={handleLibarianMenuOpen}
                 onMouseLeave={handleLibarianMenuClose}
-                active={islibarianMenuOpen || ['/items', '/itemsPendingApproval', '/studentRequest', ,'/tag-list'].includes(location.pathname)}
+                active={islibarianMenuOpen || ['/items', '/itemsPendingApproval', '/studentRequest', '/tag-list'].includes(location.pathname)}
                 ref={(node) => {
                   setlibarianAnchorEl(node);
                 }}
               >
-                 אזור ספרנית
+                אזור ספרנית
               </AdminButton>
               <Popper
                 open={islibarianMenuOpen}
@@ -244,44 +249,38 @@ export const Nav = () => {
                       <ClickAwayListener onClickAway={handleLibarianMenuClose}>
                         <MenuList autoFocusItem={islibarianMenuOpen} id="menu-list-grow">
                           <MenuItem onClick={() => navigate('/items')}>כל הפריטים</MenuItem>
-                          <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור </MenuItem>
-                          <MenuItem onClick={() => navigate('/studentRequest')}>בקשות של תלמידות</MenuItem>
+                          <MenuItem onClick={() => navigate('/itemsPendingApproval')}>ממתינים לאישור</MenuItem>
+                          <MenuItem onClick={() => navigate('/studentRequest')}>בקשות תלמידים</MenuItem>
                           <MenuItem onClick={() => navigate('/tag-list')}>ניהול תגיות</MenuItem>
-                          <MenuItem onClick={() => navigate('/items/borrowingItems')}>פריטים מושאלים</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
                   </Grow>
                 )}
               </Popper>
-
-                    </>
-                    )}
+            </>
+          )}
           <LeftSection>
-            {isLoggedIn ? (
+            {isLoggedIn && (
               <>
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  onClick={handleMenuOpen}
-                >
+                <Tooltip title={greetingMessage}>
+                  <GreetingText variant="body1" style={{ marginRight: '10px' }}>
+                    {greetingMessage}, {userName}
+                  </GreetingText>
+                </Tooltip>
+                <IconButton onClick={handleMenuOpen}>
                   <Avatar>{renderUserAvatar(userName)}</Avatar>
                 </IconButton>
-                <GreetingText variant="body1">
-                  {greetingMessage} {userName}
-                </GreetingText>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem onClick={handleProfileClick}>ניהול חשבון</MenuItem>
-                  <MenuItem onClick={handleProfileClickToRequestStatus}>רשימת השאלות</MenuItem>
-                  <MenuItem onClick={handleLogout}>התנתקות</MenuItem>
+                  <MenuItem onClick={handleProfileClick}>הפרופיל שלי</MenuItem>
+                  <MenuItem onClick={handleProfileClickToRequestStatus}>בקשות סטטוס</MenuItem>
+                  <MenuItem onClick={handleLogout}>התנתק</MenuItem>
                 </Menu>
               </>
-            ) : (
-              <GreetingText variant="body1">לא מחובר</GreetingText>
             )}
           </LeftSection>
         </Toolbar>
