@@ -149,7 +149,7 @@ export const Nav = () => {
       <NavBar position="fixed">
         <Toolbar>
           <RightSection>
-            <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '24px', marginRight: 'auto' }} />
+            <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '50px', marginRight: 'auto' }} />
             <Typography
               variant="body1"
               style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'bold' }}
@@ -201,6 +201,7 @@ export const Nav = () => {
                           <MenuItem onClick={() => navigate('/changePermission')}>שינוי הרשאות</MenuItem>
                           <MenuItem onClick={() => navigate('/Charts')}>גרפים</MenuItem>
                           <MenuItem onClick={() => navigate('/ManagerDashboard')}>דוחות</MenuItem>
+                          <MenuItem onClick={() => navigate('/LibrariansTable')}>ביצועי ספרניות</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>
