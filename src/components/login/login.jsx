@@ -209,10 +209,10 @@ const Login = () => {
             .catch(activityError => {
               console.error('Error adding activity log:', activityError);
             });
-          const roll=getRoleFromToken();
-          if(roll=='Admin')  
+          const role=getRoleFromToken();
+          if(role=='Admin')  
             navigate('/ActivityLog');
-          else
+          else if(role=='Librarian') 
             navigate('/items');
           window.location.reload();
         } else {
