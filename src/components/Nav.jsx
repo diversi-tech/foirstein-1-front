@@ -151,7 +151,7 @@ export const Nav = () => {
       <NavBar position="fixed">
         <Toolbar>
           <RightSection>
-            <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '24px', marginRight: 'auto' }} />
+            <img src="/bookshelf.png" alt="Bookshelf Icon" style={{ height: '50px', marginRight: 'auto' }} />
             <Typography
               variant="body1"
               style={{ color: '#FFFFFF', marginLeft: '4px', fontWeight: 'bold' }}
