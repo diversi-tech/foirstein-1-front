@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography, Button, Popper, Paper, ClickAwayListener, Grow, MenuList, Grid, Tooltip, Badge } from '@mui/material';
 import { styled } from '@mui/system';
-import MailIcon from '@mui/icons-material/Mail';
 import { getRoleFromToken, getUserNameFromToken, getCookie } from './decipheringToken';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const Root = styled('div')(({ theme }) => ({
   flexGrow: 1,

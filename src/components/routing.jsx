@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 import { Nav } from "./Nav";
 import ChangePermission from "./changePermission";
 import UserManagementComponent from "./adminEditing";
@@ -19,7 +19,8 @@ import '../App.css';
 import ProfileForm from "./personalArea/profileForm";
 import AccessibilityOptions from "./Accessibility/AccessibilityOptions";
 import { AccessibilityProvider } from "./Accessibility/AccessibilityContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getCookie, getRoleFromToken } from "./decipheringToken";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -29,6 +30,14 @@ function ExternalRedirect({ url }) {
 }
 
 export const Routing = () => {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
+  const role = isLoggedIn ? getRoleFromToken() : null;
+
+  useEffect(() => {
+    setIsLoggedIn(!!getCookie('jwt'));
+  }, []);
+
   return (
     <HashRouter>
       <AccessibilityProvider>
@@ -40,7 +49,13 @@ export const Routing = () => {
             <AccessibilityOptions />
           </div>
           <Routes>
-            <Route path="/" element={<Login />} />
+          {!isLoggedIn && (
+            <Route path="/" element={<Login/>} />)}
+          {isLoggedIn && role=='Admin' &&(
+              <Route path="/" element={<ActivityLog />} />)}
+          {isLoggedIn && role=='Librarian' && (
+             <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}     
+            <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             {/* <Route path='/search' element={<Login/>} /> */}
             <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
