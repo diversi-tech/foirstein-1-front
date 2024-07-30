@@ -8,10 +8,10 @@ const theme = createTheme({
   typography: {
     fontFamily: [
       'Rubik',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      // 'Roboto',
+      // '"Helvetica Neue"',
+      // 'Arial',
+      // 'sans-serif',
     ].join(','),
     fontSize: 16,
     // ...שאר ההגדרות
