@@ -94,7 +94,7 @@ const ResetPassword = () => {
       },
     },
     typography: {
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'fontFamily,Arial, sans-serif',
     },
   });
 

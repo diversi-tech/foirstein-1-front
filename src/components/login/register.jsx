@@ -14,7 +14,7 @@ import ActivityLogService from '../../axios/ActivityLogAxios';
 const theme = createTheme({
   direction: 'rtl',
   typography: {
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Rubik,Arial, sans-serif',
   },
   palette: {
     primary: {
