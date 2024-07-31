@@ -44,7 +44,7 @@ const ReportService = {
         }
     },
     createLoginActivityReport: async (loginDate, reportName,userId) => {
-        try {debugger
+        try {
             const response = await axios.get(`${userUrl}/aaa?loginDate=${loginDate}&reportName=${reportName}&type=התחברות&userId=${userId}`);
             return response.data;
         } catch (error) {
