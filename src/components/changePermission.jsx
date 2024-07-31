@@ -17,7 +17,7 @@ import theme from '../theme';
 import { FillData } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
 import ActivityLogService from '../axios/ActivityLogAxios';
-import { getUserIdFromTokenid } from './decipheringToken';
+import { getUserIdFromTokenid } from './decipheringToken';  // תקן את הנתיב לפי המיקום האמיתי של הקובץ
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -30,7 +30,7 @@ const customTheme = (outerTheme) =>
     palette: {
       mode: outerTheme.palette.mode,
       primary: {
-        main: '#0D1E46',
+        main: '#0D1E46',  // הוספת הצבע המוגדר
       },
     },
   });
@@ -47,27 +47,27 @@ const ChangePermission = () => {
   const allPermissions = ["ספר", "קובץ", "פס קול"];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [usersResponse, permissionsResponse] = await Promise.all([
-          userService.getAllUsers(),
-          userService.getAllPermissions(),
-        ]);
-        dispatch(FillData(usersResponse));
-        setPermissionsData(permissionsResponse);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    userService.getAllUsers()
+      .then(response => {
+        dispatch(FillData(response));
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      });
 
-    fetchData();
+    userService.getAllPermissions()
+      .then(response => {
+        setPermissionsData(response);
+      })
+      .catch(error => {
+        console.error('Error fetching permissions:', error);
+      });
   }, [dispatch]);
 
   const handleRoleChange = (userId, role) => {
     userService.updateUserRole(userId, role)
       .then(response => {
-        if (response.success) {
-          // Update user role in the local state
+        if (response.succes) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
           );
@@ -123,21 +123,20 @@ const ChangePermission = () => {
         userId: selectedUser.userId,
         permissions: newPermissions
       });
-
+      console.log('Response:', response); 
       if (response.data.success) {
-        // Update permissions data in local state
+        // עדכון הרשאות ברשימה המקומית
         const updatedPermissionsData = permissionsData.map(perm =>
           perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
         );
         setPermissionsData(updatedPermissionsData);
         
-        // Update users with new permissions
+        // עדכון הרשאות במצב המשתמשים
         const updatedUsers = users.map(user =>
           user.userId === selectedUser.userId ? { ...user, permissions: newPermissions } : user
         );
         dispatch(FillData(updatedUsers));
 
-        // Close dialog
         setOpenPermissionsDialog(false);
       } else {
         alert('Error updating permissions');
@@ -242,7 +241,7 @@ const ChangePermission = () => {
                           <Select
                             value={user.role}
                             onChange={(e) => handleRoleChange(user.userId, e.target.value)}
-                            style={{ marginLeft: 8, flexGrow: 1, minWidth: 160 }}
+                            style={{ marginLeft: 8, flexGrow: 1, minWidth: 160 }} // קביעת גודל מינימלי ל-160px
                             MenuProps={{
                               PaperProps: {
                                 style: {
@@ -309,7 +308,7 @@ const ChangePermission = () => {
               onClose={() => setOpenPermissionsDialog(false)}
               aria-labelledby="form-dialog-title"
             >
-              <DialogTitle id="form-dialog-title" align="center">הרשאות לספרנית</DialogTitle>
+              <DialogTitle id="form-dialog-title" align="center"> הרשאות לספרנית</DialogTitle>
               <DialogContent>
                 <DialogContentText align="center">
                   סמן את ההרשאות עבור הספרנית {selectedUser && selectedUser.fname}
