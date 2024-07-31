@@ -164,6 +164,7 @@ const ReportPage = () => {
   const { report, type } = location.state;
 
   const parseReportData = (reportData) => {
+    debugger
     const rows = reportData.trim().split('\n');
     return rows.map(row => {
       const [a, b, c, d, e] = row.split(',').map(item => item.split(': ')[1]);
