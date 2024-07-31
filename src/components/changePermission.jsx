@@ -67,14 +67,16 @@ const ChangePermission = () => {
   const handleRoleChange = (userId, role) => {
     userService.updateUserRole(userId, role)
       .then(response => {
-        if (response.data.success) {
+        debugger
+        console.log(response.success);
+        if (response.success) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
           );
           dispatch(FillData(updatedUsers));
           
           // עדכון הקוקיז עם הטוקן החדש
-          const token = response.data.token;
+          const token = response.token;
           document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
   
 
