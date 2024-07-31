@@ -30,7 +30,14 @@ const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [rtlPlugin],
 });
-
+const aleartregister=()=>{
+  Swal.fire({
+    icon: "success",
+    title: "נרשמת בהצלחה",
+    showConfirmButton: false,
+    timer: 1500
+  });
+  }
 const Register = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -202,6 +209,7 @@ const Register = () => {
 
         await ActivityLogService.addActivityLog(activityLog);
         const result = await axios.get(`https://foirstein-1-back.onrender.com/api/Users/AdminMail/${response.data.userId}`);
+        aleartregister();
         navigate('/login');
       } else {
         setError('הרשמה נכשלה, נסה שוב');
