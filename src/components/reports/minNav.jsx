@@ -32,12 +32,12 @@ const NavBar = () => {
             to="/view-reports" 
             sx={{ color: currentPath === '/view-reports' ? '#0D1E46' : '#0D1E46' }}
           />
-            <Tab 
+          <Tab 
             label="יצירת דוחות" 
-            value="/" 
+            value="/ManagerDashboard" 
             component={Link} 
             to="/ManagerDashboard" 
-            sx={{ color: currentPath === '/' ? '#0D1E46' : '#0D1E46' }}
+            sx={{ color: currentPath === '/ManagerDashboard' ? '#0D1E46' : '#0D1E46' }}
           />
         </Tabs>
       </AppBar>
