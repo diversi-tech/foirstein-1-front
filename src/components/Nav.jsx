@@ -89,7 +89,7 @@ export const Nav = () => {
 
   useEffect(() => {
     if (!isLoggedIn && (location.pathname === '/UserManagementComponent' || location.pathname === '/ActivityLog' || location.pathname === '/changePermission' || location.pathname === '/Charts')) {
-      navigate('/home');
+      navigate('/login');
     }
   }, [isLoggedIn, location.pathname, navigate]);
 

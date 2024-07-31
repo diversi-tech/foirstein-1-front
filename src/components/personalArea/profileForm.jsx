@@ -106,7 +106,7 @@ function ProfileForm() {
             console.log('User saved successfully');
             alert('המשתמש עודכן בהצלחה');
             // העברה לדף הבית - לאחר השמירה
-            navigate('/home')
+            navigate('/search')
         } catch (error) {
             console.error('Error updating user:', error);
         }

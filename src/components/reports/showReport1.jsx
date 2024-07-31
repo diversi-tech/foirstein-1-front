@@ -212,7 +212,7 @@ const ReportPage = () => {
         break;
       case 'התחברות':
         columns = ['שם משתמש', 'שם משפחה', 'תאריך התחברות'];
-        rows = data.map(item => [item.c, item.b, item.a.split('').reverse().join('')]);
+        rows = data.map(item => [item.c, item.b, item.a]);
         break;
       default:
         break;
