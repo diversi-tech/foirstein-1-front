@@ -388,84 +388,82 @@ const ActivityLog = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredLogs
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((log, index) => {
-                    const user = usersList.find(
-                      (user) => user.tz === log.userId
-                    );
-                    const fullName = user ? `${user.fname} ${user.sname}` : "";
+  {filteredLogs
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map((log, index) => {
+      const user = usersList.find((user) => user.tz === log.userId);
+      let fullName = user ? `${user.fname} ${user.sname}` : "";
+      let userIdDisplay = user ? user.tz : "משתמש לא ידוע";
 
-                    const user1 = usersList.find(
-                      (user1) => user1.userId === log.userId1
-                    );
-                    const fullName1 = user1
-                      ? `${user1.fname} ${user1.sname}`
-                      : "";
-                    debugger;
+      if (log.activity === "יצירת דוח") {
+        fullName = "פעילות כללית";
+        userIdDisplay = "פעילות כללית";
+      }
 
-                    return (
-                      <React.Fragment key={log.logId}>
-                        <TableRow>
-                          <TableCell align="center">
-                            {page * rowsPerPage + index + 1}
-                          </TableCell>
-                          <TableCell align="center">
-                            {user ? user.tz : "משתמש לא ידוע"}
-                          </TableCell>
-                          <TableCell align="center">
-                            {fullName}
-                            {/* {user ? user.userName : "משתמש לא ידוע"} */}
-                          </TableCell>
-                          <TableCell align="center">
-                            <IconButton
-                              onClick={() => handleRowToggle(log.logId)}
-                            >
-                              {expandedRow === log.logId ? (
-                                <ExpandLess />
-                              ) : (
-                                <ExpandMore />
-                              )}
-                            </IconButton>
+      const user1 = usersList.find((user1) => user1.userId === log.userId1);
+      const fullName1 = user1 ? `${user1.fname} ${user1.sname}` : "";
 
-                            {log.activity.length > 10
-                              ? log.activity.substring(0, 10) + "..."
-                              : log.activity}
-                          </TableCell>
-                          <TableCell align="center">
-                            {new Date(log.timestamp).toLocaleString()}
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell
-                            style={{ paddingBottom: 0, paddingTop: 0 }}
-                            colSpan={5}
-                          >
-                            <Collapse
-                              in={expandedRow === log.logId}
-                              timeout="auto"
-                              unmountOnExit
-                            >
-                              <Box sx={{ margin: 1 }}>
-                                <Typography variant="body2">
-                                  {`הפעילות נעשתה על ידי משתמש: ${fullName1}`}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {`תעודת זהות: ${
-                                    user1 ? user1.tz : "לא ידוע"
-                                  }`}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {`פעילות: ${log.activity}`}
-                                </Typography>
-                              </Box>
-                            </Collapse>
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    );
-                  })}
-              </TableBody>
+      return (
+        <React.Fragment key={log.logId}>
+          <TableRow>
+            <TableCell align="center">
+              {page * rowsPerPage + index + 1}
+            </TableCell>
+            <TableCell align="center">
+              {userIdDisplay}
+            </TableCell>
+            <TableCell align="center">
+              {fullName}
+            </TableCell>
+            <TableCell align="center">
+              <IconButton
+                onClick={() => handleRowToggle(log.logId)}
+              >
+                {expandedRow === log.logId ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )}
+              </IconButton>
+              {log.activity.length > 10
+                ? log.activity.substring(0, 10) + "..."
+                : log.activity}
+            </TableCell>
+            <TableCell align="center">
+              {new Date(log.timestamp).toLocaleString()}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell
+              style={{ paddingBottom: 0, paddingTop: 0 }}
+              colSpan={5}
+            >
+              <Collapse
+                in={expandedRow === log.logId}
+                timeout="auto"
+                unmountOnExit
+              >
+                <Box sx={{ margin: 1 }}>
+                  <Typography variant="body2">
+                    {`הפעילות נעשתה על ידי משתמש: ${fullName1}`}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`תעודת זהות: ${
+                      user1 ? user1.tz : "לא ידוע"
+                    }`}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`פעילות: ${log.activity}`}
+                  </Typography>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      );
+    })}
+</TableBody>
+
             </Table>
             <Pagination
               count={validFilteredLogsLength}
