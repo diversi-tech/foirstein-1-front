@@ -60,7 +60,8 @@ const ActivityLog = () => {
 
   useEffect(() => {
     handleSearch();
-  }, [logs, usersList]);
+  }, [logs, usersList, userId, userName, startDate, endDate, activity]);
+
 
   useEffect(() => {
     adjustPagination();
@@ -345,14 +346,7 @@ const ActivityLog = () => {
           xs={12}
           sx={{ display: "flex", justifyContent: "center", mt: 2 }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearch}
-            sx={{ minWidth: "150px", "& input": { color: "#0D1E46" } }}
-          >
-            חיפוש
-          </Button>
+         
         </Grid>
       </Grid>
 
