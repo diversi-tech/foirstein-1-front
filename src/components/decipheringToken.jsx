@@ -13,7 +13,6 @@ export const getRoleFromToken = () => {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
       return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -24,7 +23,6 @@ export const getRoleFromToken = () => {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
       const permissions = decoded['permissions']; // ההרשאות אמורות להיות כאן לפי הקוד שכתבת
   
       return {
@@ -39,7 +37,6 @@ export const getRoleFromToken = () => {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
       return decoded['sub'];
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -51,7 +48,6 @@ export const getRoleFromToken = () => {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
       return decoded['tz'];
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -63,7 +59,6 @@ export const getRoleFromToken = () => {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // בדיקת תוכן הטוקן
       return parseInt(decoded['userId'], 10); // Convert userId to integer
     } catch (error) {
       console.error('Error decoding token:', error);
