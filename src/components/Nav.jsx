@@ -111,7 +111,10 @@ export const Nav = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
+  const handleProfileClickSavedItemsScreen = () => {
+    navigate('/SavedItemsScreen');
+    handleMenuClose();
+  };
   const handleProfileClick = () => {
     navigate('/profileform');
     handleMenuClose();
@@ -278,6 +281,7 @@ export const Nav = () => {
                 >
                   <MenuItem onClick={handleProfileClick}>הפרופיל שלי</MenuItem>
                   <MenuItem onClick={handleProfileClickToRequestStatus}>בקשות סטטוס</MenuItem>
+                  <MenuItem onClick={handleProfileClickSavedItemsScreen}>מאגר אישי </MenuItem>
                   <MenuItem onClick={handleLogout}>התנתק</MenuItem>
                 </Menu>
               </>
