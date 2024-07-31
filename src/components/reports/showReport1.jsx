@@ -164,6 +164,7 @@ const ReportPage = () => {
   const { report, type } = location.state;
 
   const parseReportData = (reportData) => {
+    debugger
     const rows = reportData.trim().split('\n');
     return rows.map(row => {
       const [a, b, c, d, e] = row.split(',').map(item => item.split(': ')[1]);
@@ -211,7 +212,7 @@ const ReportPage = () => {
         break;
       case 'התחברות':
         columns = ['שם משתמש', 'שם משפחה', 'תאריך התחברות'];
-        rows = data.map(item => [item.c, item.b, item.a.split('').reverse().join('')]);
+        rows = data.map(item => [item.c.split('').reverse().join(''), item.b, item.a]);
         break;
       default:
         break;

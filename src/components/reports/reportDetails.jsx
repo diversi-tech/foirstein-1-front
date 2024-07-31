@@ -303,7 +303,8 @@ const ReportDetails = ({ open, handleClose, report, reportNames, setReportNames,
           setLoading(false);
           return;
         }
-        const fullDate = new Date(`${loginDate}T00:00:00`);
+        const fullDate = new Date(`${loginDate}T12:00:00`);
+      debugger
         const formattedDate = fullDate.toISOString();
         response = await ReportService.createLoginActivityReport(formattedDate, reportName, userid);
       } else {
