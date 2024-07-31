@@ -77,7 +77,7 @@ const ChangePermission = () => {
           
           // עדכון הקוקיז עם הטוקן החדש
           const token = response.token;
-          document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+          // document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
   
 
           const currentUserId = getUserIdFromTokenid();
