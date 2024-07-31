@@ -119,6 +119,7 @@ const ActivityLog = () => {
 
       return matchUserName && matchActivity && matchDateRange && userIdMatch;
     });
+    filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     setFilteredLogs(filtered);
     setPage(0);

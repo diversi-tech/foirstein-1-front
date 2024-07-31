@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { getCookie, getRoleFromToken } from "./decipheringToken";
 import Tasks from "./LibrarianPerformance/Tasks";
 import LibrariansTable from "./LibrarianPerformance/LibrariansTable";
+import NotFoundPage from "./notFound";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -85,6 +86,7 @@ export const Routing = () => {
             <Route path='/StatusListView' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/StatusListView" />} />
             <Route path='/LibrariansTable' element={<LibrariansTable />} />
             <Route path="/tasks/:userId" element={<Tasks />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </div>
