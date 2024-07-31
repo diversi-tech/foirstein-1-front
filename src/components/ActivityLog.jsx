@@ -398,7 +398,6 @@ const ActivityLog = () => {
       if (log.activity === "יצירת דוח") {
         fullName = "פעילות כללית";
         userIdDisplay = "פעילות כללית";
-        
       }
 
       const user1 = usersList.find((user1) => user1.userId === log.userId1);
