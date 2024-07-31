@@ -201,6 +201,7 @@ const Register = () => {
         };
 
         await ActivityLogService.addActivityLog(activityLog);
+        const result = await axios.get(`https://foirstein-1-back.onrender.com/api/Users/AdminMail/${response.data.userId}`);
         navigate('/home');
       } else {
         setError('הרשמה נכשלה, נסה שוב');
