@@ -63,7 +63,7 @@ const ChangePermission = () => {
   const handleRoleChange = (userId, role) => {
     userService.updateUserRole(userId, role)
       .then(response => {
-        if (response.success) {
+        if (response.succes) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
           );
@@ -115,6 +115,7 @@ const ChangePermission = () => {
 
   const confirmPermissionsChange = async () => {
     try {
+      debugger
       const response = await axios.put('https://foirstein-1-back.onrender.com/api/LibrarianPermissions/updatePermissions', {
         userId: selectedUser.userId,
         permissions: newPermissions
