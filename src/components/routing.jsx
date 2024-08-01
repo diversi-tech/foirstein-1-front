@@ -58,7 +58,7 @@ export const Routing = () => {
               <Route path="/" element={<ActivityLog />} />)}
           {isLoggedIn && role=='Librarian' && (
             <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}     
-            <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
+            <Route path='/SearchAppBar' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il" />} />
             {/* <Route path='/search' element={<Login/>} /> */}
             <Route path='/SavedItemsScreen' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SavedItemsScreen" />} />
