@@ -171,7 +171,7 @@ export const Nav = () => {
             </StyledLink>
           )}
           {isLoggedIn && (
-            <StyledLink to="/SearchAppBar" active={location.pathname === '/SearchAppBar'}>
+            <StyledLink to="/SearchAppBar" active={location.pathname === '/search'}>
               חיפוש
             </StyledLink>
           )}
