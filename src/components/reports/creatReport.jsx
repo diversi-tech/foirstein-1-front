@@ -4,11 +4,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Card, CardContent, Typography, Container, Grid, CssBaseline, Snackbar, Alert, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ActivityIcon from '@mui/icons-material/Assessment';
-import PeopleIcon from '@mui/icons-material/People'; // Updated icon
+import PeopleIcon from '@mui/icons-material/People';
 import ReportDetails from './reportDetails';
 import theme from '../../theme';
 import NavBar from './minNav';
-import ReportService from '../../axios/reportsAxios'; // Assuming you have a service for fetching reports
+import ReportService from '../../axios/reportsAxios';
 
 const customTheme = createTheme(theme, {
   components: {
@@ -16,11 +16,16 @@ const customTheme = createTheme(theme, {
       styleOverrides: {
         root: {
           borderRadius: '8px',
-          boxShadow: '0 0 20px rgba(0, 0, 0, 0.2)', // Increased shadow intensity
-          backgroundColor: '#fff', // White background
-          border: 'none', // Remove border
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Subtle initial shadow
+          backgroundColor: '#fff',
+          border: 'none',
           margin: '20px 0',
           minHeight: '250px',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease', // Add transition for transform and box-shadow change
+          '&:hover': {
+            border: '2px solid #FFD700', 
+            transform: 'scale(0.99)'
+          },
         },
       },
     },
@@ -28,13 +33,13 @@ const customTheme = createTheme(theme, {
       styleOverrides: {
         h5: {
           color: theme.palette.primary.main,
-          fontSize: '1.5rem', // Adjusted font size
+          fontSize: '1.5rem',
           fontWeight: 'bold',
-          marginBottom: '10px', // Add margin below title
+          marginBottom: '10px',
         },
         body2: {
-          color: '#555', // Dark grey color for better readability
-          fontSize: '1rem', // Adjusted font size
+          color: '#555',
+          fontSize: '1rem',
         },
         h4: {
           color: theme.palette.primary.main,
@@ -73,11 +78,12 @@ const ManagerDashboard = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
+
   const reports = [
     { title: 'התחברות', description: 'הצג רשימת משתמשים שהתחברו למערכת בתאריך מסוים', icon: <SearchIcon fontSize="large" /> },
     { title: 'פעילות', description: 'הצג לכל משתמש את כמות החיפושים שלו בחודש האחרון', icon: <ActivityIcon fontSize="large" /> },
-    { title: 'שנתי', description: 'הצג את כמות המשתמשים שנוספו למערכת בכל שנה', icon: <PeopleIcon fontSize="large" /> }, // Updated icon
-    { title: 'חיפושים', description: 'הצג את החיפושים שהביאו לבקשת פריט', icon: <SearchIcon fontSize="large" /> }
+    { title: 'שנתי', description: 'הצג את כמות המשתמשים שנוספו למערכת בכל שנה', icon: <PeopleIcon fontSize="large" /> },
+    { title: 'חיפושים', description: 'הצג את החיפושים שהביאו לבקשת פריט', icon: <SearchIcon fontSize="large" /> },
   ];
 
   useEffect(() => {
@@ -127,10 +133,10 @@ const ManagerDashboard = () => {
   };
 
   const handleReportGenerated = async () => {
-    await fetchReports(); // Fetch the latest reports from the server
-    const response = await ReportService.getAllReports(); // Get the latest reports again
+    await fetchReports();
+    const response = await ReportService.getAllReports();
     setGeneratedReports(response);
-    const latestReport = response[response.length - 1]; // Get the latest report from the updated response
+    const latestReport = response[response.length - 1];
     handleViewReport(latestReport);
   };
 
@@ -180,7 +186,7 @@ const ManagerDashboard = () => {
               report={selectedReport}
               reportNames={reportNames}
               setReportNames={setReportNames}
-              onReportGenerated={handleReportGenerated} // Pass the new handler
+              onReportGenerated={handleReportGenerated}
             />
           )}
         </Container>

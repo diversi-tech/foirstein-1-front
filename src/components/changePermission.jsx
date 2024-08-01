@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox,
+  Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox, IconButton, Tooltip,
   createTheme
 } from '@mui/material';
 import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import rtlPlugin from 'stylis-plugin-rtl';
@@ -28,6 +29,9 @@ const customTheme = (outerTheme) =>
     direction: 'rtl',
     palette: {
       mode: outerTheme.palette.mode,
+      primary: {
+        main: '#0D1E46',  // הוספת הצבע המוגדר
+      },
     },
   });
 
@@ -63,11 +67,18 @@ const ChangePermission = () => {
   const handleRoleChange = (userId, role) => {
     userService.updateUserRole(userId, role)
       .then(response => {
-        if (response.succes) {
+        debugger
+        console.log(response.success);
+        if (response.success) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
           );
           dispatch(FillData(updatedUsers));
+          
+          // עדכון הקוקיז עם הטוקן החדש
+          const token = response.token;
+          // document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+  
 
           const currentUserId = getUserIdFromTokenid();
           const activityLog = {
@@ -115,17 +126,24 @@ const ChangePermission = () => {
 
   const confirmPermissionsChange = async () => {
     try {
-      debugger
       const response = await axios.put('https://foirstein-1-back.onrender.com/api/LibrarianPermissions/updatePermissions', {
         userId: selectedUser.userId,
         permissions: newPermissions
       });
       console.log('Response:', response); 
       if (response.data.success) {
+        // עדכון הרשאות ברשימה המקומית
         const updatedPermissionsData = permissionsData.map(perm =>
           perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
         );
         setPermissionsData(updatedPermissionsData);
+        
+        // עדכון הרשאות במצב המשתמשים
+        const updatedUsers = users.map(user =>
+          user.userId === selectedUser.userId ? { ...user, permissions: newPermissions } : user
+        );
+        dispatch(FillData(updatedUsers));
+
         setOpenPermissionsDialog(false);
       } else {
         alert('Error updating permissions');
@@ -190,7 +208,6 @@ const ChangePermission = () => {
       <ThemeProvider theme={customTheme}>
         <div dir="rtl">
           <Container>
-            <Typography variant="h1" align="center">שינוי הרשאות</Typography>
             <Box sx={{ mb: 2 }}>
               <TextField
                 fullWidth
@@ -210,48 +227,85 @@ const ChangePermission = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="right">שם פרטי</TableCell>
-                    <TableCell align="right">תעודת זהות</TableCell>
-                    <TableCell align="right">הרשאה</TableCell>
-                    <TableCell align="right">הרשאות ספרנית</TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="center">תעודת זהות</TableCell>
+                    <TableCell align="center">שם פרטי</TableCell>
+                    <TableCell align="center">הרשאה</TableCell>
+                    <TableCell align="center">הרשאות ספרנית</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredUsers.map(user => (
-                    <TableRow key={user.userId}>
-                      <TableCell align="right">{user.fname}</TableCell>
-                      <TableCell align="right">{user.tz}</TableCell>
-                      <TableCell align="right" style={{ width: '200px' }}>
-                        <Box display="flex" alignItems="center" justifyContent="flex-start">
+                  {filteredUsers.map(user => {
+                    const userPermissions = getUserPermissions(user.userId);
+                    return (
+                      <TableRow key={user.userId}>
+                        <TableCell align="center">
                           {getIconByRole(user.role)}
+                        </TableCell>
+                        <TableCell align="center">{user.tz}</TableCell>
+                        <TableCell align="center">{user.fname}</TableCell>
+                        <TableCell align="center">
                           <Select
                             value={user.role}
                             onChange={(e) => handleRoleChange(user.userId, e.target.value)}
-                            style={{ marginLeft: 8, flexGrow: 1 }}
-                          >
-                            <MenuItem value="Admin">מנהל</MenuItem>
-                            <MenuItem value="Student">סטודנט</MenuItem>
-                            <MenuItem value="Librarian">ספרנית</MenuItem>
-                          </Select>
-                        </Box>
-                      </TableCell>
-                      <TableCell align="right">
-                        {user.role === 'Librarian' && (
-                          <Box
-                            sx={{
-                              border: '1px solid #ccc',
-                              borderRadius: '4px',
-                              padding: '8px',
-                              cursor: 'pointer'
+                            style={{ marginLeft: 8, flexGrow: 1, minWidth: 160 }} // קביעת גודל מינימלי ל-160px
+                            MenuProps={{
+                              PaperProps: {
+                                style: {
+                                  textAlign: 'center',
+                                },
+                              },
                             }}
-                            onClick={() => handlePermissionsChange(user.userId)}
                           >
-                            {getUserPermissions(user.userId).map(perm => translatePermissionToHebrew(perm)).join(', ')}
-                          </Box>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                            <MenuItem value="Admin" style={{ textAlign: 'center' }}>מנהל</MenuItem>
+                            <MenuItem value="Student" style={{ textAlign: 'center' }}>סטודנט</MenuItem>
+                            <MenuItem value="Librarian" style={{ textAlign: 'center' }}>ספרנית</MenuItem>
+                          </Select>
+                        </TableCell>
+                        <TableCell align="center">
+                          {user.role === 'Librarian' ? (
+                            userPermissions.length === 0 ? (
+                              <Box
+                                sx={{
+                                  border: '1px solid #ccc',
+                                  borderRadius: '4px',
+                                  padding: '8px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handlePermissionsChange(user.userId)}
+                                >
+                                  בחר הרשאות לספרנית
+                                </Button>
+                              </Box>
+                            ) : (
+                              <Box
+                                sx={{
+                                  border: '1px solid #ccc',
+                                  borderRadius: '4px',
+                                  padding: '8px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                {userPermissions.map(perm => translatePermissionToHebrew(perm)).join(', ')}
+                                <Tooltip title="שינוי הרשאות">
+                                  <IconButton onClick={() => handlePermissionsChange(user.userId)}>
+                                    <EditIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
+                            )
+                          ) : null}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -261,13 +315,13 @@ const ChangePermission = () => {
               onClose={() => setOpenPermissionsDialog(false)}
               aria-labelledby="form-dialog-title"
             >
-              <DialogTitle id="form-dialog-title">שינוי הרשאות לספרנית</DialogTitle>
+              <DialogTitle id="form-dialog-title" align="center"> הרשאות לספרנית</DialogTitle>
               <DialogContent>
-                <DialogContentText>
+                <DialogContentText align="center">
                   סמן את ההרשאות עבור הספרנית {selectedUser && selectedUser.fname}
                 </DialogContentText>
                 {allPermissions.map(permission => (
-                  <Box key={permission} display="flex" alignItems="center" justifyContent="space-between">
+                  <Box key={permission} display="flex" alignItems="center" justifyContent="flex-end">
                     <Typography>{permission}</Typography>
                     <Checkbox
                       checked={newPermissions.includes(translatePermissionToEnglish(permission))}
@@ -277,12 +331,14 @@ const ChangePermission = () => {
                 ))}
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setOpenPermissionsDialog(false)} color="primary">
-                  ביטול
-                </Button>
-                <Button onClick={confirmPermissionsChange} color="primary">
-                  אישור
-                </Button>
+                <Box display="flex" justifyContent="center" width="100%">
+                  <Button onClick={() => setOpenPermissionsDialog(false)} color="error">
+                    ביטול
+                  </Button>
+                  <Button onClick={confirmPermissionsChange} color="success">
+                    אישור
+                  </Button>
+                </Box>
               </DialogActions>
             </Dialog>
           </Container>

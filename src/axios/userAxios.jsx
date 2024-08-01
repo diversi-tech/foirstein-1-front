@@ -104,6 +104,7 @@ const userService = {
   },
   updateUserRole: async (userId, newRole) => {
     try {
+      debugger
         const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
         debugger
         return response.data;
