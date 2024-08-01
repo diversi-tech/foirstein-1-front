@@ -59,7 +59,7 @@ export const Routing = () => {
           {isLoggedIn && role=='Librarian' && (
             <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}  
             {isLoggedIn && role=='Student' && (   
-            <Route path='/' element={<ExternalRedrect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />)}
+            <Route path='/' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />)}
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} /> 
             {/* <Route path='/search' element={<Login/>}/> */}
             <Route path='/SearchAppBar' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
