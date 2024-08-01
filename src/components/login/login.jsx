@@ -137,7 +137,7 @@ const Login = () => {
           .catch(activityError => {
             console.error('Error adding activity log:', activityError);
           });
-        navigate('/search');
+        navigate('/SearchAppBar');
         window.location.reload();
         }
       } else if (response.data.token === null) {
