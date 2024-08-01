@@ -168,9 +168,11 @@ const ReportPage = () => {
     const rows = reportData.trim().split('\n');
     return rows.map(row => {
       const [a, b, c, d, e] = row.split(',').map(item => item.split(': ')[1]);
+
       const adjustTime = (timeStr) => {
         if (!timeStr) return timeStr;
         const date = new Date(`1970-01-01T${timeStr}Z`);
+        if (isNaN(date.getTime())) return timeStr; // Return original string if invalid date
         date.setHours(date.getHours() + 3);
         return date.toISOString().split('T')[1].split('.')[0];
       };
