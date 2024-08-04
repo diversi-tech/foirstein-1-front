@@ -14,10 +14,10 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { prefixer } from 'stylis';
 import axios from 'axios';
 import theme from '../theme';
-import { FillData } from '../redux/actions/userAction';
+import { FillData, FillPermissions } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
 import ActivityLogService from '../axios/ActivityLogAxios';
-import { getUserIdFromTokenid } from './decipheringToken';  // תקן את הנתיב לפי המיקום האמיתי של הקובץ
+import { getUserIdFromTokenid } from './decipheringToken';  // Adjust the path based on the actual location of the file
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -30,7 +30,7 @@ const customTheme = (outerTheme) =>
     palette: {
       mode: outerTheme.palette.mode,
       primary: {
-        main: '#0D1E46',  // הוספת הצבע המוגדר
+        main: '#0D1E46',
       },
     },
   });
@@ -38,10 +38,10 @@ const customTheme = (outerTheme) =>
 const ChangePermission = () => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.userReducer.userList);
+  const permissionsData = useSelector(state => state.userReducer.permissionsList);
   const [openPermissionsDialog, setOpenPermissionsDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newPermissions, setNewPermissions] = useState([]);
-  const [permissionsData, setPermissionsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   const allPermissions = ["ספר", "קובץ", "פס קול"];
@@ -57,7 +57,7 @@ const ChangePermission = () => {
 
     userService.getAllPermissions()
       .then(response => {
-        setPermissionsData(response);
+        dispatch(FillPermissions(response));
       })
       .catch(error => {
         console.error('Error fetching permissions:', error);
@@ -67,19 +67,12 @@ const ChangePermission = () => {
   const handleRoleChange = (userId, role) => {
     userService.updateUserRole(userId, role)
       .then(response => {
-        debugger
-        console.log(response.success);
         if (response.success) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
           );
           dispatch(FillData(updatedUsers));
           
-          // עדכון הקוקיז עם הטוקן החדש
-          const token = response.token;
-          // document.cookie = `jwt=${token}; path=/; domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
-  
-
           const currentUserId = getUserIdFromTokenid();
           const activityLog = {
             LogId: 0,
@@ -130,15 +123,12 @@ const ChangePermission = () => {
         userId: selectedUser.userId,
         permissions: newPermissions
       });
-      console.log('Response:', response); 
       if (response.data.success) {
-        // עדכון הרשאות ברשימה המקומית
         const updatedPermissionsData = permissionsData.map(perm =>
           perm.userId === selectedUser.userId ? { ...perm, permissions: newPermissions } : perm
         );
-        setPermissionsData(updatedPermissionsData);
+        dispatch(FillPermissions(updatedPermissionsData));
         
-        // עדכון הרשאות במצב המשתמשים
         const updatedUsers = users.map(user =>
           user.userId === selectedUser.userId ? { ...user, permissions: newPermissions } : user
         );
@@ -248,7 +238,7 @@ const ChangePermission = () => {
                           <Select
                             value={user.role}
                             onChange={(e) => handleRoleChange(user.userId, e.target.value)}
-                            style={{ marginLeft: 8, flexGrow: 1, minWidth: 160 }} // קביעת גודל מינימלי ל-160px
+                            style={{ marginLeft: 8, flexGrow: 1, minWidth: 160 }}
                             MenuProps={{
                               PaperProps: {
                                 style: {
