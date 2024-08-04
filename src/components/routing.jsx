@@ -24,6 +24,8 @@ import { getCookie, getRoleFromToken } from "./decipheringToken";
 import Tasks from "./LibrarianPerformance/Tasks";
 import LibrariansTable from "./LibrarianPerformance/LibrariansTable";
 import NotFoundPage from "./notFound";
+import ServerError from "./ServerError";
+import AxiosInterceptorComponent from "../axios/AxiosInterceptorComponent";
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -51,6 +53,7 @@ export const Routing = () => {
           <div className="Accessibility">
             <AccessibilityOptions />
           </div>
+          <AxiosInterceptorComponent />
           <Routes>
           {!isLoggedIn && (
             <Route path="/" element={<Login/>} />)}
@@ -89,6 +92,7 @@ export const Routing = () => {
             <Route path='/StatusListView' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/StatusListView" />} />
             <Route path='/LibrariansTable' element={<LibrariansTable />} />
             <Route path="/tasks/:userId" element={<Tasks />} />
+            <Route path="server-error" element={<ServerError />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
