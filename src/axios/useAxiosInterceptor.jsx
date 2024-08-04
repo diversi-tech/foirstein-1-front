@@ -24,30 +24,30 @@ const useAxiosInterceptor = () => {
   };
 
   useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use(
-      async (config) => {
-        console.log('Request config:', config);
-        if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')) {
-          const token = getCookie('jwt');
-          if (token) {
-            const isValid = await validateToken(token);
-            if (isValid) {
-              config.headers.Authorization = `Bearer ${token}`;
-            } else {
-              console.warn('Token is not valid');
-              document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-              navigate('/login');
-              return Promise.reject(new Error('Invalid token'));
-            }
-          }
-        }
-        return config;
-      },
-      (error) => {
-        console.error('Request error:', error);
-        return Promise.reject(error);
-      }
-    );
+  //   const requestInterceptor = axios.interceptors.request.use(
+  //     async (config) => {
+  //       console.log('Request config:', config);
+  //       if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')) {
+  //         const token = getCookie('jwt');
+  //         if (token) {
+  //           const isValid = await validateToken(token);
+  //           if (isValid) {
+  //             config.headers.Authorization = `Bearer ${token}`;
+  //           } else {
+  //             console.warn('Token is not valid');
+  //             document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  //             navigate('/login');
+  //             return Promise.reject(new Error('Invalid token'));
+  //           }
+  //         }
+  //       }
+  //       return config;
+  //     },
+  //     (error) => {
+  //       console.error('Request error:', error);
+  //       return Promise.reject(error);
+  //     }
+  //   );
     
 
 
