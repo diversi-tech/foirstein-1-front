@@ -1,20 +1,7 @@
 import axios from 'axios';
-import { getCookie, validateToken } from '../components/decipheringToken';
 
 // 
 const API_URL = 'https://foirstein-1-back.onrender.com/api/Users'; // שים כאן את ה-URL שלך לקונטרולר
-axios.interceptors.request.use(
-  async (config) => {
-    const token = getCookie('jwt');
-    if (token) {
-      // Validate the token before adding it to the header
-      const isValid = await validateToken();
-      if (isValid) {
-       alert("isValid")
-      } else {
-        // Handle invalid token scenario (e.g., clear the cookie and redirect to login)
-        console.warn('Token is not valid');
-  }}})
 const userService = {
   getAllUsers: async () => {
     try {
