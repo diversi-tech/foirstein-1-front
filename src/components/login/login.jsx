@@ -182,7 +182,7 @@ const Login = () => {
       if (response.data.token && isActive) {
         alertLogin();
         const token = response.data.token;
-        document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+      document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
         dispatch(FillData(response.data));
         const decoded = parseInt(jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {
@@ -194,13 +194,15 @@ const Login = () => {
           UserId1NavigationUserId: decoded,
         };
 
-        await ActivityLogService.addActivityLog(activityLog)
-          .then((activityResponse) => {
-            console.log('Activity log added successfully:', activityResponse);
-          })
-          .catch((activityError) => {
-            console.error('Error adding activity log:', activityError);
-          });
+        setTimeout(async () => {
+          await ActivityLogService.addActivityLog(activityLog)
+            .then((activityResponse) => {
+              console.log('Activity log added successfully:', activityResponse);
+            })
+            .catch((activityError) => {
+              console.error('Error adding activity log:', activityError);
+            });
+        }, 100); // עיכוב של 100 מילישניות
         const role = getRoleFromToken();
         if (role == 'Admin') navigate('/ActivityLog');
         else if (role == 'Librarian') navigate('/items');
