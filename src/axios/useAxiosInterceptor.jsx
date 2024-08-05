@@ -8,30 +8,30 @@ const useAxiosInterceptor = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use(
-      async (config) => {
-        console.log('Request config:', config);
-        debugger;
-        // לא לבצע בדיקת טוקן בבקשות מסוימות
-        if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')&&!config.url.includes('/api/Users/verify-security-questions')&&!config.url.includes('/api/Users/getUsers')&&!config.url.includes('/api/Users/password2')) {
-          const token = getCookie('jwt');
-          if (token) {
-            const isValid = await validateToken();
-            if (isValid) {
-              config.headers.Authorization = `Bearer ${token}`;
-            } else {
-              navigate('/login', { state: { message: 'Token is not valid' } }); // הפניה לעמוד התחברות אם הטוקן לא תקין עם הודעה
-              return Promise.reject(new Error('Token is not valid'));
-            }
-          } else {
-            navigate('/login', { state: { message: 'Token is missing' } }); // הפניה לעמוד התחברות אם אין טוקן עם הודעה
-            return Promise.reject(new Error('Token is missing'));
-          }
-        }
-        return config;
-      },
-      error => Promise.reject(error)
-    );
+    // const requestInterceptor = axios.interceptors.request.use(
+    //   async (config) => {
+    //     console.log('Request config:', config);
+    //     debugger;
+    //     // לא לבצע בדיקת טוקן בבקשות מסוימות
+    //     if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')&&!config.url.includes('/api/Users/verify-security-questions')&&!config.url.includes('/api/Users/getUsers')&&!config.url.includes('/api/Users/password2')) {
+    //       const token = getCookie('jwt');
+    //       if (token) {
+    //         const isValid = await validateToken();
+    //         if (isValid) {
+    //           config.headers.Authorization = `Bearer ${token}`;
+    //         } else {
+    //           navigate('/login', { state: { message: 'Token is not valid' } }); // הפניה לעמוד התחברות אם הטוקן לא תקין עם הודעה
+    //           return Promise.reject(new Error('Token is not valid'));
+    //         }
+    //       } else {
+    //         navigate('/login', { state: { message: 'Token is missing' } }); // הפניה לעמוד התחברות אם אין טוקן עם הודעה
+    //         return Promise.reject(new Error('Token is missing'));
+    //       }
+    //     }
+    //     return config;
+    //   },
+    //   error => Promise.reject(error)
+    // );
 
     const responseInterceptor = axios.interceptors.response.use(
       response => response,
@@ -45,7 +45,7 @@ const useAxiosInterceptor = () => {
 
     // ניקוי ה-interceptors בעת סיום השימוש
     return () => {
-      axios.interceptors.request.eject(requestInterceptor);
+      // axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
   }, [navigate]);
