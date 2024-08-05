@@ -68,10 +68,11 @@ export const getRoleFromToken = () => {
 
 
   export const validateToken = async () => {
-    if (!token) return false;
+    const token1 = getCookie('jwt');
+    if (!token1) return false;
     try {
       debugger
-      const response = await axios.post('http://localhost:5211/api/validate-token', { token });
+      const response = await axios.post('https://foirstein-1-back.onrender.com/api/Users/validate-token', { token1 });
       return response.data.isValid;
     } catch (error) {
       console.error('Error validating token:', error);
