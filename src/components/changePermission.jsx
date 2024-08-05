@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, InputAdornment, Checkbox, IconButton, Tooltip,
-  createTheme
+  createTheme,
+  Alert
 } from '@mui/material';
 import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
@@ -17,7 +18,7 @@ import theme from '../theme';
 import { FillData, FillPermissions } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
 import ActivityLogService from '../axios/ActivityLogAxios';
-import { getUserIdFromTokenid } from './decipheringToken';  // Adjust the path based on the actual location of the file
+import { getUserIdFromTokenid, validateToken } from './decipheringToken';  // Adjust the path based on the actual location of the file
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -118,6 +119,10 @@ const ChangePermission = () => {
   };
 
   const confirmPermissionsChange = async () => {
+    const isValid = await validateToken();
+    if(isValid){
+      alert("good");
+    }
     try {
       const response = await axios.put('https://foirstein-1-back.onrender.com/api/LibrarianPermissions/updatePermissions', {
         userId: selectedUser.userId,
