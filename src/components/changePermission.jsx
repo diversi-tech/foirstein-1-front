@@ -119,10 +119,6 @@ const ChangePermission = () => {
   };
 
   const confirmPermissionsChange = async () => {
-    const isValid = await validateToken();
-    if(isValid){
-      alert("good");
-    }
     try {
       const response = await axios.put('https://foirstein-1-back.onrender.com/api/LibrarianPermissions/updatePermissions', {
         userId: selectedUser.userId,

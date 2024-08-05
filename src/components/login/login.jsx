@@ -194,15 +194,13 @@ const Login = () => {
           UserId1NavigationUserId: decoded,
         };
 
-        setTimeout(async () => {
-          await ActivityLogService.addActivityLog(activityLog)
-            .then((activityResponse) => {
-              console.log('Activity log added successfully:', activityResponse);
-            })
-            .catch((activityError) => {
-              console.error('Error adding activity log:', activityError);
-            });
-        }, 100); // עיכוב של 100 מילישניות
+        await ActivityLogService.addActivityLog(activityLog)
+          .then((activityResponse) => {
+            console.log('Activity log added successfully:', activityResponse);
+          })
+          .catch((activityError) => {
+            console.error('Error adding activity log:', activityError);
+          });
         const role = getRoleFromToken();
         if (role == 'Admin') navigate('/ActivityLog');
         else if (role == 'Librarian') navigate('/items');
