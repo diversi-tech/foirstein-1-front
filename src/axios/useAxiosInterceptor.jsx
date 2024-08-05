@@ -13,7 +13,7 @@ const useAxiosInterceptor = () => {
         console.log('Request config:', config);
         debugger;
         // לא לבצע בדיקת טוקן בבקשות מסוימות
-        if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')&&!config.url.includes('/api/Users/verify-security-questions')) {
+        if (config && config.url && !config.url.includes('/api/Users/login') && !config.url.includes('/api/Users/password-recovery')&&!config.url.includes('/api/Users/verify-security-questions')&&!config.url.includes('/api/Users/getUsers')&&!config.url.includes('/api/Users/password2')) {
           const token = getCookie('jwt');
           if (token) {
             const isValid = await validateToken();
