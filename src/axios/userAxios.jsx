@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { validateToken } from '../components/decipheringToken';
+import { getCookie, validateToken } from '../components/decipheringToken';
 
 // 
 const API_URL = 'https://foirstein-1-back.onrender.com/api/Users'; // שים כאן את ה-URL שלך לקונטרולר
