@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getCookie, validateToken } from '../components/decipheringToken';
 
 // 
 const API_URL = 'https://foirstein-1-back.onrender.com/api/Users'; // שים כאן את ה-URL שלך לקונטרולר
@@ -72,7 +71,6 @@ const userService = {
   },
 
   addUser: async (user) => {
-    
     try {
       debugger
       const response = await axios.post(`${API_URL}/addUser`, user);
@@ -105,30 +103,13 @@ const userService = {
   },
   updateUserRole: async (userId, newRole) => {
     try {
-      const token = getCookie('jwt');
-      if (token) {
-        const isValid = await validateToken();
-        if (isValid) {
-          const response = await axios.put(
-            `${API_URL}/${userId}/role`,
-            { role: newRole },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
-          
-          if (response.data && response.data.success) {
-            return response.data;
-          } else {
-            throw new Error('Invalid response structure');
-          }
-        }
-      }
+      debugger
+        const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole });
+        debugger
+        return response.data;
     } catch (error) {
-      console.error('Error updating user role:', error);
-      throw error;
+        console.error('Error updating user role:', error);
+        throw error;
     }
   },
 }
