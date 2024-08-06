@@ -104,26 +104,31 @@ const userService = {
     }
   },
   updateUserRole: async (userId, newRole) => {
-   
     try {
       const token = getCookie('jwt');
-      debugger
       if (token) {
         const isValid = await validateToken();
-        if (isValid) {              
-        const response = await axios.put(`${API_URL}/${userId}/role`, { role: newRole },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
+        if (isValid) {
+          const response = await axios.put(
+            `${API_URL}/${userId}/role`,
+            { role: newRole },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
             }
+          );
+          
+          if (response.data && response.data.success) {
+            return response.data;
+          } else {
+            throw new Error('Invalid response structure');
           }
-        );
-        debugger
-        return response.data;
-    } }
-  }catch (error) {
-        console.error('Error updating user role:', error);
-        throw error;
+        }
+      }
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      throw error;
     }
   },
 }
