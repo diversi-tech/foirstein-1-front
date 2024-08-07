@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid, Card, CardContent, Typography, Select, MenuItem, TextField, FormControl, Box, Pagination, PaginationItem, Tooltip, IconButton } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Select, MenuItem, TextField, FormControl, Box, Pagination, PaginationItem, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import { TableRows } from '@mui/icons-material';
 import ReportService from '../../axios/reportsAxios';
 import { FillData1 } from '../../redux/actions/reportsAction';
@@ -192,9 +192,9 @@ const ViewReports = () => {
                 </Grid>
               );
             }) : (
-              <Typography variant="h6" component="div">
-                אין דוחות זמינים.
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                <CircularProgress />
+              </Box>
             )}
           </Grid>
           <Pagination
