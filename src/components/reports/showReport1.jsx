@@ -37,19 +37,46 @@ const ReportPage = () => {
     });
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const doc = new jsPDF();
+
+    const loadImageAsBase64 = async (url) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+        });
+    };
+
+    const imagePath = '/image (17).png'; 
+    const imageBase64 = await loadImageAsBase64(imagePath);
+
+    doc.addImage(imageBase64, 'PNG', 10, 10, 30, 30);
 
     doc.addFileToVFS('Alef-Regular.ttf', alefFont);
     doc.addFont('Alef-Regular.ttf', 'Alef', 'normal');
-    doc.setFont('Alef'); 
-    doc.setFontSize(12);
+    doc.setFont('Alef');
     doc.setLanguage('he-IL');
     doc.setR2L(true);
 
-    doc.text(`שם הדוח: ${report.reportName}`, 190, 10, { align: 'right' });
-    doc.text(`נוצר בתאריך: ${new Date(report.generatedAt).toLocaleString()}`, 190, 20, { align: 'right' });
-    doc.text(`נוצר על ידי ${report.generatedBy}`, 190, 30, { align: 'right' });
+    doc.setFontSize(18);
+    doc.text(report.reportName, doc.internal.pageSize.width / 2, 25, { align: 'center' });
+
+    doc.setDrawColor(169, 169, 169); 
+    doc.line(10, 40, doc.internal.pageSize.width - 10, 40);
+
+    const footer = (data) => {
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(10); // הקטנת גודל הפונט
+            doc.text(`נוצר על ידי ${report.generatedBy}`, doc.internal.pageSize.width - 10, doc.internal.pageSize.height - 10, { align: 'right' });
+            doc.text(`נוצר בתאריך: ${new Date(report.generatedAt).toLocaleString()}`, 10, doc.internal.pageSize.height - 10, { align: 'left' });
+            doc.setFontSize(12); // החזרת גודל הפונט המקורי
+        }
+    };
 
     const data = parseReportData(report.reportData);
 
@@ -57,42 +84,47 @@ const ReportPage = () => {
     let rows = [];
 
     switch (type) {
-      case 'פעילות':
-        columns = ['מספר פעולות', 'שם משתמש'];
-        rows = data.map(item => [item.b.split('').reverse().join(''), item.a]);
-        break;
-      case 'חיפושים':
-        columns = ['תאריך הבקשה', 'קוד הבקשה', 'תאריך החיפוש', 'תוכן החיפוש', 'קוד משתמש'];
-        rows = data.map(item => [item.e.split('').reverse().join(''), item.d, item.c.split('').reverse().join(''), item.b, item.a]);
-        break;
-      case 'שנתי':
-        columns = ['כמות המשתמשים שנוספו בשנה זו', 'שנה'];
-        rows = data.map(item => [item.b.split('').reverse().join(''), item.a.split('').reverse().join('')]);
-        break;
-      case 'התחברות':
-        columns = ['שעה', 'שם משפחה', 'שם משתמש'];
-        rows = data.map(item => [item.c.split('').reverse().join(''),item.b, item.a]);
-        break;
-      default:
-        break;
+        case 'פעילות':
+            columns = ['מספר פעולות', 'שם משתמש'];
+            rows = data.map(item => [item.b.split('').reverse().join(''), item.a]);
+            break;
+        case 'חיפושים':
+            columns = ['תאריך הבקשה', 'קוד הבקשה', 'תאריך החיפוש', 'תוכן החיפוש', 'קוד משתמש'];
+            rows = data.map(item => [item.e.split('').reverse().join(''), item.d, item.c.split('').reverse().join(''), item.b, item.a]);
+            break;
+        case 'שנתי':
+            columns = ['כמות המשתמשים שנוספו בשנה זו', 'שנה'];
+            rows = data.map(item => [item.b.split('').reverse().join(''), item.a.split('').reverse().join('')]);
+            break;
+        case 'התחברות':
+            columns = ['שעה', 'שם משפחה', 'שם משתמש'];
+            rows = data.map(item => [item.c.split('').reverse().join(''), item.b, item.a]);
+            break;
+        default:
+            break;
     }
 
     doc.autoTable({
-      head: [columns],
-      body: rows,
-      startY: 40,
-      styles: { font: 'Alef', halign: 'right' },
-      columnStyles: {
-        0: { halign: 'right' },
-        1: { halign: 'right' },
-        2: { halign: 'right' },
-        3: { halign: 'right' },
-        4: { halign: 'right' }
-      }
+        head: [columns],
+        body: rows,
+        startY: 50, 
+        styles: { font: 'Alef', halign: 'right', cellPadding: 2 }, 
+        headStyles: { fillColor: [169, 169, 169] }, 
+        columnStyles: {
+            0: { halign: 'right' },
+            1: { halign: 'right' },
+            2: { halign: 'right' },
+            3: { halign: 'right' },
+            4: { halign: 'right' }
+        },
+        didDrawPage: footer 
     });
 
     doc.save(`${report.reportName}.pdf`);
-  };
+};
+
+
+
 
   const renderReportContent = () => {
     const data = parseReportData(report.reportData);
