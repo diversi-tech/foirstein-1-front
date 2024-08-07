@@ -26,6 +26,8 @@ import LibrariansTable from "./LibrarianPerformance/LibrariansTable";
 import NotFoundPage from "./notFound";
 import ServerError from "./ServerError";
 import AxiosInterceptorComponent from "../axios/AxiosInterceptorComponent";
+import BarcodeScanner from "./BarcodeScanner";
+
 
 function ExternalRedirect({ url }) {
   useEffect(() => {
@@ -36,6 +38,7 @@ function ExternalRedirect({ url }) {
 
 export const Routing = () => {
 
+  const [item, setItem] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const role = isLoggedIn ? getRoleFromToken() : null;
 
@@ -46,6 +49,7 @@ export const Routing = () => {
   return (
     <HashRouter>
       <AccessibilityProvider>
+      <BarcodeScanner setItem={setItem} />
         <nav className="navbar">
           <Nav />
         </nav>
@@ -92,6 +96,10 @@ export const Routing = () => {
             <Route path='/StatusListView' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/StatusListView" />} />
             <Route path='/LibrariansTable' element={<LibrariansTable />} />
             <Route path="/tasks/:userId" element={<Tasks />} />
+            <Route 
+  path="/borrow" 
+  element={<ExternalRedirect url={`https://search.foirstein.diversitech.co.il/#/borrow?item=${encodeURIComponent(JSON.stringify(item))}`} />} 
+/>
             <Route path="server-error" element={<ServerError />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
