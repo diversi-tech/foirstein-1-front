@@ -528,14 +528,14 @@ const ReportDetails = ({ open, handleClose, report, onReportGenerated }) => {
       }
 
       // בדיקה אם אין נתונים בדוח המוחזר
-      if (!response || (Array.isArray(response.data) && response.data.length === 0)) {
+      if (!response.data || (Array.isArray(response.data) && response.data.length === 0)) {
         setSnackbarMessage('אין נתונים ליצירת דוח זה כרגע.');
         setOpenSnackbar(true);
         setLoading(false);
         return;
       }
 
-      setSnackbarMessage('!!!נוצר בהצלחה! המתן להצגת הדוח.');
+      setSnackbarMessage('!!!!נוצר בהצלחה! המתן להצגת הדוח.');
       setOpenSnackbar(true);
       handleClose();
 
