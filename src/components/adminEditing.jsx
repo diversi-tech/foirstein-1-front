@@ -244,8 +244,6 @@ const UserManagementComponent = () => {
       myDispatch(FillData(users));
       setDeleteDialogOpen(false);
       aleartdell();
-      // document.cookie = `jwt=; path=/; domain=.foirstein.diversitech.co.il; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-      navigate('/login');
     } 
     catch (error) {
       console.error('Error deleting user:', error);
