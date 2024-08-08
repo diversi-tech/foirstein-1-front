@@ -19,6 +19,7 @@ import { FillData, FillPermissions } from '../redux/actions/userAction';
 import userService from '../axios/userAxios';
 import ActivityLogService from '../axios/ActivityLogAxios';
 import { getUserIdFromTokenid, validateToken } from './decipheringToken';  // Adjust the path based on the actual location of the file
+import { useLocation } from 'react-router-dom';
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -47,8 +48,18 @@ const ChangePermission = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const api_url=process.env.REACT_APP_SERVER_URL;
   const [pendingRoleChange, setPendingRoleChange] = useState(null);
+  const location = useLocation();
+
 
   const allPermissions = ["ספר", "קובץ", "פס קול"];
+  
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tzParam = queryParams.get('tz');
+    if (tzParam) {
+      setSearchQuery(tzParam);
+    }
+  }, [location]);
 
   useEffect(() => {
     userService.getAllUsers()
