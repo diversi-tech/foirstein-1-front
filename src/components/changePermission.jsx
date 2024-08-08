@@ -41,9 +41,11 @@ const ChangePermission = () => {
   const users = useSelector(state => state.userReducer.userList);
   const permissionsData = useSelector(state => state.userReducer.permissionsList);
   const [openPermissionsDialog, setOpenPermissionsDialog] = useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newPermissions, setNewPermissions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [pendingRoleChange, setPendingRoleChange] = useState(null);
 
   const allPermissions = ["ספר", "קובץ", "פס קול"];
 
@@ -66,8 +68,15 @@ const ChangePermission = () => {
   }, [dispatch]);
 
   const handleRoleChange = (userId, role) => {
-    userService.updateUserRole(userId, role)
-      .then(response => {
+    setPendingRoleChange({ userId, role });
+    setOpenConfirmationDialog(true);
+  };
+
+  const handleConfirmRoleChange = async () => {
+    if (pendingRoleChange) {
+      const { userId, role } = pendingRoleChange;
+      try {
+        const response = await userService.updateUserRole(userId, role);
         if (response.success) {
           const updatedUsers = users.map(user =>
             user.userId === userId ? { ...user, role: role } : user
@@ -84,20 +93,16 @@ const ChangePermission = () => {
             UserId1NavigationUserId: currentUserId
           };
 
-          ActivityLogService.addActivityLog(activityLog)
-            .then(activityResponse => {
-              console.log('Activity log added successfully:', activityResponse);
-            })
-            .catch(activityError => {
-              console.error('Error adding activity log:', activityError);
-            });
+          await ActivityLogService.addActivityLog(activityLog);
+          setOpenConfirmationDialog(false);
+          setPendingRoleChange(null);
         } else {
           alert('Error updating role');
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error updating role:', error);
-      });
+      }
+    }
   };
 
   const handlePermissionsChange = (userId) => {
@@ -301,12 +306,38 @@ const ChangePermission = () => {
               </Table>
             </TableContainer>
 
+            {/* Dialog for Confirming Role Change */}
+            <Dialog
+              open={openConfirmationDialog}
+              onClose={() => setOpenConfirmationDialog(false)}
+              aria-labelledby="form-confirmation-dialog-title"
+            >
+              <DialogTitle id="form-confirmation-dialog-title" align="center" sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+               ‼️ 
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText align="center" sx={{ fontSize: '1.25rem' }}>
+                  האם אתה בטוח כי ברצונך לבצע שינוי בהרשאה?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Box display="flex" justifyContent="center" width="100%">
+                  <Button onClick={() => setOpenConfirmationDialog(false)} color="error" sx={{ fontSize: '1rem' }}>
+                    ביטול
+                  </Button>
+                  <Button onClick={handleConfirmRoleChange} color="success" sx={{ fontSize: '1rem' }}>
+                    אישור
+                  </Button>
+                </Box>
+              </DialogActions>
+            </Dialog>
+
             <Dialog
               open={openPermissionsDialog}
               onClose={() => setOpenPermissionsDialog(false)}
               aria-labelledby="form-dialog-title"
             >
-              <DialogTitle id="form-dialog-title" align="center"> הרשאות לספרנית</DialogTitle>
+              <DialogTitle id="form-dialog-title" align="center">הרשאות לספרנית</DialogTitle>
               <DialogContent>
                 <DialogContentText align="center">
                   סמן את ההרשאות עבור הספרנית {selectedUser && selectedUser.fname}
