@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid, Card, CardContent, Typography, Select, MenuItem, TextField, FormControl, Box, Pagination, PaginationItem, Tooltip, IconButton, CircularProgress } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Select, MenuItem, TextField, FormControl, Box, Pagination, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import { TableRows } from '@mui/icons-material';
 import ReportService from '../../axios/reportsAxios';
 import { FillData1 } from '../../redux/actions/reportsAction';
@@ -22,7 +22,7 @@ const ViewReports = () => {
     "חיפושים": "#0D1E46",
     "פעילות": "#0D1E99",
     "שנתי": "black",
-     "התחברות": "blue"
+    "התחברות": "blue"
   };
 
   useEffect(() => {
@@ -121,6 +121,7 @@ const ViewReports = () => {
       <NavBar />
       <Container dir="rtl">
         <Typography variant="h4" component="h1" align="center" sx={{ marginBottom: 4 }}>
+          דוחות
         </Typography>
         <Grid container spacing={2} justifyContent="center" sx={{ marginBottom: 4 }}>
           <Grid item xs={12} md={4}>
@@ -162,38 +163,46 @@ const ViewReports = () => {
         </Grid>
         <Box sx={{ marginTop: 4 }}>
           <Grid container spacing={2} justifyContent="center">
-            {displayedReports.length > 0 ? displayedReports.map((report, index) => {
-              const rows = report.reportData?.trim().split('\n') || [];
-              const lastRow = rows[rows.length - 1]?.trim() || '';
-              const typeItem = lastRow.split(',').find(item => item.trim().startsWith('type:'));
-              const type = typeItem ? typeItem.split(':')[1]?.trim() : 'לא ידוע';
+            {displayedReports.length > 0 ? (
+              displayedReports.map((report, index) => {
+                const rows = report.reportData?.trim().split('\n') || [];
+                const lastRow = rows[rows.length - 1]?.trim() || '';
+                const typeItem = lastRow.split(',').find(item => item.trim().startsWith('type:'));
+                const type = typeItem ? typeItem.split(':')[1]?.trim() : 'לא ידוע';
 
-              return (
-                <Grid item xs={12} key={index}>
-                  <Card sx={{ display: 'flex', borderRadius: 1, overflow: 'hidden', mb: 1, width: '75%', margin: '0 auto', height: '60px', boxShadow: 3 }}>
-                    <Box sx={{ width: '10px', backgroundColor: getColorByReportType(type) }}></Box>
-                    <CardContent sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="h6" component="div" sx={{ flex: 2, color: 'black', textAlign: 'right', fontWeight: 'bold' }}>
-                        {report.reportName}
-                      </Typography>
-                      <Typography variant="body2" sx={{ flex: 1, color: 'black', textAlign: 'center', fontWeight: 'bold' }}>
-                        {new Date(report.generatedAt).toLocaleDateString()}
-                      </Typography>
-                      <Tooltip title="הצג דוח">
-                        <IconButton 
-                          sx={{ color: 'black' }}
-                          onClick={() => handleViewReport(report)}
-                        >
-                          <TableRows />
-                        </IconButton>
-                      </Tooltip>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              );
-            }) : (
+                return (
+                  <Grid item xs={12} key={index}>
+                    <Card sx={{ display: 'flex', borderRadius: 1, overflow: 'hidden', mb: 1, width: '75%', margin: '0 auto', height: '60px', boxShadow: 3 }}>
+                      <Box sx={{ width: '10px', backgroundColor: getColorByReportType(type) }}></Box>
+                      <CardContent sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="h6" component="div" sx={{ flex: 2, color: 'black', textAlign: 'right', fontWeight: 'bold' }}>
+                          {report.reportName}
+                        </Typography>
+                        <Typography variant="body2" sx={{ flex: 1, color: 'black', textAlign: 'center', fontWeight: 'bold' }}>
+                          {new Date(report.generatedAt).toLocaleDateString()}
+                        </Typography>
+                        <Tooltip title="הצג דוח">
+                          <IconButton 
+                            sx={{ color: 'black' }}
+                            onClick={() => handleViewReport(report)}
+                          >
+                            <TableRows />
+                          </IconButton>
+                        </Tooltip>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })
+            ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
-                <CircularProgress />
+                {filteredReports.length === 0 && !selectedType && !searchName && !searchDate ? (
+                  <CircularProgress />
+                ) : (
+                  <Typography variant="h6" component="div" sx={{ color: 'black', textAlign: 'center', fontWeight: 'bold' }}>
+                    אין דוחות תואמים לחיפוש
+                  </Typography>
+                )}
               </Box>
             )}
           </Grid>
@@ -202,13 +211,6 @@ const ViewReports = () => {
             page={page}
             onChange={handlePageChange}
             sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}
-            renderItem={(item) => (
-              <PaginationItem
-                {...item}
-                sx={{ direction: 'rtl' }}
-                page={Math.abs(item.page - (Math.ceil(filteredReports.length / reportsPerPage) + 1))}
-              />
-            )}
           />
         </Box>
       </Container>
