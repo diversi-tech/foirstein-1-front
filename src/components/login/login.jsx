@@ -69,6 +69,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation(); // הוסף שורה זו
   const dispatch = useDispatch();
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     const checkUserExists = async () => {
@@ -113,8 +114,8 @@ const Login = () => {
         } else {
           const token = response.data.token;
           // הגדרת ה-cookie עם ה-token
-          // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
-          document.cookie = `jwt=${token}; Secure; expires=Session`;
+          document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+          // document.cookie = `jwt=${token}; Secure; expires=Session`;
           dispatch(FillData(response.data));
           const decoded = parseInt(jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
@@ -183,8 +184,8 @@ const Login = () => {
       if (response.data.token && isActive) {
         alertLogin();
         const token = response.data.token;
-      // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
-      document.cookie = `jwt=${token}; Secure; expires=Session`;
+      document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+      // document.cookie = `jwt=${token}; Secure; expires=Session`;
       dispatch(FillData(response.data));
         const decoded = parseInt(jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {
