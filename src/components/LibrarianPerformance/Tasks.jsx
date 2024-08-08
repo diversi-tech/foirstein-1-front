@@ -64,13 +64,14 @@ const Tasks = () => {
         const taskResponse = await approvalService.getAllApprovals();
         
         const filteredTasks = taskResponse.filter(task => task.librariansId == userId);
-        
+        const api_url=process.env.REACT_APP_SERVER_URL;
+
         setTasks(filteredTasks);
 
         // Fetch item details
         const itemIds = [...new Set(filteredTasks.map(task => task.itemId))];
         debugger
-        const itemResponses = await axios.get('https://foirstein-1-back.onrender.com/api/Item/GetAllItems');
+        const itemResponses = await axios.get(`${api_url}/api/Item/GetAllItems`);
         debugger
         
         const itemsMap = itemResponses.data.reduce((acc, item) => {

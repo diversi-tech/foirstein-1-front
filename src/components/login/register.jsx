@@ -110,6 +110,7 @@ const Register = () => {
     setPreview(URL.createObjectURL(file));
     setImage(file);
   };
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   const handleRegister = async () => {
     let formErrors = {};
@@ -168,7 +169,7 @@ const Register = () => {
     setError('');
 
     try {
-      const usersResponse = await axios.get('https://foirstein-1-back.onrender.com/api/Users/getUsers');
+      const usersResponse = await axios.get(`${api_url}/api/Users/getUsers`);
       const existingUsers = usersResponse.data;
       const userExists = existingUsers.some((user) => user.tz === idNumber);
 
@@ -192,14 +193,14 @@ const Register = () => {
         formData.append('ProfilePicture', image, image.name);
       }
 
-      const response = await axios.post('https://foirstein-1-back.onrender.com/api/Users/addUser', formData, {
+      const response = await axios.post(`${api_url}/api/Users/addUser`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
       if (response.data) {
-        const result = await axios.get(`https://foirstein-1-back.onrender.com/api/Users/AdminMail/${response.data.userId}`);
+        const result = await axios.get(`${api_url}/api/Users/AdminMail/${response.data.userId}`);
         aleartregister();
         const activityLog = {
           LogId: 0,

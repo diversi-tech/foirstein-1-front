@@ -1,6 +1,7 @@
 import axios from "axios";
 
-let userUrl="https://foirstein-1-back.onrender.com/api/ActivityLog";
+const api_url=process.env.REACT_APP_SERVER_URL;
+let userUrl=`${api_url}/api/ActivityLog`;
 
 const ActivityLogService = {
     getAllActivityLog: async () => {

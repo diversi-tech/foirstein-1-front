@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// 
-const API_URL = 'https://foirstein-1-back.onrender.com/api/Users'; // שים כאן את ה-URL שלך לקונטרולר
+const api_url=process.env.REACT_APP_SERVER_URL;
+
+const API_URL = `${api_url}/api/Users`; // שים כאן את ה-URL שלך לקונטרולר
 const userService = {
   getAllUsers: async () => {
     try {

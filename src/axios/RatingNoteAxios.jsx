@@ -1,7 +1,8 @@
 // src/axios/RatingNoteAxios.js
 import axios from 'axios';
+const api_url=process.env.REACT_APP_SERVER_URL;
 
-const API_URL = 'https://foirstein-1-back.onrender.com/api/RatingNote'; // שים כאן את ה-URL שלך לקונטרולר
+const API_URL = `${api_url}/api/RatingNote`; // שים כאן את ה-URL שלך לקונטרולר
 
 const RatingNoteService = {
   getAllRatingNote: async () => {

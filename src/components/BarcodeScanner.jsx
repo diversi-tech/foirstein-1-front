@@ -8,6 +8,7 @@ const BarcodeScanner = ({ setItem }) => {
     const [barcode, setBarcode] = useState('');
     const [scanning, setScanning] = useState(false);
     const navigate = useNavigate();
+    const api_url=process.env.REACT_APP_SERVER_URL;
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -35,7 +36,7 @@ const BarcodeScanner = ({ setItem }) => {
 
     const fetchProductData = async (barcode) => {
         try {
-            const response = await axios.get(`https://foirstein-2-back-lifb.onrender.com/api/BorrowRequest/getItemById/${barcode}`);
+            const response = await axios.get(`${api_url}/api/BorrowRequest/getItemById/${barcode}`);
             const productData = response.data;
             setItem(productData);
             navigate('/borrow');

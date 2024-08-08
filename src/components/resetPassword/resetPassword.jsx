@@ -27,6 +27,7 @@ const ResetPassword = () => {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -70,7 +71,7 @@ const ResetPassword = () => {
       return;
     }
     try {
-      await axios.put("https://foirstein-1-back.onrender.com/api/Users/reset-password", {
+      await axios.put(`${api_url}/api/Users/reset-password`, {
         userId,
         newPassword,
       });

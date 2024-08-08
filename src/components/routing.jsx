@@ -41,7 +41,7 @@ export const Routing = () => {
   const [item, setItem] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!getCookie('jwt'));
   const role = isLoggedIn ? getRoleFromToken() : null;
-
+  const librarians_api="https://librarian.foirstein.diversitech.co.il/#";
   useEffect(() => {
     setIsLoggedIn(!!getCookie('jwt'));
   }, []);
@@ -64,18 +64,20 @@ export const Routing = () => {
           {isLoggedIn && role=='Admin' &&(
               <Route path="/" element={<ActivityLog />} />)}
           {isLoggedIn && role=='Librarian' && (
-            <Route path="/" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />    )}  
+            <Route path="/" element={<ExternalRedirect url="/items" />} />    )}  
             {isLoggedIn && role=='Student' && (   
             <Route path='/' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />)}
-            {/* <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il" />} />  */}
-            {/* <Route path='/search' element={<Login/>}/> */}
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/SavedItemsScreen' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SavedItemsScreen" />} />
-            <Route path='/items' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items" />} />
+            <Route path='/items' element={<ExternalRedirect url="{https://librarian.foirstein.diversitech.co.il/#}/items" />} />
             <Route path='/itemsPendingApproval' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/itemsPendingApproval" />} />
             <Route path='/studentRequest' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/studentRequest" />} />
             <Route path='/tag-list' element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/tag-list" />} />
             <Route path="/items/borrowingItems" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items/borrowingItems" />} />
+            <Route path="/borrowing" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/borrowing" />} />
+            <Route path="/returning" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/returning" />} />
+
+
             <Route path='/Charts' element={<Charts />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
             <Route path='/changePermission' element={<ChangePermission />} />

@@ -44,6 +44,7 @@ const ChangePermission = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newPermissions, setNewPermissions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   const allPermissions = ["ספר", "קובץ", "פס קול"];
 
@@ -120,7 +121,7 @@ const ChangePermission = () => {
 
   const confirmPermissionsChange = async () => {
     try {
-      const response = await axios.put('https://foirstein-1-back.onrender.com/api/LibrarianPermissions/updatePermissions', {
+      const response = await axios.put(`${api_url}/api/LibrarianPermissions/updatePermissions`, {
         userId: selectedUser.userId,
         permissions: newPermissions
       });

@@ -3,9 +3,6 @@ import { Box, Container, Grid, Typography, Link, IconButton } from '@mui/materia
 import { ThemeProvider } from '@mui/system';
 import theme from '../theme';
 import { Link as RouterLink } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
-import LoginIcon from '@mui/icons-material/Login';
-import SearchIcon from '@mui/icons-material/Search';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import FaxIcon from '@mui/icons-material/Print';

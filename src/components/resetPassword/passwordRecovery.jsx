@@ -32,6 +32,7 @@ const PasswordRecovery = () => {
   const [emailError, setEmailError] = useState(false);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -43,7 +44,7 @@ const PasswordRecovery = () => {
     }
 
     try {
-      await axios.get(`https://foirstein-1-back.onrender.com/api/Users/password-recovery/${email}`);
+      await axios.get(`${api_url}/api/Users/password-recovery/${email}`);
       setMessage('מייל לאיפוס סיסמה נשלח בהצלחה');
       setEmailError(false);
       // navigate('/login'); // הפניה לעמוד ההתחברות לאחר השליחה

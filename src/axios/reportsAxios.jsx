@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-let userUrl = 'https://foirstein-1-back.onrender.com/api/Report';
+const api_url=process.env.REACT_APP_SERVER_URL;
+let userUrl = `${api_url}/api/Report`;
 
 
 

@@ -91,7 +91,7 @@ const Login = () => {
   const handleLogin = async () => {
     setError('');
     try {
-      const response = await axios.post('https://foirstein-1-back.onrender.com/api/Users/login', {
+      const response = await axios.post(`${api_url}/api/Users/login`, {
         tz: tz,
         pass: password,
       });
@@ -101,7 +101,7 @@ const Login = () => {
           try {
             const response1 = await userService.getAllUsers();
             const email1 = response1.find((user) => user.tz === response.data.user.tz).email;
-            const result = await axios.get(`https://foirstein-1-back.onrender.com/api/Users/password2/${email1}`);
+            const result = await axios.get(`${api_url}/api/Users/password2/${email1}`);
             setSecondaryPasswordFromEmail(result.data); // הנחת את הסיסמה השנייה
             setModalMessage('נשלחה אליך סיסמה שנייה למייל לצרכי אבטחה');
             setShowSuccessMessage(true);
@@ -113,8 +113,8 @@ const Login = () => {
         } else {
           const token = response.data.token;
           // הגדרת ה-cookie עם ה-token
-          // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
-          document.cookie = `jwt=${token}; Secure; expires=Session`;
+          document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+          // document.cookie = `jwt=${token}; Secure; expires=Session`;
           dispatch(FillData(response.data));
           const decoded = parseInt(jwtDecode(response.data.token)['userId'], 10);
           const activityLog = {
@@ -176,15 +176,15 @@ const Login = () => {
 
   const handleSecondaryLogin = async () => {
     if (secondaryPassword == secondaryPasswordFromEmail) {
-      const response = await axios.post('https://foirstein-1-back.onrender.com/api/Users/login', {
+      const response = await axios.post(`${api_url}/api/Users/login`, {
         tz: tz,
         pass: password,
       });
       if (response.data.token && isActive) {
         alertLogin();
         const token = response.data.token;
-      // document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
-      document.cookie = `jwt=${token}; Secure; expires=Session`;
+      document.cookie = `jwt=${token}; path=/;domain=.foirstein.diversitech.co.il; Secure; expires=Session`;
+      // document.cookie = `jwt=${token}; Secure; expires=Session`;
       dispatch(FillData(response.data));
         const decoded = parseInt(jwtDecode(response.data.token)['userId'], 10);
         const activityLog = {

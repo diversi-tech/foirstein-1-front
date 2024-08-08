@@ -29,11 +29,12 @@ const LibrariansTable = () => {
   const [librarians, setLibrarians] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const api_url=process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     const fetchLibrarians = async () => {
       try {
-        const response = await axios.get('https://foirstein-1-back.onrender.com/api/Users/getUsers');
+        const response = await axios.get(`${api_url}/api/Users/getUsers`);
         const librariansData = response.data.filter(user => user.role === 'Librarian');
         setLibrarians(librariansData);
       } catch (error) {
