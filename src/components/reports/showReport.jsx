@@ -121,7 +121,7 @@ const ViewReports = () => {
       <NavBar />
       <Container dir="rtl">
         <Typography variant="h4" component="h1" align="center" sx={{ marginBottom: 4 }}>
-          דוחות
+          
         </Typography>
         <Grid container spacing={2} justifyContent="center" sx={{ marginBottom: 4 }}>
           <Grid item xs={12} md={4}>
