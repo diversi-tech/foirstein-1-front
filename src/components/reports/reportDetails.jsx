@@ -535,7 +535,7 @@ const ReportDetails = ({ open, handleClose, report, onReportGenerated }) => {
         return;
       }
 
-      setSnackbarMessage('נוצר בהצלחה! המתן להצגת הדוח.');
+      setSnackbarMessage('!!!נוצר בהצלחה! המתן להצגת הדוח.');
       setOpenSnackbar(true);
       handleClose();
 
