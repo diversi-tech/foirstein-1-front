@@ -119,6 +119,10 @@ export const Nav = () => {
     navigate('/profileform');
     handleMenuClose();
   };
+  const handleAddBookRequest = () => {
+    navigate('/addBookRequest');
+    handleMenuClose();
+  };
 
   const handleAdminMenuOpen = (event) => {
     setAdminAnchorEl(event.currentTarget);
@@ -285,6 +289,7 @@ export const Nav = () => {
                   <MenuItem onClick={handleProfileClick}>הפרופיל שלי</MenuItem>
                   <MenuItem onClick={handleProfileClickToRequestStatus}>בקשות סטטוס</MenuItem>
                   <MenuItem onClick={handleProfileClickSavedItemsScreen}>מאגר אישי </MenuItem>
+                  <MenuItem onClick={handleAddBookRequest}>בקשה להוספת פריט</MenuItem>
                   <MenuItem onClick={handleLogout}>התנתק</MenuItem>
                 </Menu>
               </>

@@ -67,6 +67,7 @@ export const Routing = () => {
             <Route path="/" element={<ExternalRedirect url="/items" />} />    )}  
             {isLoggedIn && role=='Student' && (   
             <Route path='/' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />)}
+            <Route path='/addBookRequest' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/addBookRequest" />} />)}
             <Route path='/search' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SearchAppBar" />} />
             <Route path='/SavedItemsScreen' element={<ExternalRedirect url="https://search.foirstein.diversitech.co.il/#/SavedItemsScreen" />} />
             <Route path='/items' element={<ExternalRedirect url="{https://librarian.foirstein.diversitech.co.il/#}/items" />} />
@@ -76,8 +77,6 @@ export const Routing = () => {
             <Route path="/items/borrowingItems" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/items/borrowingItems" />} />
             <Route path="/borrowing" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/borrowing" />} />
             <Route path="/returning" element={<ExternalRedirect url="https://librarian.foirstein.diversitech.co.il/#/returning" />} />
-
-
             <Route path='/Charts' element={<Charts />} />
             <Route path='/ActivityLog' element={<ActivityLog />} />
             <Route path='/changePermission' element={<ChangePermission />} />
