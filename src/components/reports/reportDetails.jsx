@@ -528,7 +528,7 @@ const ReportDetails = ({ open, handleClose, report, onReportGenerated }) => {
       }
 
       // בדיקה אם אין נתונים בדוח המוחזר
-      if (!response.data || (Array.isArray(response.data) && response.data.length === 0)) {
+      if (response.reportData ===""|| (Array.isArray(response.data) && response.data.length === 0)) {
         setSnackbarMessage('אין נתונים ליצירת דוח זה כרגע.');
         setOpenSnackbar(true);
         setLoading(false);
