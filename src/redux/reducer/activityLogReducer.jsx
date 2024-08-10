@@ -23,5 +23,7 @@ export const activityLogReducer=produce((state,action)=>{
     switch(action.type){
   case  'FillLog':state.activityLogList=action.payload
     break;
+    default:
+      return state;
     }
    },InitialState)
