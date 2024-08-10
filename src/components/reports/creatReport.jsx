@@ -72,7 +72,6 @@ const customTheme = createTheme(theme, {
 const ManagerDashboard = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [generatedReports, setGeneratedReports] = useState([]);
   const [reportNames, setReportNames] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
@@ -175,9 +174,9 @@ const ManagerDashboard = () => {
             autoHideDuration={6000}
             onClose={handleCloseSnackbar}
           >
-            <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+            <div style={{ color: 'red', textAlign: 'center' }}>
               {snackbarMessage}
-            </Alert>
+            </div>
           </Snackbar>
           {selectedReport && (
             <ReportDetails
